@@ -77,79 +77,6 @@ struct MyPharmacyPage {
     }
   }
 
-  //同步常用处方和历史处方
-  /*async loadPrescriptions() {
-    try {
-      let httpRequest = http.createHttp();
-
-      // 常用处方请求
-      let commonResponse = await httpRequest.request(
-        "http://127.0.0.1:8888/commonPrescriptions",
-        {
-          method: http.RequestMethod.GET,
-          header: { 'Content-Type': 'application/json' }
-        }
-      );
-      let commonRawData: RawPrescription[] = JSON.parse(commonResponse.result as string);
-      this.commonPrescriptions = commonRawData.map((item: RawPrescription) => {
-        let prescription: Prescription = {
-          id: item.id,
-          patientName: item.patientName || '',
-          patientGender: item.patientGender || '',
-          patientAge: item.patientAge || 0,
-          diagnosis: item.clinicalDiagnosis || item.diagnosis || '',
-          medicineCount: item.medicineCount,
-          medicineList: []
-        };
-
-        if (item.medicineList) {
-          prescription.medicineList = item.medicineList;
-        } else if (item.medicines) {
-          prescription.medicineList = item.medicines.map((med: RawMedicineItem) =>
-          `${med.name} ${med.specification} ×${med.quantity}盒`
-          );
-        }
-
-        return prescription;
-      });
-
-      // 历史处方请求
-      let historyResponse = await httpRequest.request(
-        "http://127.0.0.1:8888/historyPrescriptions",
-        {
-          method: http.RequestMethod.GET,
-          header: { 'Content-Type': 'application/json' }
-        }
-      );
-      let historyRawData: RawPrescription[] = JSON.parse(historyResponse.result as string);
-      this.historyPrescriptions = historyRawData.map((item: RawPrescription) => {
-        let prescription: Prescription = {
-          id: item.id,
-          patientName: item.patientName || '',
-          patientGender: item.patientGender || '',
-          patientAge: item.patientAge || 0,
-          diagnosis: item.clinicalDiagnosis || item.diagnosis || '',
-          medicineCount: item.medicineCount,
-          medicineList: []
-        };
-
-        if (item.medicineList) {
-          prescription.medicineList = item.medicineList;
-        } else if (item.medicines) {
-          prescription.medicineList = item.medicines.map((med: RawMedicineItem) =>
-          `${med.name} ${med.specification} ×${med.quantity}盒`
-          );
-        }
-
-        return prescription;
-      });
-
-      httpRequest.destroy();
-    } catch (err) {
-      console.error('加载处方失败', JSON.stringify(err));
-    }
-  }*/
-
   //只同步历史处方
   async loadPrescriptions() {
     try {
@@ -370,6 +297,7 @@ struct MyPharmacyPage {
             }
             .width('100%')
             .margin({ top: 16, bottom: 16, left: 16 })
+
 
             List() {
               ForEach(this.historyPrescriptions, (prescription: Prescription) => {

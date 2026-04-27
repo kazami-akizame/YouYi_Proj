@@ -16,7 +16,7 @@ struct RejectReasonPage {
     }
     // 返回上一页并携带退诊原因
     router.back({
-      url: 'pages/ChatPage',
+      url: 'pages/HomePages/ChatPage',
       params: { rejectReason: this.selectedReason }
     });
   }

@@ -1,11 +1,13 @@
-// 问诊类型枚举
+// 导入必须放顶部
+import http from '@ohos.net.http';
+
+// 枚举
 export enum ConsultationType {
-  SPEED = '极速',      // 极速问诊
-  GRAPHIC = '图文',     // 图文问诊
-  PRESCRIPTION = '开药' // 开药问诊
+  SPEED = '极速',
+  GRAPHIC = '图文',
+  PRESCRIPTION = '开药'
 }
 
-// 问诊状态枚举
 export enum ConsultationStatus {
   WAITING = '待接诊',
   IN_PROGRESS = '进行中',
@@ -13,17 +15,19 @@ export enum ConsultationStatus {
   FINISHED = '问诊结束'
 }
 
-// 问诊数据模型
+// 模型
 export class ConsultationItem {
-  id: string = '';                          // 唯一标识
-  patientName: string = '';                 // 患者姓名
-  patientGender: string = '';               // 性别
-  patientAge: number = 0;                  // 年龄
-  type: ConsultationType = ConsultationType.GRAPHIC;              // 问诊类型
-  status: ConsultationStatus = ConsultationStatus.WAITING;          // 问诊状态
-  description: string = '';                 // 病情描述
-  createTime: string = '';                  // 创建时间
-  rejectReason?: string;
+  id: string = '';
+  patientName: string = '';
+  patientGender: string = '';
+  patientAge: number = 0;
+  type: ConsultationType = ConsultationType.GRAPHIC;
+  status: ConsultationStatus = ConsultationStatus.WAITING;
+  description: string = '';
+  createTime: string = '';
+  rejectReason?: string = '';
+  // 新增：持久化聊天记录 + 处方
+  chatMessages?: ChatMessage[];
 
   constructor(
     id: string,
@@ -34,7 +38,9 @@ export class ConsultationItem {
     status: ConsultationStatus,
     description: string,
     createTime: string,
-    rejectReason?: string
+    rejectReason?: string,
+    // 新增：持久化聊天记录 + 处方
+    chatMessages?: ChatMessage[]
   ) {
     this.id = id;
     this.patientName = patientName;
@@ -44,8 +50,43 @@ export class ConsultationItem {
     this.status = status;
     this.description = description;
     this.createTime = createTime;
-    this.rejectReason = this.rejectReason;
+    this.rejectReason = rejectReason;
+    // 新增：持久化聊天记录 + 处方
+    this.chatMessages = chatMessages;
   }
+}
+
+// 处方
+export interface Prescription {
+  id: string;
+  diagnosis: string;
+  medicineCount: number;
+  medicineList: string[];
+}
+
+// 单条聊天消息
+export interface ChatMessage {
+  isDoctor: boolean;
+  content: string;
+  time: string;
+  isImage?: boolean;
+  isPrescription?: boolean;
+  prescriptionData?: Prescription;
+}
+
+// 【正确】从 json-server 请求 根目录下的 data.json
+// 定义接口，和你 data.json 里的单条数据结构完全对应
+interface ConsultationRaw {
+  id: string;
+  patientName: string;
+  patientGender: string;
+  patientAge: number;
+  type: ConsultationType;
+  status: ConsultationStatus;
+  description: string;
+  createTime: string;
+  rejectReason?: string;
+  chatMessages?: ChatMessage[];
 }
 
 // 模拟数据生成器
@@ -87,3 +128,85 @@ export class MockDataGenerator {
     return mockData;
   }
 }
+
+export async function loadFromJsonServer(): Promise<ConsultationItem[]> {
+  let httpConn = http.createHttp();
+
+  try {
+    // 👉 改成你电脑的局域网IP，例如：http://192.168.1.100:3000/consultations
+    let resp = await httpConn.request(
+      "http://127.0.0.1:8888/consultations",
+      { method: http.RequestMethod.GET,
+        header: { 'Content-Type': 'application/json' }
+      }
+    );
+
+    if (resp.responseCode === 200) {
+      console.info("响应内容: " + resp.result.toString());
+      // 强转为我们定义的类型数组，彻底去掉 any
+      const list = JSON.parse(resp.result.toString()) as ConsultationRaw[];
+      return list.map((item: ConsultationRaw) => new ConsultationItem(
+        item.id,
+        item.patientName,
+        item.patientGender,
+        item.patientAge,
+        item.type,
+        item.status,
+        item.description,
+        item.createTime,
+        item.rejectReason,
+        item.chatMessages
+      ));
+    }
+  } catch (err) {
+    console.error("请求失败详情: " + JSON.stringify(err));
+    console.error("请求失败", err);
+  } finally {
+    httpConn.destroy();
+  }
+
+  return [];
+}
+
+
+// ====================== 新增：保存 ======================
+export async function saveToJsonServer(data: ConsultationItem[]): Promise<void> {
+  let httpConn = http.createHttp();
+
+  try {
+    await httpConn.request(
+      "http://127.0.0.1:8888/consultations",
+      {
+        method: http.RequestMethod.PUT,
+        header: { 'Content-Type': 'application/json' },
+        extraData: data
+      }
+    );
+  } catch (err) {
+    console.error("保存失败", err);
+  } finally {
+    httpConn.destroy();
+  }
+}
+
+// ====================== 新增：保存单条问诊数据 ======================
+export async function saveSingleItemToServer(item: ConsultationItem): Promise<void> {
+  let httpConn = http.createHttp();
+
+  try {
+    await httpConn.request(
+      `http://127.0.0.1:8888/consultations/${item.id}`,
+      {
+        method: http.RequestMethod.PUT,
+        header: { 'Content-Type': 'application/json' },
+        extraData: item
+      }
+    );
+    console.log("✅ 单条保存成功：", item.id);
+  } catch (err) {
+    console.error("❌ 保存失败：", err);
+  } finally {
+    httpConn.destroy();
+  }
+}
+

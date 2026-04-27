@@ -32,7 +32,7 @@ struct CommonPrescriptionDetailPage {
   usePrescription() {
     if (!this.prescription) return;
     router.pushUrl({
-      url: 'pages/PrescriptionEditPage',
+      url: 'pages/HomePages/PrescriptionEditPage',
       params: {
         prescriptionJson: JSON.stringify(this.prescription)
       }
