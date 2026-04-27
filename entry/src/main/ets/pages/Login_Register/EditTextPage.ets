@@ -16,7 +16,7 @@ struct EditTextPage {
   @State maxLength: number = 150;
 
   aboutToAppear() {
-    // 明确类型，替换 any
+    //
     interface RouterParams {
       key?: string;
       current?: string;
@@ -65,10 +65,13 @@ struct EditTextPage {
         text: this.text,
         placeholder: this.placeholder
       })
-        .width('100%')
+        .width('92%')
         .height(250)
         .padding(16)
         .fontSize(15)
+        .backgroundColor('#F2F2F7')
+        .borderRadius(12)
+        .alignSelf(ItemAlign.Center)
         .onChange((val) => {
           if (val.length <= this.maxLength) {
             this.text = val;
@@ -78,15 +81,15 @@ struct EditTextPage {
       // 字数统计
       Text(`${this.text.length}/${this.maxLength}`)
         .fontSize(14)
-        .fontColor('#999')
+        .fontColor('#8E8E93')
         .width('100%')
         .textAlign(TextAlign.End)
-        .padding({ right: 16, bottom: 20 })
+        .padding({ right: 16, bottom: 20, top: 8 })
 
       Blank()
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#FFF')
+    .backgroundColor('#F2F2F7')
   }
 }

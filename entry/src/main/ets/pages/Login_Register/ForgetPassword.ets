@@ -4,7 +4,7 @@ import prompt from '@ohos.prompt';
 
 @Entry
 @Component
-struct FindPassword {
+struct ForgetPassword {
   // 绑定输入框值
   @State phoneNumber: string = '';
   @State verifyCode: string = '';
@@ -74,13 +74,12 @@ struct FindPassword {
     const success = await PasswordBusiness.verifyResetCode(this.phoneNumber, this.verifyCode);
     
     if (success) {
-      console.log('验证码验证成功，进入修改密码页面');
-      // 跳转到修改密码页面，携带手机号
+      console.log('验证码验证成功，进入查看密码页面');
+      // 跳转到 Password 页面，携带手机号
       router.pushUrl({
-        url: 'pages/Login_Register/NewPin',
+        url: 'pages/Login_Register/Password',
         params: {
-          phoneNumber: this.phoneNumber,
-          isResetPassword: true  // 标记是找回密码
+          phoneNumber: this.phoneNumber
         }
       });
     } else {
@@ -98,7 +97,7 @@ struct FindPassword {
       Stack({ alignContent: Alignment.Center }) {
         // 返回按钮
         Row() {
-          Image($r('app.media.img_4')) // 替换为你的返回图标资源
+          Image($r('app.media.img_4'))
             .width(24)
             .height(24)
             .objectFit(ImageFit.Contain)
@@ -107,11 +106,11 @@ struct FindPassword {
         .padding({ left: 20 })
         .alignItems(VerticalAlign.Center)
         .onClick(() => {
-          router.back(); // 👈 点击返回上一页
+          router.back();
         })
 
         // 标题
-        Text("修改密码")
+        Text("忘记密码")
           .fontSize(18)
           .fontWeight(FontWeight.Medium)
       }
@@ -122,7 +121,7 @@ struct FindPassword {
       Column({ space: 20 }) {
         // 手机号输入框（带+86前缀）
         Row() {
-          Image($r('app.media.img_7')) // 替换为你的用户图标资源
+          Image($r('app.media.img_7'))
             .width(20)
             .height(20)
             .margin({ right: 8 })
