@@ -211,9 +211,17 @@ struct HomePage {
     Row() {
       // 我的问诊
       Column() {
-        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1321.png')
-          .width(40)
-          .height(40)
+        Column(){
+          Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1321.png')
+            .width(30)
+            .height(30)
+            .margin({top:5
+            })
+        }.backgroundColor('#ff2166bc')
+        .width(40)
+        .height(40)
+        .borderRadius(5)
+
         Text('我的问诊')
           .fontSize(13)
           .fontColor('#333')
@@ -221,14 +229,21 @@ struct HomePage {
       }
       .layoutWeight(1)
       .onClick(() => {
-        router.pushUrl({ url: 'pages/MyConsultPage' })
+        router.pushUrl({ url: 'pages/HomePages/OnlineConsultationPage' })
       })
 
       // 私人医生
       Column() {
-        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1333.png')
-          .width(40)
-          .height(40)
+        Column(){
+          Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1333.png')
+            .width(30)
+            .height(30)
+            .margin({top:5
+            })
+        }.backgroundColor('#ff2166bc')
+        .width(40)
+        .height(40)
+        .borderRadius(5)
         Text('私人医生')
           .fontSize(13)
           .fontColor('#333')
@@ -236,14 +251,21 @@ struct HomePage {
       }
       .layoutWeight(1)
       .onClick(() => {
-        router.pushUrl({ url: 'pages/PrivateDoctorPage' })
+        router.pushUrl({ url: 'pages/HomePages/PrivatedoctorPage' })
       })
 
       // 我的药房
       Column() {
-        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1325.png')
-          .width(40)
-          .height(40)
+        Column(){
+          Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1325.png')
+            .width(30)
+            .height(30)
+            .margin({top:5
+            })
+        }.backgroundColor('#ff2166bc')
+        .width(40)
+        .height(40)
+        .borderRadius(5)
         Text('我的药房')
           .fontSize(13)
           .fontColor('#333')
@@ -251,14 +273,21 @@ struct HomePage {
       }
       .layoutWeight(1)
       .onClick(() => {
-        router.pushUrl({ url: 'pages/MyMedicinePage' })
+        router.pushUrl({ url: 'pages/HomePages/MypharmacyPage' })
       })
 
       // 创作中心
       Column() {
-        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1329.png')
-          .width(40)
-          .height(40)
+        Column(){
+          Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1329.png')
+            .width(30)
+            .height(30)
+            .margin({top:5
+            })
+        }.backgroundColor('#ff2166bc')
+        .width(40)
+        .height(40)
+        .borderRadius(5)
         Text('创作中心')
           .fontSize(13)
           .fontColor('#333')
@@ -266,7 +295,7 @@ struct HomePage {
       }
       .layoutWeight(1)
       .onClick(() => {
-        router.pushUrl({ url: 'pages/CreativeCenterPage' })
+        router.pushUrl({ url: 'pages/HomePages/CreatCenter' })
       })
     }
     .width('100%')
@@ -290,7 +319,7 @@ struct HomePage {
           .fontSize(14)
           .fontColor('#999')
           .onClick(()=>{
-            router.pushUrl({ url: 'pages/GrabOrderPage' })
+            router.pushUrl({ url: 'pages/HomePages/GrabOrderPage' })
           })
       }
       .width('100%')
@@ -465,7 +494,7 @@ struct HomePage {
       .layoutWeight(1)
 
       Column() {
-        Image($r('sys.symbol.group'))
+        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1071.png')
           .width(24)
           .height(24)
           .fillColor('#999999')
@@ -473,11 +502,14 @@ struct HomePage {
           .fontSize(12)
           .fontColor('#999999')
           .margin({ top:3 })
+          .onClick(()=>{
+            router.pushUrl({ url: 'pages/Patient/Index' })
+          })
       }
       .layoutWeight(1)
 
       Column() {
-        Image($r('sys.symbol.person'))
+        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1072.png')
           .width(24)
           .height(24)
           .fillColor('#999999')
@@ -485,6 +517,9 @@ struct HomePage {
           .fontSize(12)
           .fontColor('#999999')
           .margin({ top:3 })
+          .onClick(()=>{
+            router.pushUrl({ url: 'pages/Patient/Index' })
+          })
       }
       .layoutWeight(1)
     }

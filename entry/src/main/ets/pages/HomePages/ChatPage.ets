@@ -1,25 +1,8 @@
 // pages/ChatPage.ets
-import { ConsultationItem, ConsultationStatus } from '../common/ConsultationData';
+import { ConsultationItem, ConsultationStatus, ChatMessage , Prescription } from '../common/ConsultationData';
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
-
-interface ChatMessage {
-  isDoctor: boolean;
-  content: string;
-  time: string;
-  isImage?: boolean;
-  isPrescription?: boolean; // 标记是否为处方消息
-  prescriptionData?: Prescription; // 处方数据
-}
-
-// 处方数据结构
-interface Prescription {
-  id: string;
-  diagnosis: string;
-  medicineCount: number;
-  medicineList: string[];
-}
-
+import { loadFromJsonServer, saveToJsonServer, saveSingleItemToServer } from '../common/ConsultationData'
 
 // 定义接口
 interface TopBarInfo {
@@ -31,6 +14,13 @@ interface TopBarInfo {
 // 定义 ActionMenu 返回结果类型
 interface ActionMenuResult {
   index: number;
+}
+
+// 定义路由参数类型
+interface RouterParams {
+  item?: string;
+  rejectReason?: string;
+  prescriptionJson?: string;
 }
 
 @Entry
@@ -45,27 +35,71 @@ struct ChatPage {
   @State showFinishDialog: boolean = false;
   private scroller: Scroller = new Scroller();
 
+
+
   aboutToAppear() {
-    // 获取路由参数，解析 JSON 字符串
-    const params = router.getParams() as Record<string, string>;
-    if (params && params.itemJson) {
-      try {
-        const item = JSON.parse(params.itemJson) as ConsultationItem;
-        this.consultationItem = item;
-        this.initMessages();
-      } catch (e) {
-        console.error('解析参数失败', e);
-      }
+    console.log('======== ChatPage aboutToAppear START ========');
+
+    const params = router.getParams() as RouterParams;
+    console.log('ChatPage 接收到的 params.item 类型:', typeof params.item);
+    console.log('ChatPage 接收到的 params.prescriptionJson 是否为空:', !params.prescriptionJson);
+
+    console.log('接收到路由参数:', JSON.stringify(params));
+
+    if (!params || !params.item) {
+      console.warn('未接收到问诊数据');
+      return;
     }
+    const rawItem = JSON.parse(params.item) as ConsultationItem;
+    this.consultationItem = new ConsultationItem(
+      rawItem.id,
+      rawItem.patientName,
+      rawItem.patientGender,
+      rawItem.patientAge,
+      rawItem.type,
+      rawItem.status,
+      rawItem.description,
+      rawItem.createTime,
+      rawItem.rejectReason,
+      rawItem.chatMessages
+    );
+
+    // ✅ 2. 初始化聊天记录
+    if (this.consultationItem.chatMessages?.length) {
+      this.messageList = this.consultationItem.chatMessages;
+    } else {
+      this.initMessages();
+    }
+
+    // ✅ 3. 处理退诊原因（如果存在）
     this.checkRejectReason(params);
+
+    // ✅ 4. 最后处理处方（此时 consultationItem 已可用）
     this.checkPrescriptionData(params);
+  }
+
+  // 页面销毁前：自动保存聊天记录 & 问诊状态到json
+  aboutToDisappear() {
+    this.saveChatDataToJson();
+  }
+
+  // 核心：真正能保存到 data.json 的方法
+  async saveChatDataToJson() {
+    if (!this.consultationItem) return;
+
+    // 绑定聊天记录
+    this.consultationItem.chatMessages = this.messageList;
+
+    // 调用【单条保存】
+    await saveSingleItemToServer(this.consultationItem);
+
+    console.log("✅ 聊天记录已持久化");
   }
 
   // 监听页面显示（用于接收退诊页面返回的结果）
   onPageShow() {
     const params = router.getParams() as Record<string, string>;
     this.checkRejectReason(params);
-    this.checkPrescriptionData(params);
   }
 
 
@@ -118,6 +152,8 @@ struct ChatPage {
       default:
         this.messageList = baseMessages;
     }
+    // 初始化就保存一次
+    this.saveChatDataToJson();
   }
 
   // 顶部状态提示信息
@@ -308,7 +344,7 @@ struct ChatPage {
     }
   }
 
-  checkRejectReason(params: Record<string, string> | undefined) {
+  checkRejectReason(params: RouterParams) {
     if (params && params.rejectReason && !this.hasProcessedReject) {
       this.hasProcessedReject = true;
       this.doRejectConsultation(params.rejectReason);
@@ -316,26 +352,36 @@ struct ChatPage {
   }
 
   // 接收处方数据，自动发送处方消息
-  checkPrescriptionData(params: Record<string, string> | undefined) {
+  checkPrescriptionData(params: RouterParams) {
+    console.log('--- checkPrescriptionData 被调用 ---');
     if (params && params.prescriptionJson) {
+      console.log('prescriptionJson 存在, 开始解析...');
       try {
         const prescription = JSON.parse(params.prescriptionJson) as Prescription;
+        console.log('解析得到的处方对象:', JSON.stringify(prescription));
         this.sendPrescriptionMessage(prescription);
         // 可选：清除路由参数中的 prescriptionJson，防止重复发送
         // router.clear() 没有直接清参数的方法，可以通过页面返回时携带标志位处理，但通常无需处理
       } catch (e) {
         console.error('解析处方数据失败', e);
       }
+    }else {
+      console.warn('没有处方数据 (prescriptionJson 为空/未定义)');
     }
   }
 
 
   // 新增：发送处方消息
   sendPrescriptionMessage(prescription: Prescription) {
-    if (!this.consultationItem) return;
+    console.log('--- sendPrescriptionMessage 被调用 ---');
+    if (!this.consultationItem){
+      console.error('consultationItem 为 null, 终止发送');
+      return;
+    }
     if (this.consultationItem.status === ConsultationStatus.FINISHED ||
       this.consultationItem.status === ConsultationStatus.REJECTED) {
       promptAction.showToast({ message: '问诊已结束，无法发送处方' });
+      console.warn('问诊状态为已结束, 跳过发送');
       return;
     }
 
@@ -346,7 +392,11 @@ struct ChatPage {
       isPrescription: true,
       prescriptionData: prescription
     };
+    console.log('准备添加处方消息:', JSON.stringify(newMsg));
     this.messageList = [...this.messageList, newMsg];
+    console.log('当前消息列表长度:', this.messageList.length);
+    // 发送处方自动保存
+    this.saveChatDataToJson();
     this.scroller.scrollEdge(Edge.Bottom);
     promptAction.showToast({ message: '处方已发送' });
   }
@@ -366,7 +416,7 @@ struct ChatPage {
   // 退诊按钮点击：跳转到退诊原因选择页
   rejectConsultation() {
     router.pushUrl({
-      url: 'pages/RejectReasonPage'
+      url: 'pages/HomePages/RejectReasonPage'
     }).catch((err: Error) => {
       console.error(`跳转失败: ${err.message}`);
       promptAction.showToast({ message: '页面跳转失败，请检查页面配置' });
@@ -397,7 +447,7 @@ struct ChatPage {
     };
     this.messageList = [...this.messageList, newMsg];
     this.inputText = '';
-    // 模拟患者自动回复（可选）
+
     setTimeout(() => {
       const autoReply: ChatMessage = {
         isDoctor: false,
@@ -405,8 +455,13 @@ struct ChatPage {
         time: this.getCurrentTime()
       };
       this.messageList = [...this.messageList, autoReply];
+      // 患者回复也保存
+      this.saveChatDataToJson();
       this.scroller.scrollEdge(Edge.Bottom);
     }, 300);
+
+    // 医生发消息立刻保存到json
+    this.saveChatDataToJson();
     this.scroller.scrollEdge(Edge.Bottom);
   }
 
@@ -490,6 +545,11 @@ struct ChatPage {
           Text('查看病人详情 >')
             .fontSize(14)
             .fontColor('#999')
+            .onClick(() => {
+              router.pushUrl({
+                url: 'pages/Patient/PatientDetailPages.ets'
+              });
+            })
         }
         .width('100%')
         .padding(16)
@@ -625,7 +685,12 @@ struct ChatPage {
                 })
                 .borderRadius(4)
                 .onClick(() => {
-                  router.pushUrl({ url: 'pages/MyPrescriptionPage' });
+                  router.pushUrl({
+                    url: 'pages/HomePages/MyPrescriptionPage',
+                    params: {
+                      item: JSON.stringify(this.consultationItem)
+                    }
+                  });
                 })
             }
             .width('100%')

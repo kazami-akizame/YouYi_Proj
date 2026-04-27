@@ -1,6 +1,34 @@
-// pages/MyPharmacyPage.ets
+// pages/MyPharmacyPage.ets (第一个代码)
 import router from '@ohos.router';
+import http from '@ohos.net.http';
 import promptAction from '@ohos.promptAction';
+import { ConsultationItem } from '../common/ConsultationData';
+
+// 在文件开头，import 语句之后定义接口
+interface RawPrescription {
+  id: string;
+  patientName?: string;
+  patientGender?: string;
+  patientAge?: number;
+  clinicalDiagnosis?: string;
+  diagnosis?: string;
+  medicineCount: number;
+  medicineList?: string[];
+  medicines?: RawMedicineItem[];
+  createDate?: string;
+  isCommon?: boolean;
+}
+
+interface RawMedicineItem {
+  name: string;
+  specification: string;
+  quantity: number;
+  usageMethod?: string;
+  frequency?: string;
+  singleDose?: string;
+  remark?: string;
+}
+
 
 // 模拟处方数据
 interface Prescription {
@@ -13,74 +41,105 @@ interface Prescription {
   medicineList: string[];
 }
 
+interface RouterParams {
+  item?: ConsultationItem;
+}
+
 @Entry
 @Component
 struct MyPharmacyPage {
   @State currentTab: number = 0; // 0:常用处方 1:历史处方
-  @State commonPrescriptions: Prescription[] = [
-    {
-      id: '1',
-      diagnosis: '感冒',
-      medicineCount: 5,
-      medicineList: ['板蓝根颗粒10包/盒 *1盒', '感冒灵颗粒10包/盒 *1盒', '维C银翘片 *1盒']
-    },
-    {
-      id: '2',
-      diagnosis: '感冒',
-      medicineCount: 5,
-      medicineList: ['板蓝根颗粒10包/盒 *1盒', '感冒灵颗粒10包/盒 *1盒', '维C银翘片 *1盒']
-    },
-    {
-      id: '3',
-      diagnosis: '感冒',
-      medicineCount: 5,
-      medicineList: ['板蓝根颗粒10包/盒 *1盒', '感冒灵颗粒10包/盒 *1盒', '维C银翘片 *1盒']
-    }
-  ];
+  @State commonPrescriptions: Prescription[] = [];
+  @State historyPrescriptions: Prescription[] = [];
+  @State consultationItem: ConsultationItem | null = null;
 
-  @State historyPrescriptions: Prescription[] = [
-    {
-      id: '4',
-      patientName: '吴珊珊',
-      patientGender: '女',
-      patientAge: 23,
-      diagnosis: '感冒',
-      medicineCount: 5,
-      medicineList: ['板蓝根颗粒10包/盒 *1盒', '感冒灵颗粒10包/盒 *1盒', '维C银翘片 *1盒']
-    },
-    {
-      id: '5',
-      patientName: '吴珊珊',
-      patientGender: '女',
-      patientAge: 23,
-      diagnosis: '感冒',
-      medicineCount: 5,
-      medicineList: ['板蓝根颗粒10包/盒 *1盒', '感冒灵颗粒10包/盒 *1盒', '维C银翘片 *1盒']
-    },
-    {
-      id: '6',
-      patientName: '吴珊珊',
-      patientGender: '女',
-      patientAge: 23,
-      diagnosis: '感冒',
-      medicineCount: 5,
-      medicineList: ['板蓝根颗粒10包/盒 *1盒', '感冒灵颗粒10包/盒 *1盒', '维C银翘片 *1盒']
-    }
-  ];
+  async onPageShow() {
+    await this.loadPrescriptions();
+  }
 
-  onPageShow() {
-    this.commonPrescriptions = AppStorage.Get<Prescription[]>('commonPrescriptions') || this.commonPrescriptions;
+  aboutToAppear() {
+    const params = router.getParams() as Record<string, string>;
+
+    if (typeof params.item === 'string') {
+      const raw: ConsultationItem = JSON.parse(params.item);
+      this.consultationItem = new ConsultationItem(
+        raw.id,
+        raw.patientName,
+        raw.patientGender,
+        raw.patientAge,
+        raw.type,
+        raw.status,
+        raw.description,
+        raw.createTime,
+        raw.rejectReason,
+        //raw.chatMessages
+      );
+    }
+  }
+
+  //只同步历史处方
+  async loadPrescriptions() {
+    try {
+      let httpRequest = http.createHttp();
+
+      // 常用处方请求 - 保持原样，不做转换
+      let commonResponse = await httpRequest.request(
+        "http://127.0.0.1:8888/commonPrescriptions",
+        {
+          method: http.RequestMethod.GET,
+          header: { 'Content-Type': 'application/json' }
+        }
+      );
+      this.commonPrescriptions = JSON.parse(commonResponse.result as string);
+
+      // 历史处方请求 - 转换格式
+      let historyResponse = await httpRequest.request(
+        "http://127.0.0.1:8888/historyPrescriptions",
+        {
+          method: http.RequestMethod.GET,
+          header: { 'Content-Type': 'application/json' }
+        }
+      );
+      let historyRawData: RawPrescription[] = JSON.parse(historyResponse.result as string);
+
+      // 只转换历史处方数据格式
+      this.historyPrescriptions = historyRawData.map((item: RawPrescription) => {
+        let prescription: Prescription = {
+          id: item.id,
+          patientName: item.patientName || '',
+          patientGender: item.patientGender || '',
+          patientAge: item.patientAge || 0,
+          diagnosis: item.clinicalDiagnosis || '',
+          medicineCount: item.medicineCount,
+          medicineList: []
+        };
+
+        if (item.medicineList) {
+          prescription.medicineList = item.medicineList;
+        } else if (item.medicines) {
+          prescription.medicineList = item.medicines.map((med: RawMedicineItem) =>
+          `${med.name} ${med.specification} ×${med.quantity}盒`
+          );
+        }
+
+        return prescription;
+      });
+
+      httpRequest.destroy();
+    } catch (err) {
+      console.error('加载处方失败', JSON.stringify(err));
+    }
   }
 
   usePrescription(prescription: Prescription) {
     router.pushUrl({
-      url: 'pages/PrescriptionEditPage',
+      url: 'pages/HomePages/PrescriptionEditPage',
       params: {
-        prescriptionJson: JSON.stringify(prescription)
+        prescriptionJson: JSON.stringify(prescription),
+        item: this.consultationItem
       }
     });
   }
-
 
   @Builder PrescriptionCard(prescription: Prescription, tabIndex: number) {
     Column() {
@@ -116,10 +175,9 @@ struct MyPharmacyPage {
       .width('100%')
       .margin({ top:10, bottom: 8 })
       .onClick(() => {
-        // 根据当前Tab判断跳转哪个详情页
         const url = tabIndex === 0
-          ? 'pages/CommonPrescriptionDetailPage'
-          : 'pages/HistoryPrescriptionDetailPage';
+          ? 'pages/HomePages/CommonPrescriptionDetailPage'
+          : 'pages/HomePages/HistoryPrescriptionDetailPage';
         router.pushUrl({
           url: url,
           params: { prescriptionJson: JSON.stringify(prescription) }
@@ -175,7 +233,12 @@ struct MyPharmacyPage {
           .fontSize(16)
           .fontColor('#007AFF')
           .onClick(() => {
-            router.pushUrl({ url: 'pages/PrescriptionEditPage' });
+            router.pushUrl({
+              url: 'pages/HomePages/PrescriptionEditPage',
+              params: {
+                item: this.consultationItem
+              }
+            });
           })
       }
       .width('100%')
@@ -191,7 +254,7 @@ struct MyPharmacyPage {
                 .width(6)
                 .height(26)
                 .margin({ left: 10, right: 12 })
-              Text('常用处方列表 (3)')
+              Text(`常用处方列表 (${this.commonPrescriptions.length})`)
                 .fontSize(18)
                 .fontWeight(FontWeight.Medium)
             }
@@ -228,12 +291,13 @@ struct MyPharmacyPage {
                 .width(6)
                 .height(26)
                 .margin({ left: 10, right: 12 })
-              Text('历史处方列表 (3)')
+              Text(`历史处方列表 (${this.historyPrescriptions.length})`)
                 .fontSize(18)
                 .fontWeight(FontWeight.Medium)
             }
             .width('100%')
             .margin({ top: 16, bottom: 16, left: 16 })
+
 
             List() {
               ForEach(this.historyPrescriptions, (prescription: Prescription) => {

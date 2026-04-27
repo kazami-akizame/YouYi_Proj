@@ -1,9 +1,35 @@
 import router from '@ohos.router';
 
+import promptAction from '@ohos.promptAction';  // 👈 添加这一行
+
+// 👇 添加处方数据类型定义
+interface PrescriptionItem {
+  name: string;
+  specification: string;
+  quantity: number;
+}
+
+interface Prescription {
+  id: string;
+  patientName: string;
+  patientGender: string;
+  patientAge: number;
+  clinicalDiagnosis: string;
+  medicineCount: number;
+  medicines: PrescriptionItem[];
+  createDate: string;
+  isCommon: boolean;
+}
+
+
+
+
 @Entry
 @Component
 struct AddPrescriptionPage {
   @State diagnosis: string = '';
+
+  @State medicines: PrescriptionItem[] = [];  // 👈 添加药品列表状态
 
   build() {
     Column() {
@@ -72,6 +98,33 @@ struct AddPrescriptionPage {
 
           Blank().height(15)
 
+
+          // 👇 显示已添加的药品列表
+          if (this.medicines.length > 0) {
+            Column() {
+              ForEach(this.medicines, (medicine: PrescriptionItem, index: number) => {
+                Row() {
+                  Text(`${medicine.name} ${medicine.specification} ×${medicine.quantity}`)
+                    .fontSize(14)
+                    .layoutWeight(1)
+
+                  Text('删除')
+                    .fontSize(12)
+                    .fontColor('#ff6b6b')
+                    .onClick(() => {
+                      this.medicines = this.medicines.filter((_, i) => i !== index);
+                    })
+                }
+                .width('100%')
+                .padding({ top: 8, bottom: 8 })
+                .borderWidth({ bottom: 1 })
+                .borderColor('#eee')
+              })
+            }
+            .width('100%')
+            .margin({ bottom: 15 })
+          }
+
           // +新增药品
           Row() {
             Text('+新增药品')
@@ -85,7 +138,7 @@ struct AddPrescriptionPage {
           .onClick(() => {  // 👈 添加这行：点击跳转
             router.pushUrl({
               url: 'pages/HomePages/ACPSDCPPage',
-              //params: { diseaseName: drug.name }
+              params: { returnData: true }  // 👈 传递参数表示需要返回数据
             });
           })
         }
@@ -108,13 +161,69 @@ struct AddPrescriptionPage {
           .borderRadius(24)
           .margin({ bottom: 1 })
           .onClick(() => {
-            console.log('保存常用处方');
-            router.back();
+            //router.back();
+            // 👇 修改这里：保存处方并返回数据
+            this.savePrescription();
           })
 
     }
     .width('100%')
     .height('100%')
     //.backgroundColor('#fff')
+
+
   }
+
+  // 👇 添加保存方法
+  savePrescription() {
+    // 验证诊断和药品
+    if (!this.diagnosis.trim()) {
+      promptAction.showToast({
+        message: '请输入诊断',
+        duration: 2000
+      });
+      return;
+    }
+
+    if (this.medicines.length === 0) {
+      promptAction.showToast({
+        message: '请至少添加一种药品',
+        duration: 2000
+      });
+      return;
+    }
+
+    // 创建处方对象
+    const newPrescription: Prescription = {
+      id: Date.now().toString(),
+      patientName: '',
+      patientGender: '',
+      patientAge: 0,
+      clinicalDiagnosis: this.diagnosis,
+      medicineCount: this.medicines.length,
+      medicines: this.medicines,
+      createDate: '',
+      isCommon: true
+    };
+
+    // 返回数据到我的药房页面
+    router.back({
+      url: 'pages/HomePages/MypharmacyPage',
+      params: {
+        newPrescription: newPrescription
+      }
+    });
+  }
+
+  // 👇 接收从药品选择页面返回的数据
+  aboutToAppear() {
+    const params = router.getParams() as Record<string, object>;
+    if (params && params['selectedMedicine']) {
+      const selectedMedicine = params['selectedMedicine'] as PrescriptionItem;
+      // 添加药品到列表
+      this.medicines = [...this.medicines, selectedMedicine];
+    }
+  }
+
+
 }

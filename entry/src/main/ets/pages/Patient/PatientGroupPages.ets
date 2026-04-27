@@ -1,9 +1,15 @@
 import { GroupItem } from './PatientModels'
+import { PatientGroupEntity } from '../../backend/patient/model/PatientEntities'
+import { patientService } from '../../backend/patient/service/PatientService'
 
 @Component
 export struct ManageGroupPage {
   @Link activePage: string;
-  private readonly groups: string[] = ['默认分组', '流行性感冒', '病毒性感冒', '咽炎'];
+  @State private groups: string[] = [];
+
+  aboutToAppear() {
+    this.groups = patientService.getGroups().map((item: PatientGroupEntity) => item.name);
+  }
 
   build() {
     Column() {
@@ -69,17 +75,22 @@ export struct ModifyGroupPage {
   @Link activePage: string;
   /** 左上角返回时回到的页面（进入前由患者资料页写入） */
   @Prop cancelReturnPage: string = '患者资料';
+  @Link currentPatientId: number;
 
   /** 已选中的分组名（多选），与患者资料页「分组」展示共用 */
   @Link patientGroupSelection: string[];
 
-  private readonly groups: GroupItem[] = [
-    new GroupItem('默认分组', '20人'),
-    new GroupItem('发热门诊', '2人'),
-    new GroupItem('流行性感冒', '10人'),
-    new GroupItem('病毒性感冒', '2人'),
-    new GroupItem('咽炎', '6人')
-  ];
+  @State private groups: GroupItem[] = [];
+  @State private currentPatientName: string = '该患者';
+
+  aboutToAppear() {
+    this.groups = patientService.getPatientGroupItems();
+    const profile = patientService.getPatientProfile(this.currentPatientId);
+    if (profile) {
+      this.currentPatientName = profile.patient.name;
+      this.patientGroupSelection = patientService.getPatientGroupNames(this.currentPatientId);
+    }
+  }
 
   private isGroupSelected(name: string): boolean {
     return this.patientGroupSelection.indexOf(name) >= 0;
@@ -111,6 +122,7 @@ export struct ModifyGroupPage {
           .fontSize(18)
           .fontColor('#4A74F5')
           .onClick(() => {
+            patientService.updatePatientGroupNames(this.currentPatientId, this.patientGroupSelection);
             this.activePage = this.cancelReturnPage;
           })
       }
@@ -118,7 +130,7 @@ export struct ModifyGroupPage {
       .padding({ left: 16, right: 16, top: 14, bottom: 8 })
       .backgroundColor('#FFFFFF')
 
-      Text('请选择患者吴珊珊所属的分组（可多选）')
+      Text(`请选择患者${this.currentPatientName}所属的分组（可多选）`)
         .fontSize(16)
         .fontColor('#666666')
         .width('100%')

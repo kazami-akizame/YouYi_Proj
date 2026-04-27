@@ -1,10 +1,22 @@
+import { ConsultationItem, ConsultationStatus, ConsultationType } from '../common/ConsultationData'
+import { PatientEntity } from '../../backend/patient/model/PatientEntities'
+import { patientService } from '../../backend/patient/service/PatientService'
+import router from '@ohos.router'
+
 /** 默认分组：分组下患者列表（搜索 + 列表 + 底部「没有更多了」） */
 @Component
 export struct DefaultGroupPage {
   @Link activePage: string;
   @Link searchReturnPage: string;
+  @Link currentGroupId: number;
+  @Link currentGroupName: string;
+  @Link currentPatientId: number;
 
-  private readonly demoPatientIds: number[] = [1, 2, 3, 4, 5];
+  @State private patients: PatientEntity[] = [];
+
+  aboutToAppear() {
+    this.patients = patientService.getPatientsByGroup(this.currentGroupId);
+  }
 
   build() {
     Column() {
@@ -18,7 +30,7 @@ export struct DefaultGroupPage {
             this.activePage = '患者';
           })
         Blank()
-        Text('默认分组').fontSize(24).fontWeight(FontWeight.Medium)
+        Text(this.currentGroupName).fontSize(24).fontWeight(FontWeight.Medium)
         Blank()
         Text(' ')
           .fontSize(24)
@@ -60,11 +72,11 @@ export struct DefaultGroupPage {
       })
 
       List() {
-        ForEach(this.demoPatientIds, (pid: number, index: number) => {
+        ForEach(this.patients, (patient: PatientEntity, index: number) => {
           ListItem() {
             Column() {
               Row() {
-                Image($r('app.media.__80px_u1228'))
+                Image(patient.avatar)
                   .width(48)
                   .height(48)
                   .syncLoad(true)
@@ -72,12 +84,12 @@ export struct DefaultGroupPage {
                   .objectFit(ImageFit.Cover)
                   .margin({ right: 12 })
                 Column({ space: 6 }) {
-                  Text('吴珊珊 女 23岁').fontSize(18).fontWeight(FontWeight.Medium)
-                  Text('添加时间：2020-01-09').fontSize(14).fontColor('#999999')
+                  Text(`${patient.name} ${patient.gender} ${patient.age}岁`).fontSize(18).fontWeight(FontWeight.Medium)
+                  Text(`添加时间：${patient.createdAt}`).fontSize(14).fontColor('#999999')
                 }
                 .layoutWeight(1)
                 .alignItems(HorizontalAlign.Start)
-                Text('专家问诊')
+                Text(patient.serviceType)
                   .fontSize(12)
                   .fontColor('#CFAF3A')
                   .backgroundColor('#FFF4C9')
@@ -88,10 +100,11 @@ export struct DefaultGroupPage {
               .padding({ left: 16, right: 16, top: 12, bottom: 12 })
               .alignItems(VerticalAlign.Center)
               .onClick(() => {
+                this.currentPatientId = patient.id;
                 this.activePage = '患者资料';
               })
 
-              if (index < this.demoPatientIds.length - 1) {
+              if (index < this.patients.length - 1) {
                 Divider()
                   .strokeWidth(0.5)
                   .color('#E8E8E8')
@@ -100,7 +113,7 @@ export struct DefaultGroupPage {
             }
             .width('100%')
           }
-        }, (pid: number) => pid.toString())
+        }, (patient: PatientEntity) => patient.id.toString())
       }
       .layoutWeight(1)
       .width('100%')
@@ -127,18 +140,115 @@ export struct PatientProfilePage {
   @Link profileReturnPage: string;
   /** 与修改分组页共用：当前患者所属分组（多选） */
   @Link patientGroupSelection: string[];
+  @Link currentPatientId: number;
 
   @State private consultRecordExpanded: boolean = false;
+  @State private patientDetail: PatientEntity | null = null;
+  @State private consultations: ConsultationItem[] = [];
 
   private readonly consultDescShort: string = '病情描述：孩子从出生后睡眠就不好，入睡困难...';
   private readonly consultDescFull: string =
     '病情描述：孩子从出生后睡眠就不好，入睡困难，夜间易醒，白天精神差，家长曾尝试多种方法未见明显改善。';
+
+  aboutToAppear() {
+    const profile = patientService.getPatientProfile(this.currentPatientId);
+    if (profile) {
+      this.patientDetail = profile.patient;
+      this.consultations = profile.consultations;
+      this.patientGroupSelection = patientService.getPatientGroupNames(this.currentPatientId);
+    }
+  }
+
+  private displayName(): string {
+    return this.patientDetail ? this.patientDetail.name : '患者资料';
+  }
+
+  private displayBaseInfo(): string {
+    if (!this.patientDetail) {
+      return '患者信息加载中';
+    }
+    return `${this.patientDetail.name} ${this.patientDetail.gender} ${this.patientDetail.age}岁`;
+  }
+
+  private displayPhone(): string {
+    return this.patientDetail ? this.patientDetail.phone : '--';
+  }
+
+  private firstConsultation(): ConsultationItem | null {
+    return this.consultations.length > 0 ? this.consultations[0] : null;
+  }
+
+  private secondConsultation(): ConsultationItem | null {
+    return this.consultations.length > 1 ? this.consultations[1] : null;
+  }
+
+  private consultationStatusText(item: ConsultationItem | null): string {
+    if (!item) {
+      return '--';
+    }
+    return item.status;
+  }
+
+  private consultationStatusColor(item: ConsultationItem | null): string {
+    if (!item) {
+      return '#999999';
+    }
+    return item.status === ConsultationStatus.IN_PROGRESS ? '#F5222D' : '#999999';
+  }
+
+  private consultationTypeText(item: ConsultationItem | null): string {
+    return item ? `${item.type}问诊` : '图文问诊';
+  }
+
+  private consultationDescShort(item: ConsultationItem | null): string {
+    if (!item) {
+      return this.consultDescShort;
+    }
+    return `病情描述：${item.description.length > 20 ? item.description.slice(0, 20) + '...' : item.description}`;
+  }
+
+  private consultationDescFullText(item: ConsultationItem | null): string {
+    if (!item) {
+      return this.consultDescFull;
+    }
+    return `病情描述：${item.description}`;
+  }
 
   private groupLineText(): string {
     if (this.patientGroupSelection.length === 0) {
       return '未选择分组';
     }
     return this.patientGroupSelection.join('、');
+  }
+
+  private buildInProgressConsultation(): ConsultationItem {
+    const patientName = this.patientDetail ? this.patientDetail.name : '患者';
+    const patientGender = this.patientDetail ? this.patientDetail.gender : '女';
+    const patientAge = this.patientDetail ? this.patientDetail.age : 23;
+    const first = this.firstConsultation();
+    if (first) {
+      return new ConsultationItem(
+        first.id,
+        first.patientName,
+        first.patientGender,
+        first.patientAge,
+        first.type,
+        ConsultationStatus.IN_PROGRESS,
+        first.description,
+        first.createTime,
+        first.rejectReason
+      );
+    }
+    return new ConsultationItem(
+      `P${this.currentPatientId.toString()}`,
+      patientName,
+      patientGender,
+      patientAge,
+      ConsultationType.GRAPHIC,
+      ConsultationStatus.IN_PROGRESS,
+      '病情描述：请根据患者主诉继续问诊。',
+      '2026-04-22 10:10'
+    );
   }
 
   build() {
@@ -153,7 +263,7 @@ export struct PatientProfilePage {
             this.activePage = '默认分组';
           })
         Blank()
-        Text('吴珊珊').fontSize(24).fontWeight(FontWeight.Medium)
+        Text(this.displayName()).fontSize(24).fontWeight(FontWeight.Medium)
         Blank()
         Text(' ')
           .fontSize(24)
@@ -175,8 +285,8 @@ export struct PatientProfilePage {
                 .objectFit(ImageFit.Cover)
                 .margin({ right: 12 })
               Column({ space: 6 }) {
-                Text('吴珊珊 女 23岁').fontSize(18).fontWeight(FontWeight.Medium)
-                Text('18854137688').fontSize(14).fontColor('#888888')
+                Text(this.displayBaseInfo()).fontSize(18).fontWeight(FontWeight.Medium)
+                Text(this.displayPhone()).fontSize(14).fontColor('#888888')
               }
               .layoutWeight(1)
               .alignItems(HorizontalAlign.Start)
@@ -258,14 +368,16 @@ export struct PatientProfilePage {
               .alignItems(HorizontalAlign.Center)
               Column({ space: 6 }) {
                 Row() {
-                  Text('2020-02-05').fontSize(14).fontColor('#666666')
-                  Text('进行中')
+                  Text(this.firstConsultation()?.createTime ?? '2020-02-05').fontSize(14).fontColor('#666666')
+                  Text(this.consultationStatusText(this.firstConsultation()))
                     .fontSize(12)
-                    .fontColor('#F5222D')
+                    .fontColor(this.consultationStatusColor(this.firstConsultation()))
                     .margin({ left: 8 })
                 }
-                Text('图文问诊').fontSize(16).fontColor('#4A74F5')
-                Text(this.consultRecordExpanded ? this.consultDescFull : this.consultDescShort)
+                Text(this.consultationTypeText(this.firstConsultation())).fontSize(16).fontColor('#4A74F5')
+                Text(this.consultRecordExpanded ?
+                  this.consultationDescFullText(this.firstConsultation()) :
+                  this.consultationDescShort(this.firstConsultation()))
                   .fontSize(14)
                   .fontColor('#666666')
                 Row() {
@@ -304,13 +416,13 @@ export struct PatientProfilePage {
               .alignItems(HorizontalAlign.Center)
               Column({ space: 6 }) {
                 Row() {
-                  Text('2020-02-05').fontSize(14).fontColor('#666666')
-                  Text('已完成')
+                  Text(this.secondConsultation()?.createTime ?? '2020-02-05').fontSize(14).fontColor('#666666')
+                  Text(this.consultationStatusText(this.secondConsultation()))
                     .fontSize(12)
-                    .fontColor('#999999')
+                    .fontColor(this.consultationStatusColor(this.secondConsultation()))
                     .margin({ left: 8 })
                 }
-                Text('图文问诊').fontSize(16).fontColor('#333333')
+                Text(this.consultationTypeText(this.secondConsultation())).fontSize(16).fontColor('#333333')
               }
               .layoutWeight(1)
               .alignItems(HorizontalAlign.Start)
@@ -330,7 +442,24 @@ export struct PatientProfilePage {
               .height(44)
               .fontColor('#3F74F5')
               .backgroundColor('#FFFFFF')
-            Button('进入咨询').width('44%').height(44).backgroundColor('#3F74F5')
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/HomePages/MyPrescriptionPage'
+                });
+              })
+            Button('进入咨询')
+              .width('44%')
+              .height(44)
+              .backgroundColor('#3F74F5')
+              .onClick(() => {
+                const item = this.buildInProgressConsultation();
+                router.pushUrl({
+                  url: 'pages/HomePages/ChatPage',
+                  params: {
+                    itemJson: JSON.stringify(item)
+                  }
+                });
+              })
           }
           .width('100%')
           .justifyContent(FlexAlign.Center)
