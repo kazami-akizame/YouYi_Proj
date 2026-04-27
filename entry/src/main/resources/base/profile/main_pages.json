@@ -64,9 +64,7 @@
     "pages/Mine/MePage",
     "pages/Mine/MyIncome",
     "pages/Mine/OrderDetail",
-    "pages/Mine/OrderInfoDetail1",
-    "pages/Mine/OrderInfoDetail2",
-    "pages/Mine/OrderInfoDetail3",
-    "pages/Mine/PersonalInformation"
+    "pages/Mine/PersonalInformation",
+    "pages/Mine/OrderInfoDetail"
   ]
 }
