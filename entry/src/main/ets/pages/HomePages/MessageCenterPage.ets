@@ -94,7 +94,7 @@ struct MessageCenterPage {
             .onClick(() => {
               // 点击进入对应消息详情页
                 // 跳转到上一页我们写的 AddTopicPage 话题选择页
-                router.pushUrl({ url: 'pages/MessageDetailPage' })
+                router.pushUrl({ url: 'pages/HomePages/MessageDetailPage' })
 
               console.log('进入:' + item.title + ' 详情')
             })
@@ -129,7 +129,7 @@ struct MessageCenterPage {
         .onClick(() => {
           router.back()
               // 跳转到上一页我们写的 AddTopicPage 话题选择页
-              router.pushUrl({ url: 'pages/AddTopicPage' })
+              router.pushUrl({ url: 'pages/HomePages/HomePage' })
         })
 
       // 页面标题

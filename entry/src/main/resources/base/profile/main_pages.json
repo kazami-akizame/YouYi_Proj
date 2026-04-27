@@ -30,6 +30,7 @@
     "pages/HomePages/MedicineDetailPage",
     "pages/HomePages/MedicineUsagePage",
     "pages/HomePages/CreatCenter",
+    "pages/HomePages/MedicineApiService",
     "pages/HomePages/MyCreationPage",
     "pages/HomePages/MyDraftPage",
     "pages/HomePages/ArticalDetailPage",
