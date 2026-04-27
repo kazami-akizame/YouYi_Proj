@@ -1,3 +1,4 @@
+import router from '@ohos.router'
 interface Patient {
   id: string;
   name: string;
@@ -135,8 +136,11 @@ struct NewPage {
           .border({ width: 1, color: '#ccc' })
           .borderRadius(16)
           .onClick(() => {
-            console.log('查看患者资料', item.name);
-          })
+              router.pushUrl({
+                url: 'pages/Patient/PatientDetailPages',
+              });
+            })
+
 
         if (item.status === 0) {
           Button('联系患者')
@@ -147,7 +151,9 @@ struct NewPage {
             .border({ width: 1, color: '#007DFF' })
             .borderRadius(16)
             .onClick(() => {
-              console.log('联系患者', item.name);
+              router.pushUrl({
+                url:'pages/HomePages/ChatPage'
+              })
             })
         }
       }
@@ -171,7 +177,7 @@ struct NewPage {
           .height(15)
           .margin({ left: 16 })
           .onClick(() => {
-            console.log('返回');
+            router.back();
           })
 
         Text('我的私人医生服务')
