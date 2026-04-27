@@ -82,13 +82,13 @@ struct ImageSelectPage {
   @Builder
   buildNavBar() {
     Row() {
-      Image($r('sys.symbol.arrow_left'))
+      Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%A9%BA%E6%95%B0%E6%8D%AE/u695.png')
         .width(22)
         .height(22)
         .fillColor(Color.White)
         .margin({ left: 16 })
         .onClick(() => {
-          router.back();
+          router.pushUrl({ url: 'pages/HomePages/EditVideoPage' })
         })
     }
     .width('100%')
@@ -116,7 +116,7 @@ struct ImageSelectPage {
         .borderRadius(19)
         .margin({ right: 20 })
         .onClick(() => {
-          router.pushUrl({ url: 'pages/EditVideoPage' })
+          router.pushUrl({ url: 'pages/HomePages/EditVideoPage' })
         })
     }
     .width('100%')

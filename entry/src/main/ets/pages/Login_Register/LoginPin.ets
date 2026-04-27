@@ -1,23 +1,28 @@
 import router from '@ohos.router';
+import prompt from '@ohos.prompt';
+import { LoginBusiness } from '../../business/LoginBusiness';
+import { LoginService } from '../../service/LoginService';
+import { LoginResponse } from '../common/User';
 
 @Entry
 @Component
 struct LoginPin {
   // 勾选状态
   @State isAgree: boolean = false;
+  // 手机号和密码
+  @State phoneNumber: string = '';
+  @State password: string = '';
 
   build() {
     Column() {
-      // 👇 新增：顶部导航栏（返回图标 + 标题）
+      // 顶部导航栏（iOS 标准样式）
       Stack({ alignContent: Alignment.Center }) {
-        // 返回按钮
         Row() {
-          Image($r('app.media.img_4')) // 返回图标
+          Image($r('app.media.img_4'))
             .width(24)
             .height(24)
             .objectFit(ImageFit.Contain)
             .onClick(() => {
-              // 点击返回 验证码登录页面
               router.replace({ url: 'pages/Login_Register/Login' });
             })
         }
@@ -25,79 +30,84 @@ struct LoginPin {
         .padding({ left: 20 })
         .alignItems(VerticalAlign.Center)
 
-        // 页面标题
         Text("密码登录")
-          .fontSize(18)
+          .fontSize(17)
           .fontWeight(FontWeight.Medium)
       }
       .width('100%')
       .height(56)
       .backgroundColor(Color.White)
 
-      // 1. 顶部的医疗图标
+      // 顶部图标
       Image($r('app.media.img1'))
-        .width(100)
-        .height(100)
+        .width(120)
+        .height(120)
         .objectFit(ImageFit.Contain)
-        .margin({ top: 40 })
+        .margin({ top: 60, bottom: 20 })
 
-      Blank().height(30)
-
-      // 2. 标题
+      // 标题
       Text("手机密码登录")
-        .fontSize(24)
+        .fontSize(26)
         .fontWeight(FontWeight.Bold)
-        .margin({ bottom: 10 })
+        .margin({ bottom: 6 })
       Text("欢迎使用有道在线问诊医生版")
-        .fontSize(14)
-        .fontColor("#999")
-        .margin({ bottom: 40 })
+        .fontSize(15)
+        .fontColor("#8E8E93")
+        .margin({ bottom: 36 })
 
-      // 3. 手机号输入框
+      // 手机号输入框（iOS 卡片）
       Row() {
         Image($r('app.media.img_7'))
-          .width(20)
-          .height(20)
-          .margin({ right: 8 })
+          .width(22)
+          .height(22)
+          .margin({ right: 12 })
         Text("+86")
           .fontSize(16)
-          .margin({ right: 10 })
-          .padding({ right: 10 })
-        TextInput({ placeholder: "请输入手机号码" })
+          .fontColor(Color.Black)
+        TextInput({ placeholder: "请输入手机号码", text: this.phoneNumber })
           .layoutWeight(1)
           .fontSize(16)
           .backgroundColor(Color.Transparent)
+          .placeholderColor("#8E8E93")
+          .margin({ left: 10 })
+          .onChange((value: string) => {
+            this.phoneNumber = value;
+          })
       }
       .width('85%')
-      .height(50)
-      .borderRadius(25)
-      .backgroundColor("#fff")
-      .padding({ left: 15 })
-      .margin({ bottom: 20 })
+      .height(52)
+      .padding({ left: 16 })
+      .backgroundColor(Color.White)
+      .borderRadius(14)
+      .shadow({ radius: 1, color: "#00000010", offsetX: 0, offsetY: 1 })
+      .margin({ bottom: 16 })
 
-      // 4. 密码输入框
+      // 密码输入框
       Row() {
         Image($r('app.media.img_5'))
-          .width(20)
-          .height(20)
-          .margin({ right: 8 })
-        TextInput({ placeholder: "请输入密码" })
+          .width(22)
+          .height(22)
+          .margin({ right: 12 })
+        TextInput({ placeholder: "请输入密码", text: this.password })
           .layoutWeight(1)
           .fontSize(16)
           .backgroundColor(Color.Transparent)
+          .placeholderColor("#8E8E93")
           .type(InputType.Password)
+          .onChange((value: string) => {
+            this.password = value;
+          })
       }
       .width('85%')
-      .height(50)
-      .borderRadius(25)
-      .backgroundColor("#fff")
-      .padding({ left: 15 })
+      .height(52)
+      .padding({ left: 16 })
+      .backgroundColor(Color.White)
+      .borderRadius(14)
+      .shadow({ radius: 1, color: "#00000010", offsetX: 0, offsetY: 1 })
       .margin({ bottom: 20 })
 
-      // ------------------------------
-      // 用户协议勾选框
-      // ------------------------------
-      Row({ space: 4 }) {
+      // 用户协议（iOS 清爽排版）
+      Row({ space: 6 }) {
         Toggle({ type: ToggleType.Checkbox, isOn: this.isAgree })
           .onChange((isOn: boolean) => {
             this.isAgree = isOn;
@@ -105,74 +115,96 @@ struct LoginPin {
           .width(20)
           .height(20)
 
-        Text("已阅读并同意以下用户注册协议：")
+        Text("已阅读并同意")
           .fontSize(14)
-          .fontColor("#666")
+          .fontColor("#8E8E93")
 
         Text("《隐私权政策》")
           .fontSize(14)
-          .fontColor("#007aff")
+          .fontColor("#007AFF")
+          .fontWeight(FontWeight.Medium)
           .onClick(() => {
             router.pushUrl({ url: 'pages/Login_Register/PrivacyPolicy' });
           })
 
-        Text("和")
-          .fontSize(14)
-          .fontColor("#666")
-
-        Text("《注册相关协议》")
-          .fontSize(14)
-          .fontColor("#007aff")
       }
       .width('85%')
-      .margin({ bottom: 30 })
+      .alignItems(VerticalAlign.Center)
+      .margin({ bottom: 32 })
 
-      // 5. 登录按钮（勾选后可用）
+      // 登录按钮（iOS 质感按钮）
       Button("登录")
         .width('85%')
-        .height(50)
-        .borderRadius(25)
-        .backgroundColor(this.isAgree ? "#007aff" : "#ccc")
-        .fontSize(18)
-        .fontColor("#fff")
+        .height(54)
+        .borderRadius(14)
+        .backgroundColor(this.isAgree ? "#007AFF" : "#C7C7CC")
+        .fontSize(17)
+        .fontWeight(FontWeight.Medium)
+        .fontColor("#FFFFFF")
+        .shadow({ radius: this.isAgree ? 3 : 0, color: "#007AFF30", offsetX: 0, offsetY: 2 })
         .enabled(this.isAgree)
-        .margin({ bottom: 20 })
+        .margin({ bottom: 28 })
+        .onClick(async () => {
+          if (!this.phoneNumber) {
+            prompt.showToast({ message: '请输入手机号码', duration: 2000 });
+            return;
+          }
+          if (!LoginBusiness.validatePhoneNumber(this.phoneNumber)) {
+            prompt.showToast({ message: '请输入正确的手机号码', duration: 2000 });
+            return;
+          }
+          if (!this.password) {
+            prompt.showToast({ message: '请输入密码', duration: 2000 });
+            return;
+          }
+          const result: LoginResponse = await LoginService.loginWithPassword(this.phoneNumber, this.password);
+          if (result.code === 200) {
+            AppStorage.setOrCreate<string>('currentUserPhone', this.phoneNumber);
+            prompt.showToast({ message: '登录成功', duration: 2000 });
+            //👈 👈--------------
+            //登录成功跳转真的首页，而不是又回到启动
+            router.replaceUrl({ url: 'pages/Login_Register/DoctorCertification' });
+            //-----------
+            //👈 👈------
+          } else {
+            prompt.showToast({ message: result.message || '登录失败', duration: 2000 });
+          }
+        })
 
-      // 6. 修改密码 & 忘记登录密码
-      Row({ space: 10 }) {
-        Button('修改密码')
-          .width(100)
-          .borderRadius(6)
-          .backgroundColor('#fff')
-          .fontColor('#5D4037')
-          .onClick(() => {
-            router.pushUrl({ url: 'pages/Login_Register/NewPin' });
-          })
-
-        Blank().width(40)
-
-        Button('忘记密码')
-          .width(100)
-          .borderRadius(6)
-          .backgroundColor('#fff')
-          .fontColor('#5D4037')
+      // 功能按钮（iOS 文字按钮，去掉丑按钮）
+      Row({ space: 30 }) {
+        Text("修改密码")
+          .fontSize(15)
+          .fontColor("#007AFF")
+          .fontWeight(FontWeight.Medium)
           .onClick(() => {
             router.pushUrl({ url: 'pages/Login_Register/FindPin' });
           })
+
+        Text("忘记密码")
+          .fontSize(15)
+          .fontColor("#007AFF")
+          .fontWeight(FontWeight.Medium)
+          .onClick(() => {
+            router.pushUrl({ url: 'pages/Login_Register/ForgetPassword' });
+          })
       }
+      .margin({ bottom: 20 })
 
       Blank().layoutWeight(1)
 
-      // 7. 底部隐私政策
+      // 底部隐私政策
       Text("登录即代表您已同意有道医生在线问诊隐私政策")
         .fontSize(12)
-        .fontColor("#999")
-        .width('100%')
+        .fontColor("#8E8E93")
         .textAlign(TextAlign.Center)
-        .margin({ bottom: 30 })
+        .margin({ bottom: 24 })
+        .onClick(() => {
+          router.pushUrl({ url: 'pages/Login_Register/PrivacyPolicy' });
+        })
     }
     .width('100%')
     .height('100%')
-    .backgroundColor("#f5f5f5")
+    .backgroundColor("#F2F2F7") // iOS 系统背景色
   }
 }

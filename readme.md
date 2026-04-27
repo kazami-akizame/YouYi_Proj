@@ -1,25 +1,16 @@
-# 注意事项
+## 优医在线问诊APP（医生端）
 
-记得更新所有跳转URL，因为我把页面都归类到模块文件夹中了
-> 如pages/HomePage → pages/HomePages/HomePage
+---
 
-# 待实现功能
+### **主要模块**
 
-**登录/注册**
-1. 在common文件夹里创建一个User类型，用于账户登录
-2. 在Login、LoginPin的登录按钮中添加onClick事件，跳转至 `"pages/HomePages/HomePage"`
-3. 完善Register的注册按钮事件，将添加的账号写入 `data.json`
-4. ...
+- Login_Register：“登录&注册”模块  
+- HomePages：”主页“模块
+- Patient：“患者”模块
+- Mine：“我的”模块
 
-**首页**
-1. 优化`HomePage`文件夹里的跳转
-2. 外部模块跳转
-3. ...
+### **已调试/待调试功能**
 
-**患者**
-1. 外部模块跳转
-2. ...
-
-**我的**
-1. 外部模块跳转
-2. ...
+- [x] 启动页跳转
+- [ ] 模块页面间跳转
+- [ ] 用户流畅体验

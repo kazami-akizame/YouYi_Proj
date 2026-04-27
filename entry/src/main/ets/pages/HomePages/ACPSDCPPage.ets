@@ -1,4 +1,5 @@
 import router from '@ohos.router';
+
 // 药品数据结构
 interface Drug {
   id: number;
@@ -16,6 +17,10 @@ interface Department {
 struct AddDrugPage {
   // 当前选中的科室索引
   @State selectedIndex: number = 0;
+  // 搜索关键词
+  @State searchText: string = '';
+  // 过滤后的药品列表
+  @State filteredDrugs: Drug[] = [];
 
   // 模拟科室和药品数据
   private departments: Department[] = [
@@ -405,6 +410,25 @@ struct AddDrugPage {
     ]}
   ];
 
+  aboutToAppear() {
+    // 初始化显示第一个科室的药品列表
+    this.filteredDrugs = this.departments[0].drugs;
+  }
+
+  // 搜索过滤方法
+  filterDrugs() {
+    if (this.searchText.trim() === '') {
+      // 搜索框为空时，显示当前科室的所有药品
+      this.filteredDrugs = this.departments[this.selectedIndex].drugs;
+    } else {
+      // 根据搜索关键词过滤药品
+      const keyword = this.searchText.toLowerCase();
+      this.filteredDrugs = this.departments[this.selectedIndex].drugs.filter((drug: Drug) =>
+      drug.name.toLowerCase().includes(keyword)
+      );
+    }
+  }
+
   build() {
     Column() {
       // 顶部导航栏
@@ -414,23 +438,24 @@ struct AddDrugPage {
           .height(15)
           .margin({ left: 16 })
           .onClick(() => {
-            router.back();// 返回逻辑
+            router.back();
           })
 
         Text('新增药品')
           .fontSize(18)
-          //.fontWeight(FontWeight.Medium)
           .layoutWeight(1)
-          .textAlign(TextAlign.Center).margin({left:25})
+          .textAlign(TextAlign.Center)
+          .margin({ left: 25 })
 
-        Text('常用药品').fontColor('#3677F2').fontSize(17).margin({right:16}).onClick(() => {
-          router.pushUrl({
-            url: 'pages/HomePages/',
-            //params: { diseaseName: drug.name }
-          });
-        })
-
-
+        Text('常用药品')
+          .fontColor('#3677F2')
+          .fontSize(17)
+          .margin({ right: 16 })
+          .onClick(() => {
+            router.pushUrl({
+              url: 'pages/HomePages/MedicineListPage',
+            });
+          })
       }
       .width('100%')
       .height(46)
@@ -450,6 +475,10 @@ struct AddDrugPage {
         .borderRadius(20)
         .placeholderColor('#999')
         .fontSize(14)
+        .onChange((value: string) => {
+          this.searchText = value;
+          this.filterDrugs();
+        })
 
       // 主内容区：左侧科室列表 + 右侧药品列表
       Row() {
@@ -467,6 +496,7 @@ struct AddDrugPage {
             }
             .onClick(() => {
               this.selectedIndex = index;
+              this.filterDrugs();
             })
           })
         }
@@ -475,9 +505,9 @@ struct AddDrugPage {
         .backgroundColor('#f5f5f5')
         .divider({ strokeWidth: 1, color: '#eee' })
 
-        // 右侧药品列表 - 修改这里让它顶头
+        // 右侧药品列表
         List() {
-          ForEach(this.departments[this.selectedIndex].drugs, (drug: Drug) => {
+          ForEach(this.filteredDrugs, (drug: Drug) => {
             ListItem() {
               Text(drug.name)
                 .fontSize(16)
@@ -485,21 +515,20 @@ struct AddDrugPage {
                 .padding({ left: 20, top: 16, bottom: 16, right: 0 })
                 .backgroundColor('#fff')
             }
-            .padding({ left: 0, right: 0 })// 关键：移除 ListItem 的默认内边距
-
-            .onClick(() => {  // 👈 添加这行：点击跳转
+            .padding({ left: 0, right: 0 })
+            .onClick(() => {
               router.pushUrl({
                 url: 'pages/HomePages/ACPSDPage',
                 params: { diseaseName: drug.name }
               });
             })
-
           })
-        }.width('70%')
+        }
+        .width('70%')
         .layoutWeight(2)
         .backgroundColor('#fff')
         .divider({ strokeWidth: 1, color: '#eee' })
-        .padding({ left: 0, right: 0 })  // 关键：移除 List 的默认内边距
+        .padding({ left: 0, right: 0 })
       }
       .layoutWeight(1)
       .width('100%')

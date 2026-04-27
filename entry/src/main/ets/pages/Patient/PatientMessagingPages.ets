@@ -1,10 +1,28 @@
 import { GroupItem } from './PatientModels'
+import { BroadcastMessageEntity, PatientEntity } from '../../backend/patient/model/PatientEntities'
+import { patientService } from '../../backend/patient/service/PatientService'
+import { broadcastService } from '../../backend/patient/service/BroadcastService'
+import promptAction from '@ohos.promptAction'
+import common from '@ohos.app.ability.common'
 
 @Component
 export struct CreateBroadcastPage {
   @Link activePage: string;
-  /** 接收人列表（示例 7 人：一屏约显示 5 个头像，更多可横向滑动） */
-  private readonly recipientKeys: number[] = [1, 2, 3, 4, 5, 6, 7];
+  @Link selectedMessageId: number;
+  @Link selectedRecipientIds: number[];
+  @State private recipients: PatientEntity[] = [];
+  @State private messageContent: string = '';
+
+  aboutToAppear() {
+    const allPatients = patientService.getAllPatients();
+    if (this.selectedRecipientIds.length === 0) {
+      this.recipients = allPatients;
+      return;
+    }
+    this.recipients = allPatients.filter((item: PatientEntity) => {
+      return this.selectedRecipientIds.indexOf(item.id) >= 0;
+    });
+  }
 
   build() {
     Column({ space: 10 }) {
@@ -31,14 +49,17 @@ export struct CreateBroadcastPage {
       .padding({ left: 16, right: 16, top: 14, bottom: 8 })
 
       Text('群发内容').fontSize(20).fontWeight(FontWeight.Medium).width('100%').padding({ left: 16, right: 16 })
-      TextArea({ placeholder: '可将就诊通知/文章等消息发送给患者' })
+      TextArea({ text: this.messageContent, placeholder: '可将就诊通知/文章等消息发送给患者' })
         .width('100%')
         .height(180)
         .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+        .onChange((value: string) => {
+          this.messageContent = value;
+        })
 
       Column({ space: 8 }) {
         Row() {
-          Text(`接收人（已选择${this.recipientKeys.length}人）`)
+          Text(`接收人（已选择${this.recipients.length}人）`)
             .fontSize(18)
             .fontWeight(FontWeight.Medium)
             .layoutWeight(1)
@@ -56,17 +77,17 @@ export struct CreateBroadcastPage {
 
         Scroll() {
           Row({ space: 16 }) {
-            ForEach(this.recipientKeys, (item: number) => {
+            ForEach(this.recipients, (item: PatientEntity) => {
               Column({ space: 4 }) {
-                Image($r('app.media.__80px_u1228'))
+                Image(item.avatar)
                   .width(50)
                   .height(44)
                   .syncLoad(true)
                   .borderRadius(22)
                   .objectFit(ImageFit.Cover)
-                Text('吴珊珊').fontSize(14)
+                Text(item.name).fontSize(14)
               }
-            }, (item: number) => item.toString())
+            }, (item: PatientEntity) => item.id.toString())
           }
           .justifyContent(FlexAlign.Start)
           .alignItems(VerticalAlign.Top)
@@ -83,14 +104,30 @@ export struct CreateBroadcastPage {
       .padding({ left: 16, right: 16, top: 10, bottom: 10 })
       .backgroundColor('#FFFFFF')
 
-      Text('每日发送上限为10条，今日还可发送6条')
+      Text(broadcastService.getTodayQuotaText())
         .fontSize(14)
         .fontColor('#909090')
         .width('100%')
         .padding({ left: 16, right: 16 })
 
       Blank()
-      Button('确认发送').width('92%').height(48).margin({ bottom: 14 }).backgroundColor('#3F74F5')
+      Button('确认发送')
+        .width('92%')
+        .height(48)
+        .margin({ bottom: 14 })
+        .backgroundColor('#3F74F5')
+        .onClick(async () => {
+          const context = getContext(this) as common.UIAbilityContext;
+          const content = this.messageContent.trim().length > 0 ? this.messageContent.trim() : '（演示群发消息）';
+          const patientIds = this.recipients.length > 0
+            ? this.recipients.map((item: PatientEntity) => item.id)
+            : patientService.getAllPatients().map((item: PatientEntity) => item.id);
+          const newId = await broadcastService.createAndSendMessage(context, content, patientIds);
+          this.selectedMessageId = newId;
+          this.messageContent = '';
+          promptAction.showToast({ message: '群发发送成功' });
+          this.activePage = '群发历史';
+        })
     }
     .width('100%')
     .height('100%')
@@ -101,6 +138,13 @@ export struct CreateBroadcastPage {
 @Component
 export struct BroadcastHistoryPage {
   @Link activePage: string;
+  @Link selectedMessageId: number;
+  @State private historyList: BroadcastMessageEntity[] = [];
+
+  async aboutToAppear() {
+    const context = getContext(this) as common.UIAbilityContext;
+    this.historyList = await broadcastService.listHistory(context);
+  }
 
   build() {
     Column() {
@@ -131,13 +175,13 @@ export struct BroadcastHistoryPage {
         })
 
       List() {
-        ForEach([1, 2, 3, 4, 5], (item: number, index: number) => {
+        ForEach(this.historyList, (item: BroadcastMessageEntity, index: number) => {
           ListItem() {
             Column() {
               Row() {
                 Column({ space: 6 }) {
-                  Text('低热、咳嗽超过7天，应排除肺结核、支原体...').fontSize(18)
-                  Text('2020-01-09 12:09').fontSize(14).fontColor('#999999')
+                  Text(item.content).fontSize(18).maxLines(1).textOverflow({ overflow: TextOverflow.Ellipsis })
+                  Text(item.sentAt).fontSize(14).fontColor('#999999')
                 }
                 .layoutWeight(1)
                 .alignItems(HorizontalAlign.Start)
@@ -151,10 +195,11 @@ export struct BroadcastHistoryPage {
               .padding({ left: 16, right: 16, top: 12, bottom: 12 })
               .alignItems(VerticalAlign.Center)
               .onClick(() => {
+                this.selectedMessageId = item.id;
                 this.activePage = '消息详情';
               })
 
-              if (index < 4) {
+              if (index < this.historyList.length - 1) {
                 Divider()
                   .strokeWidth(0.5)
                   .color('#E8E8E8')
@@ -163,7 +208,7 @@ export struct BroadcastHistoryPage {
             }
             .width('100%')
           }
-        }, (item: number) => item.toString())
+        }, (item: BroadcastMessageEntity) => item.id.toString())
       }
       .layoutWeight(1)
       .width('100%')
@@ -177,14 +222,27 @@ export struct BroadcastHistoryPage {
 @Component
 export struct SearchMessagePage {
   @Link activePage: string;
+  @Link selectedMessageId: number;
+  @State private keyword: string = '';
+  @State private resultList: BroadcastMessageEntity[] = [];
+
+  async aboutToAppear() {
+    const context = getContext(this) as common.UIAbilityContext;
+    this.resultList = await broadcastService.listHistory(context);
+  }
 
   build() {
     Column() {
       Row() {
-        TextInput({ placeholder: '请输入群发消息关键字' })
+        TextInput({ placeholder: '请输入群发消息关键字', text: this.keyword })
           .layoutWeight(1)
           .height(42)
           .backgroundColor('#F4F5F7')
+          .onChange(async (value: string) => {
+            this.keyword = value;
+            const context = getContext(this) as common.UIAbilityContext;
+            this.resultList = await broadcastService.searchHistory(context, value);
+          })
         Text('取消')
           .fontSize(18)
           .fontColor('#7A7A7A')
@@ -195,7 +253,45 @@ export struct SearchMessagePage {
       }
       .width('100%')
       .padding({ left: 16, right: 16, top: 12, bottom: 8 })
-      Blank()
+
+      List() {
+        ForEach(this.resultList, (item: BroadcastMessageEntity, index: number) => {
+          ListItem() {
+            Column() {
+              Row() {
+                Column({ space: 6 }) {
+                  Text(item.content).fontSize(18).maxLines(1).textOverflow({ overflow: TextOverflow.Ellipsis })
+                  Text(item.sentAt).fontSize(14).fontColor('#999999')
+                }
+                .layoutWeight(1)
+                .alignItems(HorizontalAlign.Start)
+                Image($r('app.media.u4795'))
+                  .width(16)
+                  .height(16)
+                  .syncLoad(true)
+                  .objectFit(ImageFit.Contain)
+              }
+              .width('100%')
+              .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+              .alignItems(VerticalAlign.Center)
+              .onClick(() => {
+                this.selectedMessageId = item.id;
+                this.activePage = '消息详情';
+              })
+
+              if (index < this.resultList.length - 1) {
+                Divider()
+                  .strokeWidth(0.5)
+                  .color('#E8E8E8')
+                  .margin({ left: 16, right: 16 })
+              }
+            }
+            .width('100%')
+          }
+        }, (item: BroadcastMessageEntity) => item.id.toString())
+      }
+      .layoutWeight(1)
+      .width('100%')
     }
     .width('100%')
     .height('100%')
@@ -206,7 +302,22 @@ export struct SearchMessagePage {
 @Component
 export struct MessageDetailPage {
   @Link activePage: string;
-  private readonly recipientKeys: number[] = [1, 2, 3, 4, 5, 6, 7];
+  @Link selectedMessageId: number;
+  @State private currentMessage: BroadcastMessageEntity | null = null;
+  @State private recipients: PatientEntity[] = [];
+
+  async aboutToAppear() {
+    const context = getContext(this) as common.UIAbilityContext;
+    let messageId = this.selectedMessageId;
+    if (messageId <= 0) {
+      const history = await broadcastService.listHistory(context);
+      messageId = history.length > 0 ? history[0].id : 0;
+    }
+    if (messageId > 0) {
+      this.currentMessage = await broadcastService.getMessageDetail(context, messageId);
+      this.recipients = await broadcastService.getRecipientsByMessage(context, messageId);
+    }
+  }
 
   build() {
     Column({ space: 10 }) {
@@ -230,8 +341,8 @@ export struct MessageDetailPage {
       .padding({ left: 16, right: 16, top: 14, bottom: 8 })
       Column({ space: 10 }) {
         Text('群发内容').fontSize(20).fontWeight(FontWeight.Medium)
-        Text('2020-01-09 12:09').fontSize(14).fontColor('#999999')
-        Text('低热、咳嗽超过7天，应排除肺结核、支原体肺炎。突然寒战、高热，伴有呼吸道症状...')
+        Text(this.currentMessage?.sentAt ?? '--').fontSize(14).fontColor('#999999')
+        Text(this.currentMessage?.content ?? '暂无内容')
           .fontSize(16)
       }
       .width('100%')
@@ -240,20 +351,20 @@ export struct MessageDetailPage {
       .alignItems(HorizontalAlign.Start)
 
       Column({ space: 8 }) {
-        Text(`接收人（${this.recipientKeys.length}人）`).fontSize(18).fontWeight(FontWeight.Medium)
+        Text(`接收人（${this.recipients.length}人）`).fontSize(18).fontWeight(FontWeight.Medium)
         Scroll() {
           Row({ space: 16 }) {
-            ForEach(this.recipientKeys, (item: number) => {
+            ForEach(this.recipients, (item: PatientEntity) => {
               Column({ space: 4 }) {
-                Image($r('app.media.__80px_u1228'))
+                Image(item.avatar)
                   .width(50)
                   .height(44)
                   .syncLoad(true)
                   .borderRadius(22)
                   .objectFit(ImageFit.Cover)
-                Text('吴珊珊').fontSize(14)
+                Text(item.name).fontSize(14)
               }
-            }, (item: number) => item.toString())
+            }, (item: PatientEntity) => item.id.toString())
           }
           .justifyContent(FlexAlign.Start)
           .alignItems(VerticalAlign.Top)
@@ -282,17 +393,22 @@ export struct MessageDetailPage {
 export struct SelectPatientPage {
   @Link activePage: string;
   @Link searchReturnPage: string;
+  @Link selectedRecipientIds: number[];
+  @Link selectedRecipientGroupId: number;
+  @Link selectedRecipientGroupName: string;
   /** 与 groups 下标对应：第 0 行「所有患者」的勾选表示下方分组是否已全选 */
-  @State private rowSelected: boolean[] = [false, false, false, false, false, false];
+  @State private rowSelected: boolean[] = [false];
+  @State private groups: GroupItem[] = [new GroupItem('所有患者', '0人')];
+  @State private groupIds: number[] = [0];
 
-  private readonly groups: GroupItem[] = [
-    new GroupItem('所有患者', '38人'),
-    new GroupItem('默认分组', '20人'),
-    new GroupItem('发热门诊', '2人'),
-    new GroupItem('流行性感冒', '10人'),
-    new GroupItem('病毒性感冒', '2人'),
-    new GroupItem('咽炎', '6人')
-  ];
+  aboutToAppear() {
+    const actualGroups = patientService.getPatientGroupItems();
+    const realGroups = patientService.getGroups();
+    const totalCount = patientService.getAllPatients().length;
+    this.groups = [new GroupItem('所有患者', `${totalCount}人`), ...actualGroups];
+    this.groupIds = [0, ...realGroups.map((item) => item.id)];
+    this.rowSelected = this.groups.map(() => false);
+  }
 
   private allBelowSelected(): boolean {
     for (let k = 1; k < this.rowSelected.length; k++) {
@@ -408,6 +524,14 @@ export struct SelectPatientPage {
                 .width('100%')
                 .alignItems(VerticalAlign.Center)
                 .onClick(() => {
+                  const gid = this.groupIds[index] ?? 0;
+                  if (gid > 0) {
+                    this.selectedRecipientGroupId = gid;
+                    this.selectedRecipientGroupName = item.name;
+                  } else {
+                    this.selectedRecipientGroupId = 1;
+                    this.selectedRecipientGroupName = '默认分组';
+                  }
                   this.activePage = '我的患者';
                 })
               }
@@ -458,7 +582,18 @@ export struct SelectPatientPage {
 export struct MyPatientsPage {
   @Link activePage: string;
   @Link searchReturnPage: string;
-  @State private rowSelected: boolean[] = [false, false, false, false, false];
+  @Link selectedRecipientIds: number[];
+  @Link selectedRecipientGroupId: number;
+  @Link selectedRecipientGroupName: string;
+  @State private patients: PatientEntity[] = [];
+  @State private rowSelected: boolean[] = [];
+
+  aboutToAppear() {
+    this.patients = patientService.getPatientsByGroup(this.selectedRecipientGroupId);
+    this.rowSelected = this.patients.map((patient: PatientEntity) => {
+      return this.selectedRecipientIds.indexOf(patient.id) >= 0;
+    });
+  }
 
   private allPatientsSelected(): boolean {
     for (let k = 0; k < this.rowSelected.length; k++) {
@@ -482,7 +617,7 @@ export struct MyPatientsPage {
   private toggleSelectAll(): void {
     let turnOff = this.allPatientsSelected();
     let next: boolean[] = [];
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < this.patients.length; k++) {
       next.push(!turnOff);
     }
     this.rowSelected = next;
@@ -490,7 +625,7 @@ export struct MyPatientsPage {
 
   private togglePatientRow(index: number): void {
     let next: boolean[] = [];
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < this.patients.length; k++) {
       next.push(this.rowSelected[k]);
     }
     next[index] = !next[index];
@@ -509,7 +644,7 @@ export struct MyPatientsPage {
             this.activePage = '选择患者';
           })
         Blank()
-        Text('我的患者').fontSize(24).fontWeight(FontWeight.Medium)
+        Text(this.selectedRecipientGroupName).fontSize(24).fontWeight(FontWeight.Medium)
         Blank()
         Text(' ')
           .fontSize(24)
@@ -557,7 +692,7 @@ export struct MyPatientsPage {
                 .fontSize(20)
                 .textAlign(TextAlign.Start)
               Blank()
-              Text('5人').fontSize(16).fontColor('#999999')
+              Text(`${this.patients.length}人`).fontSize(16).fontColor('#999999')
             }
             .width('100%')
             .justifyContent(FlexAlign.Start)
@@ -572,7 +707,7 @@ export struct MyPatientsPage {
           .alignItems(HorizontalAlign.Start)
         }
 
-        ForEach([0, 1, 2, 3, 4], (index: number) => {
+        ForEach(this.patients, (patient: PatientEntity, index: number) => {
           ListItem() {
             Column() {
               Row() {
@@ -598,7 +733,7 @@ export struct MyPatientsPage {
                       this.togglePatientRow(index);
                     })
                 }
-                Image($r('app.media.__80px_u1228'))
+                Image(patient.avatar)
                   .width(48)
                   .height(48)
                   .syncLoad(true)
@@ -606,13 +741,13 @@ export struct MyPatientsPage {
                   .objectFit(ImageFit.Cover)
                   .margin({ right: 12 })
                 Column({ space: 5 }) {
-                  Text('吴珊珊 女 23岁').fontSize(18)
-                  Text('添加时间：2020-01-09').fontSize(14).fontColor('#999999')
+                  Text(`${patient.name} ${patient.gender} ${patient.age}岁`).fontSize(18)
+                  Text(`添加时间：${patient.createdAt}`).fontSize(14).fontColor('#999999')
                 }
                 .layoutWeight(1)
                 .alignItems(HorizontalAlign.Start)
                 Blank()
-                Text('专家问诊')
+                Text(patient.serviceType)
                   .fontSize(12)
                   .fontColor('#CFAF3A')
                   .backgroundColor('#FFF4C9')
@@ -623,7 +758,7 @@ export struct MyPatientsPage {
               .padding({ left: 16, right: 16, top: 10, bottom: 10 })
               .alignItems(VerticalAlign.Center)
 
-              if (index < 4) {
+              if (index < this.patients.length - 1) {
                 Divider()
                   .strokeWidth(0.5)
                   .color('#E8E8E8')
@@ -632,7 +767,7 @@ export struct MyPatientsPage {
             }
             .width('100%')
           }
-        }, (index: number) => 'p' + index.toString())
+        }, (patient: PatientEntity) => 'p' + patient.id.toString())
       }
       .layoutWeight(1)
       .width('100%')
@@ -650,7 +785,10 @@ export struct MyPatientsPage {
           .stateEffect(false)
           .padding({ left: 8, right: 8, top: 6, bottom: 6 })
           .onClick(() => {
-            this.activePage = '选择患者';
+            this.selectedRecipientIds = this.patients
+              .filter((_item: PatientEntity, index: number) => this.rowSelected[index])
+              .map((item: PatientEntity) => item.id);
+            this.activePage = '新建群发';
           })
       }
       .width('100%')

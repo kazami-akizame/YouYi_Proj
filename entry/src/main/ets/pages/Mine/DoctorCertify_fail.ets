@@ -1,16 +1,80 @@
 import router from '@ohos.router';
+import { http } from '@kit.NetworkKit';
+
+// 显式定义认证信息类型
+interface CertifyInfo {
+  avatar: Resource;
+  idCardFront: Resource;
+  idCardBack: Resource;
+  certImage: Resource;
+  status: number;
+}
+
+// 定义后端返回的状态类型
+interface CertifyStatus {
+  status: number;
+}
 
 @Entry
 @Component
 struct DoctorCertify_fail {
+  // ✅ 修复：显式指定 @State 变量类型
+  @State certifyInfo: CertifyInfo = {
+    avatar: $r('app.media.img11'),
+    idCardFront: $r('app.media.person'),
+    idCardBack: $r('app.media.nation'),
+    certImage: $r('app.media.ic_upload'),
+    status: 2 // 2=认证失败
+  };
+
+  onPageShow() {
+    this.loadCertifyInfo();
+  }
+
+  async loadCertifyInfo() {
+    const httpTask = http.createHttp();
+    try {
+      const response = await httpTask.request(
+        "http://localhost:8888/certifyInfo",
+        { method: http.RequestMethod.GET }
+      );
+
+      if (response.responseCode === 200) {
+        const result: CertifyStatus = JSON.parse(response.result.toString());
+        let status = result.status ?? 2;
+
+        // ======================
+        // 自动跳转正确页面
+        // ======================
+        if (status === 0) {
+          router.replaceUrl({ url: "pages/Mine/DoctorCertify_review" });
+          return;
+        }
+        if (status === 1) {
+          router.replaceUrl({ url: "pages/Mine/DoctorCertify_pass" });
+          return;
+        }
+
+        this.certifyInfo.status = status;
+        console.log("✅ 失败页面：认证状态加载成功");
+      }
+    } catch (err) {
+      console.error("⚠️ 加载失败，使用本地数据");
+    } finally {
+      httpTask.destroy();
+    }
+  }
+
   build() {
     Column() {
-      // ====================== 顶部导航栏 ======================
       Row() {
         Image($r('app.media.u695'))
           .width(24)
           .height(24)
-          .onClick(() => router.pushUrl({ url: 'pages/MePage' }))
+          .onClick(() => {
+            // ✅ 修复：用 back 回到上一页，而不是 pushUrl
+            router.back();
+          })
 
         Text("医师认证")
           .fontSize(20)
@@ -26,45 +90,36 @@ struct DoctorCertify_fail {
       .alignItems(VerticalAlign.Center)
       .padding({ left:15, right:15 })
 
-      // ====================== 头部认证失败区域（完全对标截图修改） ======================
       Column() {
-        // 红色圆形叉号失败图标
-        Image($r('app.media.u6105')) // 替换为你项目里红色叉号图标资源
+        Image($r('app.media.u6105'))
           .width(48)
           .height(48)
 
-        // 失败标题
         Text("医师认证失败")
           .fontSize(18)
           .fontColor("#333")
           .margin({ top:10 })
 
-        // 完整拒绝原因提示文案（和截图一字不差）
         Text("拒绝原因：您提交的信息无法确认职业医师的身份，请点击重新认证，按照资料上传要求相关认证信息")
           .fontSize(14)
           .fontColor("#999")
           .margin({ top: 8,left: 15,right:15})
-
-          // .maxLines(0) // 文字自动换行
       }
       .width('100%')
       .backgroundColor("#fff")
       .padding({ top:20, bottom:20 })
 
-      // 灰色分割条
       Column(){}.width('100%').height(10).backgroundColor("#F5F5F5")
 
-      // ====================== 下方资料列表（完全保留原有结构+图片靠左） ======================
       List()
       {
-        // 医生头像
         ListItem() {
           Column() {
             Text("医生头像")
               .fontSize(16)
               .width('100%')
 
-            Image($r('app.media.img'))
+            Image(this.certifyInfo.avatar)
               .width(120)
               .height(120)
               .backgroundColor("#F7F9FC")
@@ -76,12 +131,10 @@ struct DoctorCertify_fail {
           .alignItems(HorizontalAlign.Start)
         }
 
-        // 灰色间隔
         ListItem() {
           Column(){}.width('100%').height(10).backgroundColor("#F5F5F5")
         }
 
-        // 身份证正反面
         ListItem() {
           Column() {
             Text("身份证件（正反面均需上传）")
@@ -89,13 +142,13 @@ struct DoctorCertify_fail {
               .width('100%')
 
             Row({ space: 12 }) {
-              Image($r('app.media.img'))
+              Image(this.certifyInfo.idCardFront)
                 .width(120)
                 .height(120)
                 .backgroundColor("#F7F9FC")
                 .borderRadius(10)
 
-              Image($r('app.media.img'))
+              Image(this.certifyInfo.idCardBack)
                 .width(120)
                 .height(120)
                 .backgroundColor("#F7F9FC")
@@ -108,19 +161,17 @@ struct DoctorCertify_fail {
           .alignItems(HorizontalAlign.Start)
         }
 
-        // 灰色间隔
         ListItem() {
           Column(){}.width('100%').height(10).backgroundColor("#F5F5F5")
         }
 
-        // 医师资质证件
         ListItem() {
           Column() {
             Text("胸牌/执业证/资格证/职称证，至少上传一项")
               .fontSize(16)
               .width('100%')
 
-            Image($r('app.media.img'))
+            Image(this.certifyInfo.certImage)
               .width(120)
               .height(120)
               .backgroundColor("#F7F9FC")
@@ -141,7 +192,6 @@ struct DoctorCertify_fail {
       .backgroundColor("#fff")
       .divider({ strokeWidth: 0 })
 
-      // ====================== 底部按钮（保留原有按钮结构） ======================
       Button("修改认证")
         .width('90%')
         .height(48)
@@ -151,11 +201,10 @@ struct DoctorCertify_fail {
         .borderRadius(24)
         .margin({ top:10, bottom:30 })
         .onClick(() => {
-        router.pushUrl({
-          url: "pages/DoctorCertifyUpload" // 你的上传资料页面路径
+          router.pushUrl({
+            url: "pages/Login_Register/DoctorCertificationUpload"
+          });
         })
-      })
-
     }
     .width('100%')
     .height('100%')

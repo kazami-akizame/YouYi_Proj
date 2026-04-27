@@ -1,330 +1,522 @@
-import router from '@ohos.router';
+/*import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
-import http from '@ohos.net.http';
+import { BusinessError } from '@ohos.base';
 
-interface Medicine {
-  id: number;
-  name: string;
-  spec: string;
-  company: string;
-  price: number;
+export class Medicine {
+  id: number = 0;
+  name: string = '';
+  spec: string = '';
+  company: string = '';
+  price: number = 0;
+  imageUrl?: Resource = undefined;
 }
 
-interface Prescription {
-  id?: number;
-  medicineId: number;
-  quantity: number; // ✅ 改为 quantity
-  frequency: string;
-  singleDose: string;
-  usageMethod: string;
-  remark: string;
+export class UsageData {
+  medicine: Medicine = new Medicine();
+  count: number = 1;
+  frequency: string = '';
+  singleDose: string = '';
+  usageMethod: string = '';
+  remark: string = '';
 }
+
+ let tempUsageData: UsageData | null = null;
 
 @Entry
 @Component
 struct MedicineUsagePage {
-  @State medicineList: Medicine[] = [];
-  @State selectedIndex: number = 0;
-
-  @State quantity: number = 1; // ✅ 改为 quantity
+  @State medicine: Medicine = new Medicine();
+  @State medicineCount: number = 1;
   @State frequency: string = '';
   @State singleDose: string = '';
   @State usageMethod: string = '';
   @State remark: string = '';
 
-  private baseUrl: string = 'http://127.0.0.1:8888';
-
   aboutToAppear() {
-    this.loadMedicineList();
-  }
-
-  loadMedicineList(): void {
-    const req = http.createHttp();
-    req.request(this.baseUrl + '/medicineslist', {
-      method: http.RequestMethod.GET
-    }).then((res: http.HttpResponse) => {
-      if (res.responseCode === 200) {
-        this.medicineList = JSON.parse(res.result as string);
+    try {
+      const params = router.getParams() as Record<string, Medicine>;
+      if (params?.medicine) {
+        let m = params.medicine as Medicine;
+        this.medicine.id = m.id;
+        this.medicine.name = m.name;
+        this.medicine.spec = m.spec;
+        this.medicine.company = m.company;
+        this.medicine.price = m.price;
+        this.medicine.imageUrl = $r('app.media.u1107');
       }
-    }).catch(() => {});
-  }
-
-  // 保存到 prescriptions 接口
-  saveUsage(): void {
-    if (this.medicineList.length === 0) return;
-
-    const med = this.medicineList[this.selectedIndex];
-    const data: Prescription = {
-      medicineId: med.id,
-      quantity: this.quantity, // ✅ 改为 quantity
-      frequency: this.frequency,
-      singleDose: this.singleDose,
-      usageMethod: this.usageMethod,
-      remark: this.remark
-    };
-
-    const req = http.createHttp();
-    req.request(this.baseUrl + '/prescriptions', {
-      method: http.RequestMethod.POST,
-      header: { 'Content-Type': 'application/json' },
-      extraData: JSON.stringify(data)
-    }).then(() => {
-      promptAction.showToast({ message: '保存成功' });
-    }).catch(() => {
-      promptAction.showToast({ message: '保存失败' });
-    });
+    } catch (err) {
+      console.error('getParams err:', (err as BusinessError).message);
+    }
   }
 
   build() {
     Column() {
-      // 顶部导航
       Row() {
         Image($r('app.media.u695'))
-          .width(18)
-          .height(18)
-          .onClick(() => { router.back(); })
+          .width(10)
+          .height(15)
+          .onClick(() => {
+            router.back();
+          })
 
         Text('用法用量')
-          .fontSize(19)
+          .fontSize(18)
           .fontWeight(FontWeight.Medium)
           .layoutWeight(1)
           .textAlign(TextAlign.Center)
+
+        Row().width(24)
       }
       .width('100%')
-      .height(52)
-      .padding({ left: 20, right: 20 })
+      .height(46)
+      .padding({ left: 16, right: 16 })
       .backgroundColor(Color.White)
-      .shadow({ radius: 6, color: '#00000010', offsetY: 2 })
 
-      // 药品选择栏
       Row() {
-        if (this.medicineList.length > 0) {
-          Text(this.medicineList[this.selectedIndex].name + " " + this.medicineList[this.selectedIndex].spec)
-            .fontSize(16)
-            .fontColor('#333')
-        } else {
-          Text("加载中...")
-            .fontSize(16)
-            .fontColor('#999')
+        Image(this.medicine.imageUrl || $r('app.media.u1107'))
+          .width(80)
+          .height(80)
+          .backgroundColor('#E8F3FF')
+          .borderRadius(8)
+          .margin({ right: 12 })
+
+        Column() {
+          Text(`${this.medicine.name} ${this.medicine.spec}`)
+            .fontSize(18)
+            .fontWeight(FontWeight.Medium)
+            .width('100%')
+            .margin({ bottom: 8 })
+
+          Text(this.medicine.company)
+            .fontSize(14)
+            .fontColor('#999999')
+            .width('100%')
+            .margin({ bottom: 8 })
+
+          Text(`¥ ${this.medicine.price.toFixed(2)}`)
+            .fontSize(18)
+            .fontColor('#FF3B30')
+            .fontWeight(FontWeight.Bold)
+            .width('100%')
         }
+        .layoutWeight(1)
       }
-      .width('92%')
-      .height(50)
-      .margin({ top: 12 })
+      .width('100%')
+      .padding(16)
       .backgroundColor(Color.White)
-      .borderRadius(12)
-      .padding({ left: 18, right: 18 })
-      .onClick(() => {
-        if (this.medicineList.length > 0) {
-          this.selectedIndex = (this.selectedIndex + 1) % this.medicineList.length;
-        }
-      })
 
-      // 药品信息卡片
-      if (this.medicineList.length > 0) {
-        Row() {
-          Image($r('app.media.u1107'))
-            .width(86)
-            .height(86)
-            .backgroundColor('#E8F3FF')
-            .borderRadius(12)
-          Column() {
-            Text(this.medicineList[this.selectedIndex].name)
-              .fontSize(18)
-              .fontWeight(FontWeight.Medium)
-              .fontColor('#222')
-            Text(this.medicineList[this.selectedIndex].company)
-              .fontSize(14)
-              .fontColor('#999999')
-              .margin({ top: 6 })
-            Text('¥ ' + this.medicineList[this.selectedIndex].price.toFixed(2))
-              .fontColor('#FF3B30')
-              .fontSize(18)
-              .fontWeight(FontWeight.Bold)
-              .margin({ top: 8 })
-          }
-          .margin({ left: 14 })
-          .alignItems(HorizontalAlign.Start)
-        }
-        .width('92%')
-        .padding(18)
-        .margin({ top: 12 })
-        .backgroundColor(Color.White)
-        .borderRadius(12)
-        .shadow({ radius: 6, color: '#00000010', offsetY: 2 })
-      }
+      Divider().width('100%').height(10).color('#F5F5F5')
 
-      // 表单卡片容器
       Column() {
-        // 药品数量
         Row() {
-          Text('药品数量')
-            .fontSize(16)
-            .fontColor('#333')
+          Text('药品数量').fontSize(16).fontColor('#333333')
           Blank()
-          Button('—')
-            .width(38)
-            .height(38)
-            .borderRadius(19)
-            .backgroundColor('#F0F5FF')
-            .fontColor('#007AFF')
+          Button('-')
+            .width(44).height(44).backgroundColor('#F0F5FF').fontColor('#007AFF').borderRadius(22)
+            .fontSize(24)
             .onClick(() => {
-              if (this.quantity > 1) { // ✅ 改为 quantity
-                this.quantity--;
-              }
+              if (this.medicineCount > 1) this.medicineCount--;
             })
-          Text(this.quantity.toString()) // ✅ 改为 quantity
-            .width(40)
-            .textAlign(TextAlign.Center)
-            .fontSize(16)
+          Text(this.medicineCount.toString()).fontSize(16).width(40).textAlign(TextAlign.Center)
           Button('+')
-            .width(38)
-            .height(38)
-            .borderRadius(19)
-            .backgroundColor('#F0F5FF')
-            .fontColor('#007AFF')
+            .width(44).height(44).backgroundColor('#F0F5FF').fontColor('#007AFF').borderRadius(22)
+            .fontSize(24)
             .onClick(() => {
-              this.quantity++; // ✅ 改为 quantity
+              this.medicineCount++;
             })
           Text('盒')
-            .backgroundColor('#E8F3FF')
-            .padding({ left: 12, right: 12, top: 6, bottom: 6 })
-            .borderRadius(8)
-            .fontSize(15)
-            .fontColor('#333')
-            .margin({ left: 8 })
+            .fontSize(16).padding({ left: 16, right: 16 }).backgroundColor('#E8F3FF').borderRadius(8).height(36).margin({ left: 12 })
         }
-        .width('100%')
-        .height(56)
-        .padding({ left: 16, right: 16 })
+        .width('100%').height(60).padding({ left: 16, right: 16 }).alignItems(VerticalAlign.Center)
 
-        Divider().margin({ left: 16, right: 16 }).color('#f2f2f2')
+        Divider().width('100%').color('#EEEEEE')
 
-        // 用药频率
         Row() {
-          Text('用药频率')
-            .fontSize(16)
-            .fontColor('#333')
+          Text('用药频率').fontSize(16).fontColor('#333333')
           Blank()
-          TextInput({ text: this.frequency, placeholder: '请输入' })
-            .width(170)
-            .height(38)
-            .backgroundColor('#F5F7FA')
-            .borderRadius(8)
-            .padding({ left: 10, right: 10 })
-            .onChange((v: string) => { this.frequency = v; })
+          TextInput({ placeholder: '请输入', text: this.frequency })
+            .width(180).height(40).fontSize(16).textAlign(TextAlign.End)
+            .backgroundColor('#F5F5F5').borderRadius(8)
+            .onChange((value) => {
+              this.frequency = value;
+            })
         }
-        .width('100%')
-        .height(56)
-        .padding({ left: 16, right: 16 })
+        .width('100%').height(60).padding({ left: 16, right: 16 }).alignItems(VerticalAlign.Center)
 
-        Divider().margin({ left: 16, right: 16 }).color('#f2f2f2')
+        Divider().width('100%').color('#EEEEEE')
 
-        // 单次用量
         Row() {
-          Text('单次用量')
-            .fontSize(16)
-            .fontColor('#333')
+          Text('单次用量').fontSize(16).fontColor('#333333')
           Blank()
-          TextInput({ text: this.singleDose, placeholder: '请输入' })
-            .width(90)
-            .height(38)
-            .backgroundColor('#F5F7FA')
-            .borderRadius(8)
-            .textAlign(TextAlign.Center)
-            .onChange((v: string) => { this.singleDose = v; })
+          TextInput({ placeholder: '请输入', text: this.singleDose })
+            .width(100).height(40).fontSize(16).textAlign(TextAlign.Center)
+            .backgroundColor('#F5F5F5').borderRadius(8)
+            .onChange((value) => {
+              this.singleDose = value;
+            })
           Text('片/次')
-            .backgroundColor('#E8F3FF')
-            .padding({ left: 12, right: 12, top: 6, bottom: 6 })
-            .borderRadius(8)
-            .fontSize(15)
-            .margin({ left: 8 })
+            .fontSize(16).padding({ left: 16, right: 16 }).backgroundColor('#E8F3FF').borderRadius(8).height(40)
         }
-        .width('100%')
-        .height(56)
-        .padding({ left: 16, right: 16 })
+        .width('100%').height(60).padding({ left: 16, right: 16 }).alignItems(VerticalAlign.Center)
 
-        Divider().margin({ left: 16, right: 16 }).color('#f2f2f2')
+        Divider().width('100%').color('#EEEEEE')
 
-        // 用药方法
         Row() {
-          Text('用药方法')
-            .fontSize(16)
-            .fontColor('#333')
+          Text('用药方法').fontSize(16).fontColor('#333333')
           Blank()
-          TextInput({ text: this.usageMethod, placeholder: '请输入' })
-            .width(170)
-            .height(38)
-            .backgroundColor('#F5F7FA')
-            .borderRadius(8)
-            .padding({ left: 10, right: 10 })
-            .onChange((v: string) => { this.usageMethod = v; })
+          TextInput({ placeholder: '请输入', text: this.usageMethod })
+            .width(180).height(40).fontSize(16).textAlign(TextAlign.End)
+            .backgroundColor('#F5F5F5').borderRadius(8)
+            .onChange((value) => {
+              this.usageMethod = value;
+            })
         }
-        .width('100%')
-        .height(56)
-        .padding({ left: 16, right: 16 })
-      }
-      .width('92%')
-      .backgroundColor(Color.White)
-      .borderRadius(12)
-      .margin({ top: 12 })
-      .shadow({ radius: 6, color: '#00000010', offsetY: 2 })
+        .width('100%').height(60).padding({ left: 16, right: 16 }).alignItems(VerticalAlign.Center)
 
-      // 备注
-      Column() {
-        Text('备注')
-          .fontSize(16)
-          .fontColor('#333')
-          .width('100%')
-          .margin({ bottom: 8 })
-        TextArea({ text: this.remark, placeholder: '请填写备注' })
-          .height(88)
-          .width('100%')
-          .backgroundColor('#F5F7FA')
-          .borderRadius(10)
-          .padding(12)
-          .onChange((v: string) => { this.remark = v; })
+        Divider().width('100%').color('#EEEEEE')
+
+        Column() {
+          Text('备注').fontSize(16).fontColor('#333333').width('100%').margin({ bottom: 8 })
+          TextArea({ placeholder: '请填写药品备注', text: this.remark })
+            .width('100%').height(80).fontSize(16).backgroundColor(Color.Transparent)
+            .onChange((value) => {
+              this.remark = value;
+            })
+        }
+        .width('100%').padding(16)
       }
-      .width('92%')
-      .padding(16)
-      .margin({ top: 12 })
+      .width('100%')
       .backgroundColor(Color.White)
-      .borderRadius(12)
-      .shadow({ radius: 6, color: '#00000010', offsetY: 2 })
       .layoutWeight(1)
 
-      // 保存按钮
       Button('保存')
-        .width('86%')
-        .height(52)
-        .fontSize(18)
-        .backgroundColor('#007AFF')
-        .borderRadius(26)
-        .margin({ top: 24, bottom: 20 })
-        .shadow({ radius: 8, color: '#007AFF30', offsetY: 4 })
+        .width('90%').height(50).fontSize(18).backgroundColor('#007AFF').borderRadius(25).margin({ top: 20, bottom: 10 })
         .onClick(() => {
           if (!this.frequency || !this.singleDose || !this.usageMethod) {
             promptAction.showToast({ message: '请完善必填信息', duration: 2000 });
             return;
           }
 
-          this.saveUsage();
+          let data = new UsageData();
+          data.medicine = this.medicine;
+          data.count = this.medicineCount;
+          data.frequency = this.frequency;
+          data.singleDose = this.singleDose;
+          data.usageMethod = this.usageMethod;
+          data.remark = this.remark;
 
           promptAction.showDialog({
             title: '请选择返回方式',
             buttons: [
               { text: '返回处方开立页面', color: '#007AFF' },
               { text: '返回新增常用处方页面', color: '#007AFF' },
+              //{ text: '返回', color: '#007AFF' },
               { text: '取消', color: '#999999' }
             ]
           }).then((result) => {
-            if (result.index === 0) router.pushUrl({ url: 'pages/HomePages/PrescriptionEditPage' });
-            if (result.index === 1) router.pushUrl({ url: 'pages/HomePages/EditComPrePage' });
+            if (result.index === 0) {
+              router.pushUrl({ url: 'pages/HomePages/MedicineListPage' });
+            }
+            if (result.index === 1 ) {
+              tempUsageData = data;
+              router.back();
+            }
           });
         })
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F5F7FA')
+    .backgroundColor('#F5F5F5')
   }
+}
+// 导出 getter/setter，而不是直接导出变量，这样 EditComPrePage 就能读写了
+export function getTempUsageData(): UsageData | null {
+  return tempUsageData;
+}
+
+export function clearTempUsageData(): void {
+  tempUsageData = null;
+}*/
+
+
+import router from '@ohos.router';
+import promptAction from '@ohos.promptAction';
+import { BusinessError } from '@ohos.base';
+
+export class Medicine {
+  id: number = 0;
+  name: string = '';
+  spec: string = '';
+  company: string = '';
+  price: number = 0;
+  imageUrl?: Resource = undefined;
+}
+
+export class UsageData {
+  medicine: Medicine = new Medicine();
+  count: number = 1;
+  frequency: string = '';
+  singleDose: string = '';
+  usageMethod: string = '';
+  remark: string = '';
+}
+
+// 路由参数接口
+class PageParams {
+  editData?: string;
+  editIndex?: number;
+  medicine?: Medicine;
+}
+
+// 加在文件最上面
+interface DialogResult {
+  index: number;
+}
+
+let tempUsageData: UsageData | null = null;
+
+@Entry
+@Component
+struct MedicineUsagePage {
+  @State medicine: Medicine = new Medicine();
+  @State medicineCount: number = 1;
+  @State frequency: string = '';
+  @State singleDose: string = '';
+  @State usageMethod: string = '';
+  @State remark: string = '';
+
+  @State isEditMode: boolean = false;
+  @State editIndex: number = -1;
+
+  aboutToAppear() {
+    try {
+      const params = router.getParams() as PageParams;
+
+      if (params && params.editData) {
+        const editDataStr: string = params.editData as string;
+        const editData: UsageData = JSON.parse(editDataStr);
+        const editIndex: number = params.editIndex !== undefined ? params.editIndex : -1;
+
+        // 不传id，只传药品名称和规格
+        this.medicine.name = editData.medicine.name;
+        this.medicine.spec = editData.medicine.spec;
+        this.medicineCount = editData.count;
+        this.frequency = editData.frequency;
+        this.singleDose = editData.singleDose;
+        this.usageMethod = editData.usageMethod;
+        this.remark = editData.remark;
+
+        this.editIndex = editIndex;
+        this.isEditMode = true;
+      } else if (params && params.medicine) {
+        let m: Medicine = params.medicine;
+        this.medicine.id = m.id;
+        this.medicine.name = m.name;
+        this.medicine.spec = m.spec;
+        this.medicine.company = m.company;
+        this.medicine.price = m.price;
+        this.medicine.imageUrl = $r('app.media.u1107');
+      }
+    } catch (err) {
+      console.error('getParams err:', (err as BusinessError).message);
+    }
+  }
+
+  build() {
+    Column() {
+      Row() {
+        Image($r('app.media.u695'))
+          .width(10)
+          .height(15)
+          .onClick(() => {
+            router.back();
+          })
+
+        Text('用法用量')
+          .fontSize(18)
+          .fontWeight(FontWeight.Medium)
+          .layoutWeight(1)
+          .textAlign(TextAlign.Center)
+
+        Row().width(24)
+      }
+      .width('100%')
+      .height(46)
+      .padding({ left: 16, right: 16 })
+      .backgroundColor(Color.White)
+
+      Row() {
+        Image(this.medicine.imageUrl || $r('app.media.u1107'))
+          .width(80)
+          .height(80)
+          .backgroundColor('#E8F3FF')
+          .borderRadius(8)
+          .margin({ right: 12 })
+
+        Column() {
+          Text(`${this.medicine.name} ${this.medicine.spec}`)
+            .fontSize(18)
+            .fontWeight(FontWeight.Medium)
+            .width('100%')
+            .margin({ bottom: 8 })
+
+          Text(this.medicine.company)
+            .fontSize(14)
+            .fontColor('#999999')
+            .width('100%')
+            .margin({ bottom: 8 })
+
+          Text(`¥ ${this.medicine.price.toFixed(2)}`)
+            .fontSize(18)
+            .fontColor('#FF3B30')
+            .fontWeight(FontWeight.Bold)
+            .width('100%')
+        }
+        .layoutWeight(1)
+      }
+      .width('100%')
+      .padding(16)
+      .backgroundColor(Color.White)
+
+      Divider().width('100%').height(10).color('#F5F5F5')
+
+      Column() {
+        Row() {
+          Text('药品数量').fontSize(16).fontColor('#333333')
+          Blank()
+          Button('-')
+            .width(44).height(44).backgroundColor('#F0F5FF').fontColor('#007AFF').borderRadius(22)
+            .fontSize(24)
+            .onClick(() => {
+              if (this.medicineCount > 1) this.medicineCount--;
+            })
+          Text(this.medicineCount.toString()).fontSize(16).width(40).textAlign(TextAlign.Center)
+          Button('+')
+            .width(44).height(44).backgroundColor('#F0F5FF').fontColor('#007AFF').borderRadius(22)
+            .fontSize(24)
+            .onClick(() => {
+              this.medicineCount++;
+            })
+          Text('盒')
+            .fontSize(16).padding({ left: 16, right: 16 }).backgroundColor('#E8F3FF').borderRadius(8).height(36).margin({ left: 12 })
+        }
+        .width('100%').height(60).padding({ left: 16, right: 16 }).alignItems(VerticalAlign.Center)
+
+        Divider().width('100%').color('#EEEEEE')
+
+        Row() {
+          Text('用药频率').fontSize(16).fontColor('#333333')
+          Blank()
+          TextInput({ placeholder: '请输入', text: this.frequency })
+            .width(180).height(40).fontSize(16).textAlign(TextAlign.End)
+            .backgroundColor('#F5F5F5').borderRadius(8)
+            .onChange((value: string) => {
+              this.frequency = value;
+            })
+        }
+        .width('100%').height(60).padding({ left: 16, right: 16 }).alignItems(VerticalAlign.Center)
+
+        Divider().width('100%').color('#EEEEEE')
+
+        Row() {
+          Text('单次用量').fontSize(16).fontColor('#333333')
+          Blank()
+          TextInput({ placeholder: '请输入', text: this.singleDose })
+            .width(100).height(40).fontSize(16).textAlign(TextAlign.Center)
+            .backgroundColor('#F5F5F5').borderRadius(8)
+            .onChange((value: string) => {
+              this.singleDose = value;
+            })
+          Text('片/次')
+            .fontSize(16).padding({ left: 16, right: 16 }).backgroundColor('#E8F3FF').borderRadius(8).height(40)
+        }
+        .width('100%').height(60).padding({ left: 16, right: 16 }).alignItems(VerticalAlign.Center)
+
+        Divider().width('100%').color('#EEEEEE')
+
+        Row() {
+          Text('用药方法').fontSize(16).fontColor('#333333')
+          Blank()
+          TextInput({ placeholder: '请输入', text: this.usageMethod })
+            .width(180).height(40).fontSize(16).textAlign(TextAlign.End)
+            .backgroundColor('#F5F5F5').borderRadius(8)
+            .onChange((value: string) => {
+              this.usageMethod = value;
+            })
+        }
+        .width('100%').height(60).padding({ left: 16, right: 16 }).alignItems(VerticalAlign.Center)
+
+        Divider().width('100%').color('#EEEEEE')
+
+        Column() {
+          Text('备注').fontSize(16).fontColor('#333333').width('100%').margin({ bottom: 8 })
+          TextArea({ placeholder: '请填写药品备注', text: this.remark })
+            .width('100%').height(80).fontSize(16).backgroundColor(Color.Transparent)
+            .onChange((value: string) => {
+              this.remark = value;
+            })
+        }
+        .width('100%').padding(16)
+      }
+      .width('100%')
+      .backgroundColor(Color.White)
+      .layoutWeight(1)
+
+      Button('保存')
+        .width('90%').height(50).fontSize(18).backgroundColor('#007AFF').borderRadius(25).margin({ top: 20, bottom: 10 })
+        .onClick(() => {
+          if (!this.frequency || !this.singleDose || !this.usageMethod) {
+            promptAction.showToast({ message: '请完善必填信息', duration: 2000 });
+            return;
+          }
+
+          let data: UsageData = new UsageData();
+          data.medicine.name = this.medicine.name;
+          data.medicine.spec = this.medicine.spec;
+          data.count = this.medicineCount;
+          data.frequency = this.frequency;
+          data.singleDose = this.singleDose;
+          data.usageMethod = this.usageMethod;
+          data.remark = this.remark;
+
+          if (this.isEditMode) {
+            router.back({
+              url: 'pages/HomePages/EditComPrePage',
+              params: {
+                editedData: JSON.stringify(data),
+                editIndex: this.editIndex
+              }
+            });
+          } else {
+            promptAction.showDialog({
+              title: '请选择返回方式',
+              buttons: [
+                { text: '返回处方开立页面', color: '#007AFF' },
+                { text: '返回新增常用处方页面', color: '#007AFF' },
+                { text: '取消', color: '#999999' }
+              ]
+            }).then((result:  DialogResult) => {
+              if (result.index === 0) {
+                router.pushUrl({ url: 'pages/HomePages/MedicineListPage' });
+              }
+              if (result.index === 1) {
+                tempUsageData = data;
+                router.back();
+              }
+            });
+          }
+        })
+    }
+    .width('100%')
+    .height('100%')
+    .backgroundColor('#F5F5F5')
+  }
+}
+
+export function getTempUsageData(): UsageData | null {
+  return tempUsageData;
+}
+
+export function clearTempUsageData(): void {
+  tempUsageData = null;
 }

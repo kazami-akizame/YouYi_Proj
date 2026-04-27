@@ -1,7 +1,8 @@
 import router from '@ohos.router';
+import { http } from '@kit.NetworkKit';
 
-// ====================== 接口声明 ======================
 interface OrderItemParams {
+  id: number;
   time: string;
   name: string;
   serviceType: string;
@@ -15,62 +16,99 @@ interface OrderItemParams {
 struct OrderDetail {
   @State currentTab: number = 0;
   @State filteredOrders: OrderItemParams[] = [];
+
   private tabs: string[] = ['全部', '图文问诊', '极速问诊', '开药问诊', '私人医生'];
 
-  // ===== 时间选择器状态 =====
   @State showTimePicker: boolean = false;
   @State selectYear: number = 2020;
   @State selectMonth: number = 3;
   @State showTimeText: string = "2020-03";
 
-  // 年份、月份数组
   private yearList: number[] = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
   private monthList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-  // 订单原始数据
-  private allOrders: OrderItemParams[] = [
-    { time: "2020-02-06 08:09", name: "吴珊珊 女 23岁", serviceType: "极速问诊", status: "已完成", price: "¥29.00", serviceColor: "#FFA500" },
-    { time: "2020-02-06 08:09", name: "吴珊珊 女 23岁", serviceType: "图文问诊", status: "已关闭", price: "¥29.00", serviceColor: "#007AFF" },
-    { time: "2020-02-06 08:09", name: "吴珊珊 女 23岁", serviceType: "开药问诊", status: "已完成", price: "¥29.00", serviceColor: "#34C759" },
-    { time: "2020-02-06 08:09", name: "吴珊珊 女 23岁", serviceType: "私人医生", status: "已关闭", price: "¥29.00", serviceColor: "#9D4EDD" }
+  // 本地兜底数据
+  private localOrders: OrderItemParams[] = [
+    { id:1,time: "2020-02-06 08:09", name: "吴珊珊 女 23岁", serviceType: "极速问诊", status: "已完成", price: "¥29.00", serviceColor: "#FFA500" },
+    { id:2,time: "2020-02-06 08:09", name: "吴珊珊 女 23岁", serviceType: "图文问诊", status: "已关闭", price: "¥29.00", serviceColor: "#007AFF" },
+    { id:3,time: "2020-02-06 08:09", name: "吴珊珊 女 23岁", serviceType: "开药问诊", status: "已完成", price: "¥29.00", serviceColor: "#34C759" },
+    { id:4,time: "2020-02-06 08:09", name: "吴珊珊 女 23岁", serviceType: "私人医生", status: "已关闭", price: "¥29.00", serviceColor: "#9D4EDD" }
   ];
 
   aboutToAppear() {
-    this.filteredOrders = this.allOrders;
+    this.getOrderList();
   }
 
-  // Tab切换筛选逻辑
-  private updateFilteredOrders(index: number) {
-    this.currentTab = index;
-    if (index === 0) {
-      this.filteredOrders = this.allOrders;
-    } else {
-      this.filteredOrders = this.allOrders.filter(order => order.serviceType === this.tabs[index]);
+  async getOrderList() {
+    let httpTask = http.createHttp();
+    // 获取当前选中的Tab名称，例如 "图文问诊"
+    let typeName = this.tabs[this.currentTab];
+
+    let url = `http://localhost:8888/doctorOrder`;
+
+    try {
+      let res = await httpTask.request(url, { method: http.RequestMethod.GET });
+
+      if (res.responseCode === 200) {
+        let data: OrderItemParams[] = JSON.parse(res.result.toString());
+        if (data && data.length > 0) {
+          // ==========================
+          // 🔥 核心修改：在这里进行数据过滤
+          // ==========================
+          if (this.currentTab === 0) {
+            // 如果点击的是“全部”，直接显示所有数据
+            this.filteredOrders = data;
+          } else {
+            // 如果点击的是具体分类，筛选 serviceType 等于当前 Tab 名称的数据
+            this.filteredOrders = data.filter(item => item.serviceType === typeName);
+          }
+          return;
+        }
+      }
+      // 如果后端数据为空或异常，使用本地数据
+      this.useLocalData();
+
+    } catch (err) {
+      console.error("请求失败", err);
+      this.useLocalData();
+    } finally {
+      httpTask.destroy();
     }
   }
 
-  // 弹窗取消
+  // 本地数据也需要做同样的过滤逻辑，保持一致性
+  private useLocalData() {
+    if (this.currentTab === 0) {
+      this.filteredOrders = this.localOrders;
+    } else {
+      this.filteredOrders = this.localOrders.filter(item => item.serviceType === this.tabs[this.currentTab]);
+    }
+  }
+
+  private updateFilteredOrders(index: number) {
+    this.currentTab = index;
+    this.getOrderList();
+  }
+
   private cancelPickTime() {
     this.showTimePicker = false;
   }
 
-  // 弹窗确认选择年月
   private confirmPickTime() {
     this.showTimeText = `${this.selectYear}-${this.selectMonth.toString().padStart(2, '0')}`;
     this.showTimePicker = false;
+    this.getOrderList();
   }
 
   build() {
-    // ====================== 【唯一根节点 Stack】 ======================
     Stack() {
-      // 1. 底层：订单页面主体（所有原有内容原样保留）
       Column() {
         // 顶部导航栏
         Row() {
           Image($r('app.media.u695'))
             .width(24)
             .height(24)
-            .onClick(() => router.pushUrl({ url: 'pages/MyIncome' }))
+            .onClick(() => router.back())
 
           Text("订单明细")
             .fontSize(20)
@@ -86,9 +124,8 @@ struct OrderDetail {
         .alignItems(VerticalAlign.Center)
         .padding({ left: 15, right: 15 })
 
-        // 横向Tab栏
-        Scroll()
-        {
+        // 顶部 Tab 切换
+        Scroll() {
           Row() {
             ForEach(this.tabs, (item: string, index: number) => {
               Column() {
@@ -106,21 +143,19 @@ struct OrderDetail {
                 }
               }
               .padding({ left: 10, right: 10 })
-              .onClick(() => {
-                this.updateFilteredOrders(index);
-              })
+              .onClick(() => this.updateFilteredOrders(index))
             })
           }
-        }.width('100%')
+        }
+        .width('100%')
         .padding({ left: 15, right: 15, top: 10, bottom: 10 })
         .backgroundColor("#F5F5F5")
 
-        // 可点击时间筛选栏
+        // 时间筛选栏
         Row() {
           Text(this.showTimeText)
             .fontSize(16)
             .fontColor("#333")
-
           Image($r('app.media.u6241'))
             .width(12)
             .height(12)
@@ -130,32 +165,23 @@ struct OrderDetail {
         .padding({ left: 15, top: 12, bottom: 12 })
         .backgroundColor("#F5F5F5")
         .justifyContent(FlexAlign.Start)
-        .onClick(() => {
-          this.showTimePicker = true;
-        })
+        .onClick(() => this.showTimePicker = true)
 
-        // 订单列表主体
-        List()
-        {
+        // 订单列表
+        List() {
           ForEach(this.filteredOrders, (order: OrderItemParams) => {
             ListItem() {
               Column() {
                 this.OrderCardItem(order)
               }
-              // 不同订单跳转不同详情页
               .onClick(() => {
-                if (order.serviceType === "图文问诊") {
-                  router.pushUrl({ url: 'pages/OrderInfoDetail2' });
-                } else if (order.serviceType === "极速问诊") {
-                  router.pushUrl({ url: 'pages/OrderInfoDetail1' });
-                } else if (order.serviceType === "开药问诊") {
-                  router.pushUrl({ url: 'pages/OrderInfoDetail1' });
-                } else if (order.serviceType === "私人医生") {
-                  router.pushUrl({ url: 'pages/OrderInfoDetail3' });
-                }
+                router.pushUrl({
+                  url: 'pages/Mine/OrderInfoDetail',
+                  params: { id: order.id }
+                })
               })
             }
-          }, (order: OrderItemParams) => order.time + order.serviceType)
+          })
 
           ListItem() {
             Text("没有更多了～")
@@ -165,7 +191,8 @@ struct OrderDetail {
               .textAlign(TextAlign.Center)
               .margin({ top: 20, bottom: 30 })
           }
-        }.width('100%')
+        }
+        .width('100%')
         .layoutWeight(1)
         .padding({ left: 15, right: 15, top: 15 })
         .backgroundColor("#F5F5F5")
@@ -176,21 +203,17 @@ struct OrderDetail {
       .backgroundColor("#F5F5F5")
       .opacity(this.showTimePicker ? 0.5 : 1)
 
-      // ====================== 弹窗最终美化版 ======================
+      // 时间选择弹窗
       if (this.showTimePicker) {
         Column() {
-          // 白色底部面板（限制高度，不再铺满全屏）
           Column() {
-            // 顶部取消+完成栏
             Row() {
               Text("取消")
                 .fontSize(16)
                 .fontColor("#007AFF")
                 .padding(15)
                 .onClick(() => this.cancelPickTime())
-
               Blank()
-
               Text("完成")
                 .fontSize(16)
                 .fontColor("#007AFF")
@@ -200,9 +223,7 @@ struct OrderDetail {
             .width('100%')
             .border({ width: { bottom: 1 }, color: "#EEEEEE" })
 
-            // 年月双列选择容器
             Row() {
-              // 年份列表
               List() {
                 ForEach(this.yearList, (year: number) => {
                   ListItem() {
@@ -215,10 +236,8 @@ struct OrderDetail {
                       .onClick(() => this.selectYear = year)
                   }
                 })
-              }.width('50%')
-              .layoutWeight(1)
+              }.width('50%').layoutWeight(1)
 
-              // 月份列表
               List() {
                 ForEach(this.monthList, (month: number) => {
                   ListItem() {
@@ -231,21 +250,19 @@ struct OrderDetail {
                       .onClick(() => this.selectMonth = month)
                   }
                 })
-              }.width('50%')
-              .layoutWeight(1)
+              }.width('50%').layoutWeight(1)
             }
-            .height(380) // 限制弹窗面板高度，只占屏幕下半部分
-            .padding({ bottom: 50 }) // 适配手机底部安全区
+            .height(380)
+            .padding({ bottom: 50 })
           }
           .width('100%')
           .backgroundColor("#FFFFFF")
           .borderRadius({ topLeft: 16, topRight: 16 })
         }
-        // 遮罩层
         .width('100%')
         .height('100%')
         .backgroundColor('rgba(0, 0, 0, 0.5)')
-        .justifyContent(FlexAlign.End) // 固定贴屏幕底部
+        .justifyContent(FlexAlign.End)
         .onClick(() => this.cancelPickTime())
       }
     }
@@ -253,7 +270,6 @@ struct OrderDetail {
     .height('100%')
   }
 
-  // ====================== 通用订单卡片组件 ======================
   @Builder
   OrderCardItem(params: OrderItemParams) {
     Column() {

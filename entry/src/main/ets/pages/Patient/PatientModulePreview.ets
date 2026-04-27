@@ -11,6 +11,7 @@ import {
   SearchMessagePage,
   MessageDetailPage
 } from './PatientMessagingPages'
+import router from '@ohos.router'
 
 @Component
 export struct PatientModulePreview {
@@ -32,6 +33,51 @@ export struct PatientModulePreview {
   @State private patientRegionDisplay: string = '北京 朝阳';
   /** 患者资料 / 修改分组：已选分组名（多选，展示时用「、」连接） */
   @State private patientGroupSelection: string[] = ['默认分组'];
+  /** 当前查看的分组 */
+  @State private currentGroupId: number = 1;
+  @State private currentGroupName: string = '默认分组';
+  /** 当前查看的患者 */
+  @State private currentPatientId: number = 1;
+  /** 群发模块当前选中的消息ID（历史/搜索到详情） */
+  @State private selectedMessageId: number = 0;
+  /** 群发模块当前选中的接收人患者ID列表 */
+  @State private selectedRecipientIds: number[] = [];
+  /** 群发模块当前选中的分组 */
+  @State private selectedRecipientGroupId: number = 1;
+  @State private selectedRecipientGroupName: string = '默认分组';
+
+  aboutToAppear() {
+    const params = router.getParams() as Record<string, string | number | undefined>;
+    if (!params) {
+      return;
+    }
+
+    const targetPage = params.targetPage;
+    if (typeof targetPage === 'string' && targetPage.length > 0) {
+      this.activePage = targetPage;
+      this.activeTab = '患者';
+    }
+
+    const patientId = params.currentPatientId;
+    if (typeof patientId === 'number' && Number.isFinite(patientId) && patientId > 0) {
+      this.currentPatientId = patientId;
+    }
+
+    const groupId = params.currentGroupId;
+    if (typeof groupId === 'number' && Number.isFinite(groupId) && groupId > 0) {
+      this.currentGroupId = groupId;
+    }
+
+    const groupName = params.currentGroupName;
+    if (typeof groupName === 'string' && groupName.length > 0) {
+      this.currentGroupName = groupName;
+    }
+
+    const messageId = params.selectedMessageId;
+    if (typeof messageId === 'number' && Number.isFinite(messageId) && messageId > 0) {
+      this.selectedMessageId = messageId;
+    }
+  }
 
   build() {
     Column() {
@@ -61,12 +107,19 @@ export struct PatientModulePreview {
     if (this.activePage === '管理分组') {
       ManageGroupPage({ activePage: $activePage })
     } else if (this.activePage === '默认分组') {
-      DefaultGroupPage({ activePage: $activePage, searchReturnPage: $searchReturnPage })
+      DefaultGroupPage({
+        activePage: $activePage,
+        searchReturnPage: $searchReturnPage,
+        currentGroupId: $currentGroupId,
+        currentGroupName: $currentGroupName,
+        currentPatientId: $currentPatientId
+      })
     } else if (this.activePage === '患者资料') {
       PatientProfilePage({
         activePage: $activePage,
         profileReturnPage: $profileReturnPage,
-        patientGroupSelection: $patientGroupSelection
+        patientGroupSelection: $patientGroupSelection,
+        currentPatientId: $currentPatientId
       })
     } else if (this.activePage === '个人信息') {
       PersonalInfoPage({
@@ -76,48 +129,74 @@ export struct PatientModulePreview {
         patientAgeDisplay: $patientAgeDisplay,
         patientNameDisplay: $patientNameDisplay,
         patientRemarkDisplay: $patientRemarkDisplay,
-        patientRegionDisplay: $patientRegionDisplay
+        patientRegionDisplay: $patientRegionDisplay,
+        currentPatientId: $currentPatientId
       })
     } else if (this.activePage === '编辑姓名') {
       EditPersonalInfoPage({
         activePage: $activePage,
         cancelReturnPage: this.personalInfoSubReturnPage,
-        patientNameDisplay: $patientNameDisplay
+        patientNameDisplay: $patientNameDisplay,
+        currentPatientId: $currentPatientId
       })
     } else if (this.activePage === '编辑备注') {
       EditRemarkInfoPage({
         activePage: $activePage,
         cancelReturnPage: this.personalInfoSubReturnPage,
-        patientRemarkDisplay: $patientRemarkDisplay
+        patientRemarkDisplay: $patientRemarkDisplay,
+        currentPatientId: $currentPatientId
       })
     } else if (this.activePage === '编辑个人年龄') {
       EditPersonalAgePage({
         activePage: $activePage,
         cancelReturnPage: this.personalInfoSubReturnPage,
-        patientAgeDisplay: $patientAgeDisplay
+        patientAgeDisplay: $patientAgeDisplay,
+        currentPatientId: $currentPatientId
       })
     } else if (this.activePage === '修改分组') {
       ModifyGroupPage({
         activePage: $activePage,
         cancelReturnPage: this.profileReturnPage,
-        patientGroupSelection: $patientGroupSelection
+        patientGroupSelection: $patientGroupSelection,
+        currentPatientId: $currentPatientId
       })
     } else if (this.activePage === '新建群发') {
-      CreateBroadcastPage({ activePage: $activePage })
+      CreateBroadcastPage({
+        activePage: $activePage,
+        selectedMessageId: $selectedMessageId,
+        selectedRecipientIds: $selectedRecipientIds
+      })
     } else if (this.activePage === '我的患者') {
-      MyPatientsPage({ activePage: $activePage, searchReturnPage: $searchReturnPage })
+      MyPatientsPage({
+        activePage: $activePage,
+        searchReturnPage: $searchReturnPage,
+        selectedRecipientIds: $selectedRecipientIds,
+        selectedRecipientGroupId: $selectedRecipientGroupId,
+        selectedRecipientGroupName: $selectedRecipientGroupName
+      })
     } else if (this.activePage === '选择患者') {
-      SelectPatientPage({ activePage: $activePage, searchReturnPage: $searchReturnPage })
+      SelectPatientPage({
+        activePage: $activePage,
+        searchReturnPage: $searchReturnPage,
+        selectedRecipientIds: $selectedRecipientIds,
+        selectedRecipientGroupId: $selectedRecipientGroupId,
+        selectedRecipientGroupName: $selectedRecipientGroupName
+      })
     } else if (this.activePage === '群发历史') {
-      BroadcastHistoryPage({ activePage: $activePage })
+      BroadcastHistoryPage({ activePage: $activePage, selectedMessageId: $selectedMessageId })
     } else if (this.activePage === '搜索消息') {
-      SearchMessagePage({ activePage: $activePage })
+      SearchMessagePage({ activePage: $activePage, selectedMessageId: $selectedMessageId })
     } else if (this.activePage === '消息详情') {
-      MessageDetailPage({ activePage: $activePage })
+      MessageDetailPage({ activePage: $activePage, selectedMessageId: $selectedMessageId })
     } else if (this.activePage === '搜索患者') {
       SearchPatientPage({ activePage: $activePage, cancelReturnPage: this.searchReturnPage })
     } else {
-      PatientMainPage({ activePage: $activePage, searchReturnPage: $searchReturnPage })
+      PatientMainPage({
+        activePage: $activePage,
+        searchReturnPage: $searchReturnPage,
+        currentGroupId: $currentGroupId,
+        currentGroupName: $currentGroupName
+      })
     }
   }
 
@@ -139,6 +218,10 @@ export struct PatientModulePreview {
       this.activeTab = label;
       if (label === '患者') {
         this.activePage = '患者';
+      } else if (label === '首页') {
+        router.pushUrl({ url: 'pages/HomePages/HomePage' });
+      } else if (label === '我的') {
+        router.pushUrl({ url: 'pages/Mine/MePage' });
       }
     })
   }

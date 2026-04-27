@@ -1,22 +1,35 @@
 // pages/OnlineConsultationPage.ets
-import { ConsultationItem, ConsultationStatus, ConsultationType, MockDataGenerator } from '../common/ConsultationData';
+import { ConsultationItem, ConsultationStatus, ConsultationType, loadFromJsonServer } from '../common/ConsultationData';
 import router from '@ohos.router';
 
 @Entry
 @Component
 struct OnlineConsultationPage {
   @State currentTabIndex: number = 0;
-  @State allData: ConsultationItem[] = [];
+  @State waitingData: ConsultationItem[] = [];
+  @State inProgressData: ConsultationItem[] = [];
+  @State finishedData: ConsultationItem[] = [];
+
   @State isRefreshing: boolean = false;
-  private tabsController: TabsController = new TabsController();
-  private scroller: Scroller = new Scroller();
+  @State isLoaded: boolean = false;
 
   aboutToAppear() {
-    this.allData = MockDataGenerator.generateMockData();
+    this.loadData();
   }
 
-
-
+  // 把数据加载和筛选逻辑提前
+  loadData() {
+    loadFromJsonServer().then((data: ConsultationItem[]) => {
+      const raw = [...data];
+      this.waitingData = raw.filter((item: ConsultationItem) => item.status === ConsultationStatus.WAITING);
+      this.inProgressData = raw.filter((item: ConsultationItem) => item.status === ConsultationStatus.IN_PROGRESS);
+      this.finishedData = raw.filter((item: ConsultationItem) =>
+      item.status === ConsultationStatus.FINISHED ||
+        item.status === ConsultationStatus.REJECTED
+      );
+      this.isLoaded = true;
+    });
+  }
 
   // 获取类型标签颜色
   getTypeColor(type: ConsultationType): string {
@@ -42,10 +55,18 @@ struct OnlineConsultationPage {
   // 下拉刷新
   onRefresh() {
     this.isRefreshing = true;
-    setTimeout(() => {
-      this.allData = MockDataGenerator.generateMockData();
+    loadFromJsonServer().then(data => {
+      const raw = [...data];
+      this.waitingData = raw.filter((item: ConsultationItem) => item.status === ConsultationStatus.WAITING);
+      this.inProgressData = raw.filter((item: ConsultationItem) => item.status === ConsultationStatus.IN_PROGRESS);
+      this.finishedData = raw.filter((item: ConsultationItem) =>
+      item.status === ConsultationStatus.FINISHED ||
+        item.status === ConsultationStatus.REJECTED
+      );
       this.isRefreshing = false;
-    }, 800);
+    }).catch(() => {
+      this.isRefreshing = false;
+    });
   }
 
   @Builder
@@ -120,8 +141,8 @@ struct OnlineConsultationPage {
       console.info(`点击卡片：${item.patientName} - ${item.type}`);
       // 跳转到聊天页，传递当前问诊数据
       router.pushUrl({
-        url: 'pages/ChatPage',
-        params: { itemJson: JSON.stringify(item) }
+        url: 'pages/HomePages/ChatPage',
+        params: { item: JSON.stringify(item) }   // 必须序列化
       });
     })
   }
@@ -130,12 +151,17 @@ struct OnlineConsultationPage {
   @Builder
   ContentList(data: ConsultationItem[]) {
     Refresh({ refreshing: $$this.isRefreshing }) {
-      List({ scroller: this.scroller }) {
-        ForEach(data, (item: ConsultationItem) => {
-          ListItem() {
-            this.ConsultationCard(item)
-          }
-        }, (item: ConsultationItem) => item.id)
+      List() {
+
+        ForEach(data,
+          (item: ConsultationItem) => {
+            ListItem() {
+              this.ConsultationCard(item)
+            }
+          },
+          (item: ConsultationItem) => item.id
+        )
+
 
         ListItem() {
           Row() {
@@ -178,61 +204,61 @@ struct OnlineConsultationPage {
 
   build() {
     Column() {
-      // 标题
-      Row() {
-        Image($r("app.media.left")).width(14)
-        Text('在线接诊')
-          .fontSize(18)
-          .fontColor('#333')
-          .textAlign(TextAlign.Center)
-          .layoutWeight(1)
-        Blank().width(34)
+
+      if (!this.isLoaded) {
+        Column() {
+          Text("加载中...").fontSize(20).margin(50)
+        }
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.Center)
+      } else {
+        // 标题
+        Row() {
+          Image($r("app.media.left")).width(14).onClick(() => {
+            router.pushUrl({
+              url: "pages/HomePages/HomePage"
+            });
+          })
+          Text('在线接诊')
+            .fontSize(18)
+            .fontColor('#333')
+            .textAlign(TextAlign.Center)
+            .layoutWeight(1)
+          Blank().width(34)
+        }
+        .width('100%')
+        .height(56)
+        .padding({ left: 20 })
+        .backgroundColor('#fff')
+
+        // Tabs
+        Tabs({ index: this.currentTabIndex }) {
+          TabContent() {
+            this.ContentList([...this.waitingData, ...this.inProgressData, ...this.finishedData])
+          }.tabBar(this.TabBar('全部', 0))
+
+          TabContent() {
+            this.ContentList(this.waitingData)
+          }.tabBar(this.TabBar('待接诊', 1))
+
+          TabContent() {
+            this.ContentList(this.inProgressData)
+          }.tabBar(this.TabBar('进行中', 2))
+
+          TabContent() {
+            this.ContentList(this.finishedData)
+          }.tabBar(this.TabBar('已结束', 3))
+        }
+        .barMode(BarMode.Fixed)
+        .barWidth('100%')
+        .barHeight(48)
+        .onChange((index: number) => {
+          this.currentTabIndex = index;
+        })
+        .width('100%')
+        .layoutWeight(1)
       }
-      .width('100%')
-      .height(56)
-      .padding({ left: 20 })
-      .backgroundColor('#fff')
-
-      // Tabs
-      Tabs({
-        barPosition: BarPosition.Start,
-        controller: this.tabsController
-      }) {
-        TabContent() {
-          this.ContentList(this.allData)
-        }.tabBar(this.TabBar('全部', 0))
-
-        TabContent() {
-          this.ContentList(
-            this.allData.filter(item => item.status === ConsultationStatus.WAITING)
-          )
-        }.tabBar(this.TabBar('待接诊', 1))
-
-        TabContent() {
-          this.ContentList(
-            this.allData.filter(item => item.status === ConsultationStatus.IN_PROGRESS)
-          )
-        }.tabBar(this.TabBar('进行中', 2))
-
-        TabContent() {
-          this.ContentList(
-            this.allData.filter(item =>
-            item.status === ConsultationStatus.FINISHED ||
-              item.status === ConsultationStatus.REJECTED
-            )
-          )
-        }.tabBar(this.TabBar('已结束', 3))
-      }
-      .barMode(BarMode.Fixed)
-      .barWidth('100%')
-      .barHeight(48)
-      .animationDuration(200)
-      .onChange((index: number) => {
-        this.currentTabIndex = index;
-        this.scroller.scrollToIndex(0);
-      })
-      .width('100%')
-      .layoutWeight(1)
     }
     .width('100%')
     .height('100%')
