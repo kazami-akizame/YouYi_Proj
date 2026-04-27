@@ -1,4 +1,5 @@
 import { InfoRow } from './PatientModels'
+import { patientService } from '../../backend/patient/service/PatientService'
 
 @Component
 export struct PersonalInfoPage {
@@ -15,9 +16,12 @@ export struct PersonalInfoPage {
   @Link patientRemarkDisplay: string;
   /** 地区展示（省 + 空格 + 地市），与预览容器共用 */
   @Link patientRegionDisplay: string;
+  /** 当前查看患者ID */
+  @Link currentPatientId: number;
 
   @State private showGenderSheet: boolean = false;
   @State private patientGender: string = '女';
+  @State private patientPhoneDisplay: string = '--';
 
   @State private showRegionPicker: boolean = false;
   @State private regionProvinceIndex: number = 0;
@@ -81,6 +85,7 @@ export struct PersonalInfoPage {
     const city = cities.length > 0 ? cities[this.regionCityIndex] : '';
     this.patientRegionDisplay = city.length > 0 ? `${province} ${city}` : province;
     this.showRegionPicker = false;
+    this.persistCurrentPatientInfo();
   }
 
   private readonly rows: InfoRow[] = [
@@ -109,7 +114,55 @@ export struct PersonalInfoPage {
     if (item.label === '地区') {
       return this.patientRegionDisplay;
     }
+    if (item.label === '电话号码') {
+      return this.patientPhoneDisplay;
+    }
     return item.value;
+  }
+
+  aboutToAppear() {
+    const profile = patientService.getPatientProfile(this.currentPatientId);
+    if (!profile) {
+      return;
+    }
+    const patient = profile.patient;
+    this.patientNameDisplay = patient.name;
+    this.patientAgeDisplay = patient.age.toString();
+    this.patientRemarkDisplay = patient.remark;
+    this.patientRegionDisplay = `${patient.province} ${patient.city}`;
+    this.patientGender = patient.gender;
+    this.patientPhoneDisplay = this.maskPhone(patient.phone);
+  }
+
+  private maskPhone(phone: string): string {
+    if (phone.length < 7) {
+      return phone;
+    }
+    return `${phone.slice(0, 3)}****${phone.slice(phone.length - 4)}`;
+  }
+
+  private parseRegion(): [string, string] {
+    const parts = this.patientRegionDisplay.trim().split(/\s+/);
+    const province = parts[0] ?? '';
+    const city = parts.length > 1 ? parts.slice(1).join(' ') : '';
+    return [province, city];
+  }
+
+  private persistCurrentPatientInfo(): void {
+    const region = this.parseRegion();
+    const province = region[0];
+    const city = region[1];
+    const age = Number(this.patientAgeDisplay);
+    const safeAge = Number.isFinite(age) ? age : 0;
+    patientService.updatePatientBasicInfo(
+      this.currentPatientId,
+      this.patientNameDisplay,
+      this.patientGender,
+      safeAge,
+      province,
+      city,
+      this.patientRemarkDisplay
+    );
   }
 
   private showChevron(label: string): boolean {
@@ -226,6 +279,7 @@ export struct PersonalInfoPage {
               .onClick(() => {
                 this.patientGender = '男';
                 this.showGenderSheet = false;
+                this.persistCurrentPatientInfo();
               })
             Divider().color('#F0F0F0').strokeWidth(0.5)
             Text('女')
@@ -237,6 +291,7 @@ export struct PersonalInfoPage {
               .onClick(() => {
                 this.patientGender = '女';
                 this.showGenderSheet = false;
+                this.persistCurrentPatientInfo();
               })
             Column()
               .width('100%')
@@ -336,6 +391,7 @@ export struct EditPersonalInfoPage {
   @Link activePage: string;
   @Prop cancelReturnPage: string = '个人信息';
   @Link patientNameDisplay: string;
+  @Link currentPatientId: number;
 
   build() {
     Column({ space: 10 }) {
@@ -355,6 +411,19 @@ export struct EditPersonalInfoPage {
           .fontSize(18)
           .fontColor('#4A74F5')
           .onClick(() => {
+            const profile = patientService.getPatientProfile(this.currentPatientId);
+            if (profile) {
+              const p = profile.patient;
+              patientService.updatePatientBasicInfo(
+                this.currentPatientId,
+                this.patientNameDisplay,
+                p.gender,
+                p.age,
+                p.province,
+                p.city,
+                p.remark
+              );
+            }
             this.activePage = this.cancelReturnPage;
           })
       }
@@ -383,6 +452,7 @@ export struct EditPersonalAgePage {
   @Link activePage: string;
   @Prop cancelReturnPage: string = '个人信息';
   @Link patientAgeDisplay: string;
+  @Link currentPatientId: number;
 
   build() {
     Column({ space: 10 }) {
@@ -402,6 +472,21 @@ export struct EditPersonalAgePage {
           .fontSize(18)
           .fontColor('#4A74F5')
           .onClick(() => {
+            const profile = patientService.getPatientProfile(this.currentPatientId);
+            if (profile) {
+              const p = profile.patient;
+              const ageValue = Number(this.patientAgeDisplay);
+              const safeAge = Number.isFinite(ageValue) ? ageValue : p.age;
+              patientService.updatePatientBasicInfo(
+                this.currentPatientId,
+                p.name,
+                p.gender,
+                safeAge,
+                p.province,
+                p.city,
+                p.remark
+              );
+            }
             this.activePage = this.cancelReturnPage;
           })
       }
@@ -430,6 +515,7 @@ export struct EditRemarkInfoPage {
   @Link activePage: string;
   @Prop cancelReturnPage: string = '个人信息';
   @Link patientRemarkDisplay: string;
+  @Link currentPatientId: number;
 
   build() {
     Column({ space: 10 }) {
@@ -449,6 +535,19 @@ export struct EditRemarkInfoPage {
           .fontSize(18)
           .fontColor('#4A74F5')
           .onClick(() => {
+            const profile = patientService.getPatientProfile(this.currentPatientId);
+            if (profile) {
+              const p = profile.patient;
+              patientService.updatePatientBasicInfo(
+                this.currentPatientId,
+                p.name,
+                p.gender,
+                p.age,
+                p.province,
+                p.city,
+                this.patientRemarkDisplay
+              );
+            }
             this.activePage = this.cancelReturnPage;
           })
       }

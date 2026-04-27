@@ -1,18 +1,21 @@
 import { GroupItem } from './PatientModels'
+import { patientService } from '../../backend/patient/service/PatientService'
+import { PatientGroupEntity } from '../../backend/patient/model/PatientEntities'
 
 @Component
 export struct PatientMainPage {
   @Link activePage: string;
   @Link searchReturnPage: string;
+  @Link currentGroupId: number;
+  @Link currentGroupName: string;
   @State private searchText: string = '';
+  @State private groups: GroupItem[] = [];
+  @State private groupEntities: PatientGroupEntity[] = [];
 
-  private readonly groups: GroupItem[] = [
-    new GroupItem('默认分组', '20人'),
-    new GroupItem('发热门诊', '2人'),
-    new GroupItem('流行性感冒', '10人'),
-    new GroupItem('病毒性感冒', '2人'),
-    new GroupItem('咽炎', '6人')
-  ];
+  aboutToAppear() {
+    this.groups = patientService.getPatientGroupItems();
+    this.groupEntities = patientService.getGroups();
+  }
 
   build() {
     Column() {
@@ -106,6 +109,11 @@ export struct PatientMainPage {
               .padding({ left: 16, right: 16, top: 14, bottom: 14 })
               .alignItems(VerticalAlign.Center)
               .onClick(() => {
+                const group = this.groupEntities[index];
+                if (group) {
+                  this.currentGroupId = group.id;
+                  this.currentGroupName = group.name;
+                }
                 this.activePage = '默认分组';
               })
 
