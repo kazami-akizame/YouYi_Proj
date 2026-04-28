@@ -86,7 +86,7 @@ struct CertificationSuccess {
           .onClick(() => {
 
             //👈👈 -----修改成真的跳转位置
-            router.pushUrl({ url: 'pages/Homepages/HomePage' });
+            router.pushUrl({ url: 'pages/HomePages/HomePage' });
             //👈 👈
           })
       }
