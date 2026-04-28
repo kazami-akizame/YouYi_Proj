@@ -52,7 +52,6 @@
     "pages/HomePages/HomePage",
     "pages/HomePages/ArticleDetailPage",
     "pages/Patient/Index",
-    "pages/Mine/Index",
     "pages/Mine/BankCard",
     "pages/Mine/PatientEvaluatePage",
     "pages/Mine/ServiceSettingPage",

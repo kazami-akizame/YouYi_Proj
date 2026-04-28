@@ -1,309 +1,116 @@
 {
-  "medicineslist": [
+  "doctorInfo": [
     {
-      "id": "1",
-      "name": "钙铁锌咀嚼片",
-      "spec": "1.2g*60片",
-      "company": "特一药业集团股份有限公司",
-      "price": 25
-    },
-    {
-      "id": "2",
-      "name": "咀嚼片",
-      "spec": "1.8g*90片",
-      "company": "一一药业集团股份有限公司",
-      "price": 66
-    },
-    {
-      "id": "3",
-      "name": "钙铁锌",
-      "spec": "1.2g*80片",
-      "company": "药业集团",
-      "price": 88
+      "id": 1,
+      "realName": "张医生",
+      "hospital": "北京大学人民医院",
+      "department": "消化内科",
+      "title": "副主任医师",
+      "skills": "胃炎、胃溃疡、肠炎、消化不良",
+      "intro": "医学博士，15年临床经验，擅长消化系统疾病",
+      "experience": "2010-2015 北京协和医院\n2015-至今 北京大学人民医院"
     }
   ],
-  "medicines": [
+  "certifyInfo": {
+    "avatar": "avatar",
+    "idCardFront": "idCardFront",
+    "idCardBack": "idCardBack",
+    "certImage": "certImage",
+    "status": 2
+  },
+  "doctorIncome": {
+    "monthText": "四月",
+    "monthIncome": "5860.00",
+    "totalOrderCount": 126,
+    "totalIncome": "12560.00",
+    "settlementList": [
+      { "year": 2025, "month": 4, "income": "5860.00", "orderCount": 126, "settleTime": "04-30" },
+      { "year": 2025, "month": 3, "income": "6720.00", "orderCount": 143, "settleTime": "03-31" }
+    ]
+  },
+  "doctorOrder": [
     {
-      "id": "1",
-      "name": "倍健 钙铁锌咀嚼片 1.2g*60片(3效同补)",
-      "price": 136,
-      "originalPrice": 236,
-      "manufacturer": "特一药业集团股份有限公司",
-      "images": [
-        "u981",
-        "u981",
-        "u981",
-        "u981"
-      ],
-      "description": "请仔细阅读(特一 布洛芬片 0.1g*100片)的作用说明，并在药师指导下购买和使用。\n\n【药品名称】\n\n通用名称：布洛芬片\n\n英文名称：Ibuprofen Tablets\n\n汉语拼音：Buluofen Piɑn\n\n【成份】 本品每片含布洛芬0.1克。辅料为：淀粉、预胶化淀粉、（低取代）羟丙纤维素、羧甲淀粉钠、二氧化硅（微粉硅胶）、硬脂酸镁、明胶、滑石粉、蔗糖、二甲硅油、川蜡。\n\n【性状】本品为糖衣片，除去包衣后显白色。\n\n【作用类别】本品为解热镇痛类非处方药药品。\n\n【适应症】用于缓解轻至中度疼痛如头痛、关节痛、偏头痛、牙痛、肌肉痛、神经痛、痛经。也用于普通感冒或流行性感冒引起的发热。\n\n【规格】0.1g\n\n【用法用量】口服。12岁以上儿童及成人一次2片，若持续疼痛或发热，可间隔4~6小时重复用药1次，24小时不超过4次。儿童见下表。\n\n【不良反应】\n\n1.少数病人可出现恶心、呕吐、胃烧灼感或轻度消化不良、胃肠道溃疡及出血、转氨酶升高、头痛、头晕、耳鸣、视力模糊、精神紧张、嗜睡、下肢水肿或体重骤增。\n\n2.罕见皮疹、过敏性肾炎、膀胱炎、肾病综合征、肾乳头坏死或肾功能衰竭、支气管痉挛。\n\n【禁忌】\n\n1.对其他非甾体抗炎药过敏者禁用。\n\n2.孕妇及哺乳期妇女禁用。\n\n3.对阿司匹林过敏的哮喘患者禁用。\n\n【注意事项】\n\n1.本品为对症治疗药，不宜长期或大量使用，用于止痛不得超过5天，用于解热不得超过3天，如症状不缓解，请咨询医师或药师。\n\n2.1岁以下儿童应在医师指导下使用。\n\n3.不能同时服用其他含有解热镇痛药的药品（如某些复方抗感冒药）。\n\n4.服用本品期间不得饮酒或含有酒精的饮料。\n\n【药物相互作用】\n\n1.本品与其他解热、镇痛、抗炎药物同用时可增加胃肠道不良反应，并可能导致溃疡。\n\n2.本品与肝素、双香豆素等抗凝药同用时，可导致凝血酶原时间延长，增加出血倾向。\n\n3.本品与地高辛、甲氨蝶呤、口服降血糖药物同用时，能使这些药物的血药浓度增高，不宜同用。\n\n4.本品与呋塞米（呋喃苯胺酸）同用时，后者的排钠和降压作用减弱；与抗高血压药同用时，也降低后者的降压效果。\n\n5.如与其他药物同时使用可能会发生药物相互作用，详情请咨询医师或药师。\n\n【药理作用】本品能抑制前列腺素的合成，具有解热镇痛及抗炎作用。\n\n【贮藏】密封保存。\n\n【包装】塑料瓶包装。每瓶100片。\n\n【有效期】18个月\n\n【执行标准】《中国药典》2010年版二部\n\n【批准文号】国药准字H44021099\n\n【生产企业】广东台城制药股份有限公司"
+      "id": 1,
+      "time": "2025-04-20 09:20",
+      "name": "李小明 男 28岁",
+      "serviceType": "图文问诊",
+      "status": "已完成",
+      "price": "¥39.00",
+      "serviceColor": "#007FF0",
+      "patientName": "李小明",
+      "patientGender": "男",
+      "patientAge": "28岁",
+      "patientPhone": "138****1234",
+      "department": "消化内科",
+      "discount": "-¥9.00",
+      "realPay": "¥30.00",
+      "orderNo": "202504200001",
+      "createTime": "2025-04-20 09:15",
+      "payTime": "2025-04-20 09:16",
+      "payType": "微信支付"
     },
     {
-      "id": "2",
-      "name": "咀嚼片 1.8g*90片",
-      "price": 66,
-      "originalPrice": 128,
-      "manufacturer": "一一药业集团股份有限公司",
-      "images": [
-        "u981",
-        "u981",
-        "u981",
-        "u981"
-      ],
-      "description": "【药品名称】咀嚼片\n\n【成份】维生素、葡萄糖酸锌、碳酸钙等。\n\n【适应症】补充钙、铁、锌。\n\n【用法用量】口服，每日1次，每次1片。\n\n【规格】1.8g*90片\n\n【生产企业】一一药业集团股份有限公司"
+      "id": 2,
+      "time": "2025-04-19 15:10",
+      "name": "王芳 女 35岁",
+      "serviceType": "极速问诊",
+      "status": "已退款",
+      "price": "¥59.00",
+      "serviceColor": "#FFA500",
+      "patientName": "王芳",
+      "patientGender": "女",
+      "patientAge": "35岁",
+      "patientPhone": "139****5678",
+      "department": "消化内科",
+      "discount": "-¥9.00",
+      "realPay": "¥50.00",
+      "realRefund": "¥50.00",
+      "orderNo": "202504190002",
+      "createTime": "2025-04-19 15:05",
+      "payTime": "2025-04-19 15:06",
+      "payType": "支付宝",
+      "refundTime": "2025-04-19 16:00",
+      "refundType": "支付宝"
     },
     {
-      "id": "3",
-      "name": "钙铁锌 1.2g*80片",
-      "price": 88,
-      "originalPrice": 168,
-      "manufacturer": "药业集团",
-      "images": [
-        "u981",
-        "u981",
-        "u981",
-        "u981"
-      ],
-      "description": "【药品名称】钙铁锌咀嚼片\n\n【成份】碳酸钙、葡萄糖酸亚铁、葡萄糖酸锌。\n\n【功能】适合需要补充钙、铁、锌的4-17岁人群及成人、孕妇、乳母。\n\n【用法用量】每日1次，每次2片，口服。\n\n【规格】1.2g*80片\n\n【生产企业】药业集团"
+      "id": 3,
+      "time": "2025-04-18 11:00",
+      "name": "张伟 男 45岁",
+      "serviceType": "开药问诊",
+      "status": "已完成",
+      "price": "¥49.00",
+      "serviceColor": "#34C755",
+      "patientName": "张伟",
+      "patientGender": "男",
+      "patientAge": "45岁",
+      "patientPhone": "137****8888",
+      "department": "消化内科",
+      "discount": "-¥9.00",
+      "realPay": "¥40.00",
+      "orderNo": "202504180003",
+      "createTime": "2025-04-18 10:55",
+      "payTime": "2025-04-18 10:56",
+      "payType": "微信支付"
+    },
+    {
+      "id": 4,
+      "time": "2025-04-17 16:40",
+      "name": "刘红 女 29岁",
+      "serviceType": "私人医生",
+      "status": "已关闭",
+      "price": "¥199.00",
+      "serviceColor": "#9D4EDD",
+      "patientName": "刘红",
+      "patientGender": "女",
+      "patientAge": "29岁",
+      "patientPhone": "136****6666",
+      "serviceName": "私人医生服务",
+      "serviceDuration": "半年",
+      "coupon": "-¥10.00",
+      "shouldPay": "¥189.00",
+      "orderNo": "202504170004",
+      "createTime": "2025-04-17 16:30",
+      "closeReason": "支付超时，订单关闭"
     }
-  ],
-  "drafts": [
-    {
-      "id": "2",
-      "title": "夏天不能光脚丫、不能吃冰激凌？别用养生折腾孩子了",
-      "editTime": "上次编辑于：2020-01-20",
-      "topics": []
-    },
-    {
-      "title": "heyuliangzi",
-      "content": "hihihi",
-      "topics": [
-        "脾胃健康"
-      ],
-      "editTime": "上次编辑于：2026-04-27",
-      "id": "imPgo_B2ylA"
-    },
-    {
-      "title": "2222222",
-      "content": "rrrrrrrrrrrr",
-      "topics": [
-        "儿童健康"
-      ],
-      "editTime": "上次编辑于：2026-04-27",
-      "id": "mG-c27ByKxA"
-    }
-  ],
-  "prescriptions": [
-    {
-      "medicineId": "1",
-      "medicineCount": 2,
-      "frequency": "1",
-      "singleDose": "1",
-      "usageMethod": "1",
-      "remark": "nihao1",
-      "id": "JGoYOHMQ64w"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 2,
-      "frequency": "1",
-      "singleDose": "1",
-      "usageMethod": "1",
-      "remark": "nihao1",
-      "id": "wiYzCN9ZV8M"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 6,
-      "frequency": "666",
-      "singleDose": "6",
-      "usageMethod": "6666",
-      "remark": "666",
-      "id": "qwauJIhqlXM"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 5,
-      "frequency": "1111",
-      "singleDose": "222",
-      "usageMethod": "222",
-      "remark": "33333",
-      "id": "lgPXHCChlHI"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 5,
-      "frequency": "1111",
-      "singleDose": "222",
-      "usageMethod": "222",
-      "remark": "33333",
-      "id": "MKoYbDubGM4"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 3,
-      "frequency": "3333",
-      "singleDose": "3333333",
-      "usageMethod": "333333",
-      "remark": "33333",
-      "id": "egOmW1JL8OM"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 3,
-      "frequency": "3333",
-      "singleDose": "3333333",
-      "usageMethod": "333333",
-      "remark": "33333",
-      "id": "eEkzHkSt7C8"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 3,
-      "frequency": "3333",
-      "singleDose": "3333333",
-      "usageMethod": "333333",
-      "remark": "33333",
-      "id": "seLJ9qC_H_8"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 3,
-      "frequency": "3333",
-      "singleDose": "3333333",
-      "usageMethod": "333333",
-      "remark": "33333",
-      "id": "GRdAPIPM_lg"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 3,
-      "frequency": "1111",
-      "singleDose": "11111",
-      "usageMethod": "111111",
-      "remark": "",
-      "id": "USZbTgrYqFk"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 6,
-      "frequency": "88",
-      "singleDose": "11111",
-      "usageMethod": "111111",
-      "remark": "",
-      "id": "eIHpwk7sd-A"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 6,
-      "frequency": "88",
-      "singleDose": "11111",
-      "usageMethod": "111111",
-      "remark": "",
-      "id": "WisCLcNwmzg"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 8,
-      "frequency": "88",
-      "singleDose": "11111",
-      "usageMethod": "111111",
-      "remark": "",
-      "id": "edt7b5szJgs"
-    },
-    {
-      "medicineId": "1",
-      "medicineCount": 8,
-      "frequency": "88",
-      "singleDose": "11111",
-      "usageMethod": "111111",
-      "remark": "",
-      "id": "fv1BHxrz9Ww"
-    },
-    {
-      "medicineId": "1",
-      "quantity": 6,
-      "frequency": "2",
-      "singleDose": "8",
-      "usageMethod": "2",
-      "remark": "",
-      "id": "EIHg2q86U5A"
-    },
-    {
-      "medicineId": "1",
-      "quantity": 6,
-      "frequency": "2",
-      "singleDose": "8",
-      "usageMethod": "2",
-      "remark": "",
-      "id": "L-p82xroca8"
-    }
-  ],
-  "articles": [
-    {
-      "id": "1",
-      "title": "夏天不能光脚丫、不能吃冰激凌？别用养生折腾孩子了",
-      "author": "张清北",
-      "hospital": "北京协和医院",
-      "collect": "95收藏",
-      "like": "10点赞",
-      "comment": "34评论",
-      "content": "看到孩子不穿袜子，光脚在地板上踩，就说会着凉，要穿袜子。",
-      "topics": [
-        "儿童健康"
-      ]
-    },
-    {
-      "title": "hanxuanye",
-      "content": "nihao",
-      "author": "张清北",
-      "hospital": "北京协和医院",
-      "collect": "0收藏",
-      "like": "0点赞",
-      "comment": "0评论",
-      "id": "2u-bdwMkIfY",
-      "topics": [
-        "儿童健康"
-      ]
-    },
-    {
-      "title": "heyuliangzi",
-      "content": "heyuliangzi",
-      "author": "张清北",
-      "hospital": "北京协和医院",
-      "collect": "0收藏",
-      "like": "0点赞",
-      "comment": "0评论",
-      "id": "tJwkjRgnc6w",
-      "topics": [
-        "两性健康"
-      ]
-    },
-    {
-      "title": "nihao",
-      "content": "nihao",
-      "author": "张清北",
-      "hospital": "北京协和医院",
-      "collect": "0收藏",
-      "like": "0点赞",
-      "comment": "0评论",
-      "id": "SBIvfs52Ipc",
-      "topics": [
-        "儿童健康"
-      ]
-    },
-    {
-      "title": "shangshanruoshui",
-      "content": "hihihi",
-      "topics": [
-        "皮肤健康"
-      ],
-      "author": "张清北",
-      "hospital": "北京协和医院",
-      "collect": "0收藏",
-      "like": "0点赞",
-      "comment": "0评论",
-      "id": "3-IhPr2wNgA"
-    }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }
