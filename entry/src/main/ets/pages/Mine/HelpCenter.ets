@@ -85,7 +85,7 @@ struct HelpCenterPage {
     .backgroundColor(Color.White)
     .onClick(() => {
       router.replaceUrl({
-        url: 'pages/HelpDetail',
+        url: 'pages/Mine/HelpDetail',
         params: { title: item.title }
       })
     })

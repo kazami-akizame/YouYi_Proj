@@ -70,7 +70,7 @@ struct Splash {
     }
     // 👈 👈 ------------------------------
     //后期跳转真的首页！！！
-    router.replaceUrl({ url: 'pages/HomePages/HomePage' });
+    router.replaceUrl({ url: 'pages/Login_Register/Login' });
     // 👈 👈 ------------------------------
   }
 }

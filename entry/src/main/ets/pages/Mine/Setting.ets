@@ -114,9 +114,9 @@ struct SettingPage {
     .onClick(()=>{
       // 跳转+try捕获消除警告
       try {
-        if(item.title === '通知设置') router.replaceUrl({url:'pages/NoticeSetting'})
-        if(item.title === '更换手机号码') router.replaceUrl({url:'pages/ChangePhone'})
-        if(item.title === '常用语') router.replaceUrl({url:'pages/CommonWords'})
+        if(item.title === '通知设置') router.replaceUrl({url:'pages/Mine/NoticeSetting'})
+        if(item.title === '更换手机号码') router.replaceUrl({url:'pages/Mine/ChangePhone'})
+        if(item.title === '常用语') router.replaceUrl({url:'pages/Mine/CommonWords'})
       } catch(e){}
     })
     Divider().strokeWidth(1).color('#EEE')

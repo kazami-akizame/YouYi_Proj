@@ -54,7 +54,7 @@ struct MedicalAssistant {
     this.isSending = true;
 
     try {
-      let url = 'http://10.110.116.46:8888/api/chat';
+      let url = 'http://localhost:8888/api/chat';
       this.httpRequest.request(url, {
         method: http.RequestMethod.POST,
         header: { 'Content-Type': 'application/json' },
