@@ -176,33 +176,36 @@ struct GrabOrderPage {
   }
 
   // ----------------- ✅ 核心：抢单逻辑（已写好）-----------------
-  onGrabOrder() {
-    // 1. 把你写死的订单 → 转成 ChatPage 能用的 ConsultationItem
-    const chatItem = new ConsultationItem(
-      'grab_' + Date.now(),    // 唯一ID
-      this.order.name,         // 姓名
-      this.order.gender,       // 性别
-      this.order.age,          // 年龄
-      ConsultationType.GRAPHIC,
-      ConsultationStatus.IN_PROGRESS, // 抢单后直接变成问诊中
-      this.order.description,  // 病情描述
-      new Date().toLocaleString(), // 创建时间
-      '',
-      []
-    );
+  async onGrabOrder() {
+    try {
+      // 1. 把你写死的订单 → 转成 ChatPage 能用的 ConsultationItem
+      const chatItem = new ConsultationItem(
+        'grab_' + Date.now(), // 唯一ID
+        this.order.name, // 姓名
+        this.order.gender, // 性别
+        this.order.age, // 年龄
+        ConsultationType.GRAPHIC,
+        ConsultationStatus.IN_PROGRESS, // 抢单后直接变成问诊中
+        this.order.description, // 病情描述
+        new Date().toLocaleString(), // 创建时间
+        '',
+        []
+      );
 
-    // 2. 保存到数据文件
-    saveSingleItemToServer(chatItem);
+      // 2. 保存到数据文件
+      await saveSingleItemToServer(chatItem);
 
-    // 3. 跳转到聊天页，并把患者数据带过去！
-    router.pushUrl({
-      url: 'pages/HomePages/ChatPage',
-      params: {
-        item: chatItem
-      }
-    }).catch(() => {
-      promptAction.showToast({ message: '跳转聊天页失败' });
-    });
+      // 3. 跳转到聊天页，并把患者数据带过去！
+      await router.pushUrl({
+        url: 'pages/HomePages/ChatPage',
+        params: {
+          item: JSON.stringify(chatItem)
+        }
+      });
+    }catch (err) {
+      console.error('抢单失败：', JSON.stringify(err));
+      promptAction.showToast({ message: '抢单失败，请重试' });
+    }
   }
 
   @Builder
