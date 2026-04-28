@@ -42,6 +42,8 @@ export struct PatientModulePreview {
   @State private selectedMessageId: number = 0;
   /** 群发模块当前选中的接收人患者ID列表 */
   @State private selectedRecipientIds: number[] = [];
+  /** 消息详情页返回目标页面（默认返回群发历史，可由外部路由参数覆盖） */
+  @State private messageDetailReturnPage: string = '群发历史';
   /** 群发模块当前选中的分组 */
   @State private selectedRecipientGroupId: number = 1;
   @State private selectedRecipientGroupName: string = '默认分组';
@@ -76,6 +78,12 @@ export struct PatientModulePreview {
     const messageId = params.selectedMessageId;
     if (typeof messageId === 'number' && Number.isFinite(messageId) && messageId > 0) {
       this.selectedMessageId = messageId;
+    }
+
+    const detailReturnPage = params.messageDetailReturnPage;
+    if (typeof detailReturnPage === 'string' && detailReturnPage.length > 0) {
+      this.messageDetailReturnPage = detailReturnPage;
+      this.profileReturnPage = detailReturnPage;
     }
   }
 
@@ -187,7 +195,11 @@ export struct PatientModulePreview {
     } else if (this.activePage === '搜索消息') {
       SearchMessagePage({ activePage: $activePage, selectedMessageId: $selectedMessageId })
     } else if (this.activePage === '消息详情') {
-      MessageDetailPage({ activePage: $activePage, selectedMessageId: $selectedMessageId })
+      MessageDetailPage({
+        activePage: $activePage,
+        selectedMessageId: $selectedMessageId,
+        detailReturnPage: $messageDetailReturnPage
+      })
     } else if (this.activePage === '搜索患者') {
       SearchPatientPage({ activePage: $activePage, cancelReturnPage: this.searchReturnPage })
     } else {

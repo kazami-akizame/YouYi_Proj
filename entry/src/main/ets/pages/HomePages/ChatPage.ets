@@ -4,6 +4,7 @@ import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
 import { loadFromJsonServer, saveToJsonServer, saveSingleItemToServer } from '../common/ConsultationData';
 import { MedicineDetail } from '../HomePages/PrescriptionEditPage'
+import { patientService } from '../../backend/patient/service/PatientService'
 
 // 定义接口
 interface TopBarInfo {
@@ -54,6 +55,30 @@ struct ChatPage {
   @State hasProcessedReject: boolean = false;
   @State showFinishDialog: boolean = false;
   private scroller: Scroller = new Scroller();
+
+  private mapCurrentPatientId(): number {
+    if (!this.consultationItem) {
+      return 0;
+    }
+    const allPatients = patientService.getAllPatients();
+    const exact = allPatients.find((item) => {
+      return item.name === this.consultationItem!.patientName &&
+        item.gender === this.consultationItem!.patientGender &&
+        item.age === this.consultationItem!.patientAge;
+    });
+    if (exact) {
+      return exact.id;
+    }
+    const genderMatch = allPatients.find((item) => {
+      return item.name === this.consultationItem!.patientName &&
+        item.gender === this.consultationItem!.patientGender;
+    });
+    if (genderMatch) {
+      return genderMatch.id;
+    }
+    const nameOnly = allPatients.find((item) => item.name === this.consultationItem!.patientName);
+    return nameOnly ? nameOnly.id : 0;
+  }
 
 
 
@@ -605,16 +630,17 @@ struct ChatPage {
             .fontColor('#999')
             .onClick(() => {
               if (this.consultationItem) {
-                const patientInfo: PatientInfo = {
-                  name: this.consultationItem.patientName,
-                  gender: this.consultationItem.patientGender,
-                  age: this.consultationItem.patientAge
-                };
+                const currentPatientId = this.mapCurrentPatientId();
+                if (currentPatientId <= 0) {
+                  promptAction.showToast({ message: '未找到对应患者资料' });
+                  return;
+                }
                 router.pushUrl({
                   url: 'pages/Patient/Index',
                   params: {
-                    targetPage: '个人信息',
-                    patientData: JSON.stringify(patientInfo)
+                    targetPage: '患者资料',
+                    currentPatientId: currentPatientId,
+                    messageDetailReturnPage: '__BACK__'
                   }
                 });
               }

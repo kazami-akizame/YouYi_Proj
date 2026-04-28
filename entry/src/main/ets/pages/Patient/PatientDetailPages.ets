@@ -260,6 +260,10 @@ export struct PatientProfilePage {
           .syncLoad(true)
           .objectFit(ImageFit.Contain)
           .onClick(() => {
+            if (this.profileReturnPage === '__BACK__') {
+              router.back();
+              return;
+            }
             this.activePage = '默认分组';
           })
         Blank()
