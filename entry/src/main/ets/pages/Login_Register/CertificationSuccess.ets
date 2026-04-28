@@ -19,7 +19,7 @@ struct CertificationSuccess {
         .alignItems(VerticalAlign.Center)
         .onClick(() => {
           console.log(`${TAG}: 点击返回，跳转到首页`);
-          router.replaceUrl({ url: 'pages/Index' });
+          router.replaceUrl({ url: 'pages/Homepages/HomePage' });
         })
 
         Text("医师认证")
@@ -86,7 +86,7 @@ struct CertificationSuccess {
           .onClick(() => {
 
             //👈👈 -----修改成真的跳转位置
-            router.pushUrl({ url: 'pages/Index' });
+            router.pushUrl({ url: 'pages/Homepages/HomePage' });
             //👈 👈
           })
       }
