@@ -81,7 +81,7 @@ struct MessageDetailPage {
         .height(18)
         .margin({ left: 16 })
         .onClick(() => {
-          router.pushUrl({ url: 'pages/MessageCenterPage' })
+          router.pushUrl({ url: 'pages/HomePages/MessageCenterPage' })
         })
 
       // 页面标题
