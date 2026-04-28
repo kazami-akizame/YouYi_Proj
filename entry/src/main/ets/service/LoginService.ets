@@ -47,7 +47,7 @@ export class LoginService {
       
       // 添加时间戳避免缓存
       const timestamp = Date.now();
-      const url = `${LoginService.BASE_URL}/users?_t=${timestamp}`;
+      const url = `${LoginService.BASE_URL}/users`;
       
       const response: http.HttpResponse = await httpRequest.request(
         url,
@@ -56,9 +56,15 @@ export class LoginService {
 
       if (response.responseCode === 200) {
         const responseText: string = response.result as string;
+
+        console.log("responseText"+responseText);
+
         const users: UserItem[] = JSON.parse(responseText) as UserItem[];
+
+        console.log("users"+users.toString());
         
         if (!users || users.length === 0) {
+          console.log("用户为空或不存在");
           return false;
         }
         
@@ -69,7 +75,7 @@ export class LoginService {
             return true;
           }
         }
-        
+        console.log("手机号不存在");
         return false;
       }
       return false;
@@ -168,7 +174,7 @@ export class LoginService {
       // 4. 查询用户
       const timestamp = Date.now();
       const userResponse: http.HttpResponse = await httpRequest.request(
-        `${LoginService.BASE_URL}/users?_t=${timestamp}`,
+        `${LoginService.BASE_URL}/users`,
         { method: http.RequestMethod.GET }
       );
 
@@ -279,7 +285,7 @@ export class LoginService {
       // 获取所有用户，本地查找
       const timestamp = Date.now();
       const checkResponse: http.HttpResponse = await httpRequest.request(
-        `${LoginService.BASE_URL}/users?_t=${timestamp}`,
+        `${LoginService.BASE_URL}/users`,
         { method: http.RequestMethod.GET }
       );
 
@@ -355,7 +361,7 @@ export class LoginService {
       
       // 获取所有用户，本地查找
       const response: http.HttpResponse = await httpRequest.request(
-        `${LoginService.BASE_URL}/users?_t=${timestamp}`,
+        `${LoginService.BASE_URL}/users`,
         { method: http.RequestMethod.GET }
       );
 
@@ -395,7 +401,7 @@ export class LoginService {
       
       // 获取所有用户
       const response: http.HttpResponse = await httpRequest.request(
-        `${LoginService.BASE_URL}/users?_t=${timestamp}`,
+        `${LoginService.BASE_URL}/users`,
         { method: http.RequestMethod.GET }
       );
 

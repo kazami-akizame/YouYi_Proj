@@ -1,4 +1,4 @@
-//终端命令行“.\start-json-server.bat”根目录下启动命令行
+@REM 终端命令行“.\start-json-server.bat”根目录下启动命令行
 @echo off
 echo ========================================
 echo   JSON Server 启动脚本
