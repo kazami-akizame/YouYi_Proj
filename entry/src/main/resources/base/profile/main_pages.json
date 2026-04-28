@@ -47,6 +47,7 @@
     "pages/HomePages/EditVideoPage",
     "pages/HomePages/AddTopicPage",
     "pages/HomePages/GrabOrderPage",
+    "pages/HomePages/OrderPageLast",
     "pages/HomePages/MessageCenterPage",
     "pages/HomePages/MessageDetailPage",
     "pages/HomePages/HomePage",
