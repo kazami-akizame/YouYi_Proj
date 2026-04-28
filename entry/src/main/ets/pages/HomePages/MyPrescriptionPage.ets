@@ -3,6 +3,7 @@ import router from '@ohos.router';
 import http from '@ohos.net.http';
 import promptAction from '@ohos.promptAction';
 import { ConsultationItem } from '../common/ConsultationData';
+import { MedicineDetail } from '../HomePages/PrescriptionEditPage'
 
 // 在文件开头，import 语句之后定义接口
 interface RawPrescription {
@@ -38,7 +39,7 @@ interface Prescription {
   patientAge?: number;
   diagnosis: string;
   medicineCount: number;
-  medicineList: string[];
+  medicineList: Object[];
 }
 
 interface RouterParams {
@@ -72,7 +73,7 @@ struct MyPharmacyPage {
         raw.description,
         raw.createTime,
         raw.rejectReason,
-        //raw.chatMessages
+        raw.chatMessages
       );
     }
   }
@@ -84,7 +85,7 @@ struct MyPharmacyPage {
 
       // 常用处方请求 - 保持原样，不做转换
       let commonResponse = await httpRequest.request(
-        "http://127.0.0.1:8888/commonPrescriptions",
+        "http://127.0.0.1:8888/commonPrescriptions1",
         {
           method: http.RequestMethod.GET,
           header: { 'Content-Type': 'application/json' }
@@ -184,15 +185,16 @@ struct MyPharmacyPage {
         });
       })
 
-      ForEach(prescription.medicineList.slice(0, 2), (med: string) => {
-        Text(med)
-          .fontSize(14)
-          .fontColor('#999')
-          .width('100%')
-          .margin({ bottom: 4 })
+      ForEach(prescription.medicineList.slice(0, 2), (med: Object) => {
+        if (typeof med === 'string') {
+          Text(med).fontSize(14).fontColor('#999')
+        } else {
+          Text(`· ${(med as MedicineDetail).name} ${(med as MedicineDetail).specification} ×${(med as MedicineDetail).quantity}`)
+            .fontSize(14).fontColor('#999')
+        }
       })
       if (prescription.medicineList.length > 2) {
-        Text(`${prescription.medicineList[2]}...`)
+        Text(`...等${prescription.medicineList.length}种药品`)
           .fontSize(14)
           .fontColor('#999')
           .width('100%')
@@ -223,7 +225,12 @@ struct MyPharmacyPage {
       Row() {
         Image($r("app.media.left"))
           .width(14)
-          .onClick(() => router.back())
+          .onClick(() => {
+            // 直接替换当前页面为问诊列表，清除所有中间栈
+            router.replaceUrl({
+              url: 'pages/HomePages/OnlineConsultationPage'
+            });
+          })
         Blank()
         Text('我的药房')
           .fontSize(18)

@@ -1,14 +1,21 @@
 // pages/ChatPage.ets
-import { ConsultationItem, ConsultationStatus, ChatMessage , Prescription } from '../common/ConsultationData';
+import { ConsultationItem, ConsultationStatus, ConsultationType, ChatMessage , Prescription } from '../common/ConsultationData';
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
-import { loadFromJsonServer, saveToJsonServer, saveSingleItemToServer } from '../common/ConsultationData'
+import { loadFromJsonServer, saveToJsonServer, saveSingleItemToServer } from '../common/ConsultationData';
+import { MedicineDetail } from '../HomePages/PrescriptionEditPage'
 
 // 定义接口
 interface TopBarInfo {
   text: string;
   bgColor: string;
   textColor: string;
+}
+
+export interface PatientInfo {
+  name: string;
+  gender: string;
+  age: number;
 }
 
 // 定义 ActionMenu 返回结果类型
@@ -21,6 +28,19 @@ interface RouterParams {
   item?: string;
   rejectReason?: string;
   prescriptionJson?: string;
+}
+
+interface RawConsultationItem {
+  id: string;
+  patientName: string;
+  patientGender: string;
+  patientAge: number;
+  type: string;
+  status: string;
+  description: string;
+  createTime: string;
+  rejectReason?: string;
+  chatMessages?: ChatMessage[];
 }
 
 @Entry
@@ -46,28 +66,52 @@ struct ChatPage {
 
     console.log('接收到路由参数:', JSON.stringify(params));
 
+    // ✅ 兼容患者详情页传来的 itemJson（若存在则转为 item）
+    if (params && !params.item && (params as Record<string, string>).itemJson) {
+      params.item = (params as Record<string, string>).itemJson;
+    }
+
+
     if (!params || !params.item) {
       console.warn('未接收到问诊数据');
       return;
     }
-    const rawItem = JSON.parse(params.item) as ConsultationItem;
+    let rawItem: RawConsultationItem | null = null;
+    try {
+      rawItem = JSON.parse(params.item) as RawConsultationItem;
+    } catch (e) {
+      console.error('解析 item 失败', e);
+      return;
+    }
+
+    if (!rawItem) {
+      console.error('解析后 rawItem 为 null');
+      return;
+    }
+
+    // 构造对象，显式将字符串转为枚举
     this.consultationItem = new ConsultationItem(
       rawItem.id,
       rawItem.patientName,
       rawItem.patientGender,
       rawItem.patientAge,
-      rawItem.type,
-      rawItem.status,
+      rawItem.type as ConsultationType,      // 字符串 -> 枚举
+      rawItem.status as ConsultationStatus,  // 字符串 -> 枚举
       rawItem.description,
       rawItem.createTime,
       rawItem.rejectReason,
-      rawItem.chatMessages
+      rawItem.chatMessages as ChatMessage[]
     );
 
     // ✅ 2. 初始化聊天记录
     if (this.consultationItem.chatMessages?.length) {
       this.messageList = this.consultationItem.chatMessages;
-    } else {
+      console.log('从服务器加载的消息数量:', this.messageList.length);
+      this.messageList.forEach((msg, i) => {
+        console.log(`消息${i}: isPrescription=${msg.isPrescription}, content=${msg.content?.substring(0, 10)}`);
+      });
+    }else {
+      // ⭐ 新建问诊时，生成包含病情描述的基础消息
       this.initMessages();
     }
 
@@ -90,10 +134,10 @@ struct ChatPage {
     // 绑定聊天记录
     this.consultationItem.chatMessages = this.messageList;
 
-    // 调用【单条保存】
+    console.log('保存前的消息数量:', this.messageList.length);
+    console.log('最后一条消息 isPrescription:', this.messageList[this.messageList.length-1]?.isPrescription);
     await saveSingleItemToServer(this.consultationItem);
-
-    console.log("✅ 聊天记录已持久化");
+    console.log('保存完毕');
   }
 
   // 监听页面显示（用于接收退诊页面返回的结果）
@@ -272,16 +316,18 @@ struct ChatPage {
               .textAlign(TextAlign.Start)
 
             if (msg.prescriptionData?.medicineList) {
-              ForEach(msg.prescriptionData.medicineList.slice(0, 2), (med: string) => {
-                Text(`· ${med}`)
-                  .fontSize(14)
-                  .fontColor('#666')
-                  .width('100%')
+              ForEach(msg.prescriptionData.medicineList.slice(0, 2), (med: Object, index: number) => {
+                if (typeof med === 'string') {
+                  Text(`· ${med}`)
+                    .fontSize(14).fontColor('#666').width('100%')
+                } else {
+                  Text(`· ${(med as MedicineDetail).name} ${(med as MedicineDetail).specification} ×${(med as MedicineDetail).quantity}`)
+                    .fontSize(14).fontColor('#666').width('100%')
+                }
               })
               if (msg.prescriptionData.medicineList.length > 2) {
                 Text(`...等${msg.prescriptionData.medicineList.length}种药品`)
-                  .fontSize(12)
-                  .fontColor('#999')
+                  .fontSize(12).fontColor('#999')
               }
             }
 
@@ -292,6 +338,16 @@ struct ChatPage {
               .border({ width: 1, color: '#007AFF', radius: 20 })
               .padding({ left: 16, right: 16, top: 6, bottom: 6 })
               .margin({ top: 12 })
+              .onClick(() => {
+                if (msg.prescriptionData) {
+                  router.pushUrl({
+                    url: 'pages/HomePages/HistoryPrescriptionDetailPage',  // 根据你的路由配置
+                    params: {
+                      prescriptionJson: JSON.stringify(msg.prescriptionData)
+                    }
+                  });
+                }
+              })
           }
           .padding(16)
           .backgroundColor('#FFFFFF')
@@ -410,6 +466,8 @@ struct ChatPage {
     // 同步更新全局数据管理器（如果有）
     // consultationDataManager.updateItem(this.consultationItem);
     this.initMessages();  // 重新生成消息列表
+    // ⭐ 立刻保存到服务器
+    this.saveChatDataToJson();
     promptAction.showToast({ message: `已退诊，原因：${reason}` });
   }
 
@@ -546,10 +604,22 @@ struct ChatPage {
             .fontSize(14)
             .fontColor('#999')
             .onClick(() => {
-              router.pushUrl({
-                url: 'pages/Patient/PatientDetailPages.ets'
-              });
+              if (this.consultationItem) {
+                const patientInfo: PatientInfo = {
+                  name: this.consultationItem.patientName,
+                  gender: this.consultationItem.patientGender,
+                  age: this.consultationItem.patientAge
+                };
+                router.pushUrl({
+                  url: 'pages/Patient/Index',
+                  params: {
+                    targetPage: '个人信息',
+                    patientData: JSON.stringify(patientInfo)
+                  }
+                });
+              }
             })
+
         }
         .width('100%')
         .padding(16)

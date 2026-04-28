@@ -26,7 +26,7 @@
     {
       "id": "1",
       "name": "倍健 钙铁锌咀嚼片 1.2g*60片(3效同补)",
-      "price": 136,
+      "price": 25,
       "originalPrice": 236,
       "manufacturer": "特一药业集团股份有限公司",
       "images": [
@@ -81,15 +81,6 @@
       ],
       "editTime": "上次编辑于：2026-04-27",
       "id": "imPgo_B2ylA"
-    },
-    {
-      "title": "2222222",
-      "content": "rrrrrrrrrrrr",
-      "topics": [
-        "儿童健康"
-      ],
-      "editTime": "上次编辑于：2026-04-27",
-      "id": "mG-c27ByKxA"
     }
   ],
   "prescriptions": [
@@ -465,6 +456,13 @@
       "manufacturer": "江西珍视明",
       "price": 25,
       "specification": "15ml"
+    },
+    {
+      "id": "14",
+      "name": "秋水仙碱片",
+      "manufacturer": "云南植物药业",
+      "price": 25,
+      "specification": "0.5mg*20片"
     }
   ],
   "commonPrescriptions": [
@@ -667,6 +665,78 @@
       ],
       "createDate": "2026/4/26",
       "isCommon": true
+    },
+    {
+      "id": "1777358913130",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "1",
+      "medicineCount": 1,
+      "medicines": [
+        {
+          "name": "钙铁锌咀嚼片",
+          "specification": "1.2g*60片",
+          "quantity": 1,
+          "usageMethod": "1",
+          "frequency": "1",
+          "singleDose": "1",
+          "remark": ""
+        }
+      ],
+      "createDate": "2026/4/28",
+      "isCommon": true
+    },
+    {
+      "id": "1777359455789",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "9",
+      "medicineCount": 1,
+      "medicines": [
+        {
+          "name": "钙铁锌咀嚼片",
+          "specification": "1.2g*60片",
+          "quantity": 2,
+          "usageMethod": "9",
+          "frequency": "9",
+          "singleDose": "9",
+          "remark": ""
+        }
+      ],
+      "createDate": "2026/4/28",
+      "isCommon": true
+    },
+    {
+      "id": "1777359967218",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "33",
+      "medicineCount": 2,
+      "medicines": [
+        {
+          "name": "咀嚼片",
+          "specification": "1.8g*90片",
+          "quantity": 1,
+          "usageMethod": "q",
+          "frequency": "q",
+          "singleDose": "q",
+          "remark": "q"
+        },
+        {
+          "name": "铝碳酸镁片",
+          "specification": "0.5g*20片",
+          "quantity": 1,
+          "usageMethod": "a",
+          "frequency": "a",
+          "singleDose": "a",
+          "remark": "a"
+        }
+      ],
+      "createDate": "2026/4/28",
+      "isCommon": true
     }
   ],
   "historyPrescriptions": [
@@ -675,117 +745,198 @@
       "patientName": "吴珊珊",
       "patientGender": "女",
       "patientAge": 23,
-      "clinicalDiagnosis": "感冒",
-      "medicineCount": 3,
-      "medicines": [
+      "diagnosis": "感冒",
+      "medicineCount": 5,
+      "medicineList": [
         {
           "name": "板蓝根颗粒",
           "specification": "10包/盒",
           "quantity": 1,
-          "usageMethod": "口服",
-          "frequency": "每日3次",
-          "singleDose": "1",
-          "remark": ""
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
         },
         {
           "name": "感冒灵颗粒",
           "specification": "10包/盒",
           "quantity": 1,
-          "usageMethod": "口服",
-          "frequency": "每日3次",
-          "singleDose": "1",
-          "remark": ""
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
         },
         {
           "name": "维C银翘片",
-          "specification": "1盒",
+          "specification": "",
           "quantity": 1,
-          "usageMethod": "口服",
-          "frequency": "每日3次",
-          "singleDose": "2",
-          "remark": ""
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
         }
-      ],
-      "createDate": "2024-01-15",
-      "isCommon": false
+      ]
     },
     {
       "id": "5",
       "patientName": "陈明",
       "patientGender": "男",
       "patientAge": 28,
-      "clinicalDiagnosis": "急性肠胃炎",
+      "diagnosis": "急性肠胃炎",
       "medicineCount": 4,
-      "medicines": [
+      "medicineList": [
         {
           "name": "蒙脱石散",
-          "specification": "1盒",
+          "specification": "10包/盒",
           "quantity": 1,
-          "usageMethod": "口服",
-          "frequency": "每日3次",
-          "singleDose": "1",
-          "remark": ""
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
         },
         {
           "name": "诺氟沙星胶囊",
-          "specification": "1盒",
+          "specification": "10包/盒",
           "quantity": 1,
-          "usageMethod": "口服",
-          "frequency": "每日2次",
-          "singleDose": "2",
-          "remark": ""
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
         },
         {
           "name": "口服补液盐散",
-          "specification": "1盒",
+          "specification": "",
           "quantity": 1,
-          "usageMethod": "冲服",
-          "frequency": "按需",
-          "singleDose": "1",
-          "remark": ""
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
         },
         {
           "name": "奥美拉唑肠溶胶囊",
-          "specification": "1盒",
+          "specification": "",
           "quantity": 1,
-          "usageMethod": "口服",
-          "frequency": "每日1次",
-          "singleDose": "1",
-          "remark": ""
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
         }
-      ],
-      "createDate": "2024-01-20",
-      "isCommon": false
+      ]
     },
     {
       "id": "6",
       "patientName": "刘芳",
       "patientGender": "女",
       "patientAge": 38,
-      "clinicalDiagnosis": "高血压",
+      "diagnosis": "高血压",
       "medicineCount": 2,
-      "medicines": [
+      "medicineList": [
         {
           "name": "硝苯地平缓释片",
-          "specification": "1瓶",
+          "specification": "10包/盒",
           "quantity": 1,
-          "usageMethod": "口服",
-          "frequency": "每日1次",
-          "singleDose": "1",
-          "remark": "晨起服用"
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
         },
         {
           "name": "厄贝沙坦片",
-          "specification": "1盒",
+          "specification": "10包/盒",
           "quantity": 1,
-          "usageMethod": "口服",
-          "frequency": "每日1次",
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    },
+    {
+      "patientName": "吴珊珊",
+      "patientGender": "女",
+      "patientAge": 23,
+      "diagnosis": "bb",
+      "medicineCount": 3,
+      "medicineList": [
+        {
+          "name": "板蓝根颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "维C银翘片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ],
+      "id": "IJDOfLt"
+    },
+    {
+      "patientName": "1",
+      "patientGender": "男",
+      "patientAge": 1,
+      "diagnosis": "1",
+      "medicineCount": 3,
+      "medicineList": [
+        {
+          "name": "板蓝根颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "维C银翘片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ],
+      "id": "1dxr1rF"
+    },
+    {
+      "patientName": "2",
+      "patientGender": "男",
+      "patientAge": 2,
+      "diagnosis": "2",
+      "medicineCount": 2,
+      "medicineList": [
+        {
+          "name": "硝苯地平片",
+          "specification": "10mg*100片",
+          "quantity": 1,
+          "usageMethod": "1",
+          "frequency": "1",
           "singleDose": "1",
+          "remark": ""
+        },
+        {
+          "name": "硝苯地平片",
+          "specification": "10mg*100片",
+          "quantity": 2,
+          "usageMethod": "2",
+          "frequency": "2",
+          "singleDose": "2",
           "remark": ""
         }
       ],
-      "createDate": "2024-01-25",
-      "isCommon": false
+      "id": "OsmRlw-"
     }
   ],
   "doctorInfo": [
@@ -913,6 +1064,403 @@
       "createTime": "2025-04-17 16:30",
       "closeReason": "支付超时，订单关闭"
     }
+  ],
+  "consultations": [
+    {
+      "id": "C001",
+      "patientName": "吴珊珊",
+      "patientGender": "女",
+      "patientAge": 23,
+      "type": "极速",
+      "status": "待接诊",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-04-06 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C002",
+      "patientName": "张伟",
+      "patientGender": "男",
+      "patientAge": 45,
+      "type": "图文",
+      "status": "待接诊",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约4天）",
+      "createTime": "2026-04-07 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约4天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C003",
+      "patientName": "李娜",
+      "patientGender": "女",
+      "patientAge": 32,
+      "type": "开药",
+      "status": "问诊结束",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约5天）",
+      "createTime": "2026-04-08 08:08",
+      "rejectReason": "咨询不对症",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约5天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
+    },
+    {
+      "id": "C004",
+      "patientName": "王磊",
+      "patientGender": "男",
+      "patientAge": 29,
+      "type": "极速",
+      "status": "进行中",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约6天）",
+      "createTime": "2026-04-09 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约6天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C005",
+      "patientName": "刘芳",
+      "patientGender": "女",
+      "patientAge": 38,
+      "type": "图文",
+      "status": "进行中",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约7天）",
+      "createTime": "2026-04-10 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约7天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C006",
+      "patientName": "陈晨",
+      "patientGender": "男",
+      "patientAge": 27,
+      "type": "开药",
+      "status": "进行中",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约8天）",
+      "createTime": "2026-04-11 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约8天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
+    },
+    {
+      "id": "C008",
+      "patientName": "孙丽",
+      "patientGender": "女",
+      "patientAge": 26,
+      "type": "图文",
+      "status": "问诊结束",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约10天）",
+      "createTime": "2026-04-13 08:08",
+      "rejectReason": ""
+    },
+    {
+      "id": "C009",
+      "patientName": "郑丽",
+      "patientGender": "女",
+      "patientAge": 25,
+      "type": "图文",
+      "status": "待接诊",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-02-06 08:09",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C010",
+      "patientName": "陈明",
+      "patientGender": "男",
+      "patientAge": 28,
+      "type": "开药",
+      "status": "问诊结束",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-02-06 08:09",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
+    },
+    {
+      "id": "C011",
+      "patientName": "刘洋",
+      "patientGender": "女",
+      "patientAge": 22,
+      "type": "极速",
+      "status": "已退诊",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-02-06 08:09",
+      "rejectReason": "患者病情复杂",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好，退诊原因：患者病情复杂",
+          "time": "10:40"
+        }
+      ]
+    },
+    {
+      "id": "C012",
+      "patientName": "周敏",
+      "patientGender": "女",
+      "patientAge": 31,
+      "type": "图文",
+      "status": "问诊结束",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-02-06 08:09",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
+    }
+  ],
+  "commonPrescriptions1": [
+    {
+      "id": "1",
+      "diagnosis": "感冒",
+      "medicineCount": 5,
+      "medicineList": [
+        {
+          "name": "板蓝根颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "维C银翘片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "diagnosis": "急性咽炎",
+      "medicineCount": 4,
+      "medicineList": [
+        {
+          "name": "蒲地蓝消炎口服液",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "西瓜霜润喉片",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "阿莫西林胶囊",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "金银花含片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "diagnosis": "头痛/偏头痛",
+      "medicineList": [
+        {
+          "name": "布洛芬缓释胶囊",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "天麻头痛片",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    }
+  ],
+  "rejectReasons": [
+    "咨询不对症",
+    "患者缺少诊疗资料",
+    "患者病情复杂"
   ],
   "$schema": "./node_modules/json-server/schema.json"
 }

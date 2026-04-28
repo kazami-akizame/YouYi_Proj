@@ -140,7 +140,7 @@ struct MedicineListPage {
     .backgroundColor('#F8F8F8')
   }
 
-  // 药品列表项（完全不变）
+  // 药品列表项 ✅ 已完整修复
   @Builder
   MedicineItem(item: Medicine) {
     Row() {
@@ -178,7 +178,19 @@ struct MedicineListPage {
             .border({ width: 1, color: '#007AFF', radius: 20 })
             .padding({ left: 16, right: 16, top: 6, bottom: 6 })
             .onClick(() => {
-              router.pushUrl({ url: 'pages/HomePages/MedicineUsagePage' });
+              // ✅ 修复：传递当前药品到用法页面
+              router.pushUrl({
+                url: 'pages/HomePages/MedicineUsagePage',
+                params: {
+                  medicine: {
+                    id: item.id,
+                    name: item.name,
+                    spec: item.spec,
+                    company: item.company,
+                    price: item.price
+                  }
+                }
+              });
             })
         }
         .width('100%')
@@ -190,8 +202,10 @@ struct MedicineListPage {
     .padding(16)
     .backgroundColor(Color.White)
     .onClick(() => {
-      router.pushUrl({ url: 'pages/HomePages/MedicineDetailPage',
-        params: { id: item.id }});
+      router.pushUrl({
+        url: 'pages/HomePages/MedicineDetailPage',
+        params: { id: item.id }
+      });
     })
   }
 }

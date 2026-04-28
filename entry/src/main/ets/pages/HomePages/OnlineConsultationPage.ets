@@ -17,6 +17,11 @@ struct OnlineConsultationPage {
     this.loadData();
   }
 
+  onPageShow() {
+    console.log('OnlineConsultationPage onPageShow - refresh data');
+    this.loadData();
+  }
+
   // 把数据加载和筛选逻辑提前
   loadData() {
     loadFromJsonServer().then((data: ConsultationItem[]) => {

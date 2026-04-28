@@ -2,14 +2,30 @@
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
 import http from '@ohos.net.http';
-import { ConsultationItem, ChatMessage } from '../common/ConsultationData';
+import { ConsultationItem, ConsultationStatus, ChatMessage } from '../common/ConsultationData';
 import { UIContext } from '@ohos.arkui.UIContext';
+import { getTempUsageData, clearTempUsageData } from '../HomePages/MedicineUsagePage';
 
 // 处方药品项接口
-interface MedicineItem {
-  name: string;
-  specification: string;
-  dosage: string;
+export interface MedicineDetail {
+  name: string;            // 药品名，如“硝苯地平片”
+  specification: string;   // 规格，如“10mg*100片”
+  quantity: number;        // 数量（盒/瓶等）
+  usageMethod: string;     // 用法，如“口服”
+  frequency: string;       // 频次，如“每日3次”
+  singleDose: string;      // 单次剂量，如“1片”
+  remark?: string;         // 备注
+}
+
+interface CommonPrescriptionData {
+  diagnosis: string;
+  medicineCount: number;
+  medicineList: string[];   // 只存名称字符串
+}
+
+interface RawPrescriptionData {
+  diagnosis?: string;
+  medicineList?: Object[];   // 使用 Object[] 兼容字符串或对象
 }
 
 // 处方数据结构（从路由接收）
@@ -20,7 +36,7 @@ interface PrescriptionData {
   patientAge?: number;
   diagnosis: string;
   medicineCount: number;
-  medicineList: string[];
+  medicineList: MedicineDetail[] ;
 }
 
 interface PrescriptionEditParams {
@@ -60,7 +76,7 @@ struct PrescriptionEditPage {
   @State diagnosis: string = '';
 
   // 药品列表（解析处方数据后填充）
-  @State medicineList: MedicineItem[] = [];
+  @State medicineList: MedicineDetail[] = [];
 
   // 是否保存为常用处方
   @State isSavedAsCommon: boolean = false;
@@ -81,24 +97,64 @@ struct PrescriptionEditPage {
     }
     if (params.prescriptionJson) {
       try {
-        const data = JSON.parse(params.prescriptionJson) as PrescriptionData;
-        this.diagnosis = data.diagnosis;
+        const data: RawPrescriptionData = JSON.parse(params.prescriptionJson) as RawPrescriptionData;
+        this.diagnosis = data.diagnosis ?? '';
 
-        // 赋值患者信息（现在接口已经定义了，不会报错）
-        if (data.patientName) this.patientName = data.patientName;
-        if (data.patientGender) this.patientGender = data.patientGender;
-        if (data.patientAge !== undefined) this.patientAge = data.patientAge + '岁';
-
-        // 解析药品列表
-        this.medicineList = data.medicineList.map((medStr: string): MedicineItem => {
-          return {
-            name: medStr,
-            specification: '',
-            dosage: '2次/天，每次1片，温水送服'
-          };
-        });
+        const rawList: Object[] = data.medicineList ?? [];
+        if (rawList.length > 0) {
+          if (typeof rawList[0] === 'string') {
+            // 旧格式：字符串数组
+            this.medicineList = rawList.map((item: Object) => {
+              const medStr: string = item as string;
+              return {
+                name: medStr,
+                specification: '',
+                quantity: 1,
+                usageMethod: '',
+                frequency: '',
+                singleDose: ''
+              } as MedicineDetail;
+            });
+          } else {
+            // 新格式：对象数组
+            this.medicineList = rawList as MedicineDetail[];
+          }
+        }
       } catch (e) {
         promptAction.showToast({ message: '数据加载失败' });
+      }
+    }
+  }
+
+  onPageShow() {
+    // 1. 尝试从全局临时变量获取药品数据
+    const temp = getTempUsageData();
+    if (temp) {
+      clearTempUsageData();
+      // 转换为 MedicineDetail 格式
+      const newMed: MedicineDetail = {
+        name: temp.medicine.name,
+        specification: temp.medicine.spec,   // 注意字段对应
+        quantity: temp.count,
+        usageMethod: temp.usageMethod,
+        frequency: temp.frequency,
+        singleDose: temp.singleDose,
+        remark: temp.remark
+      };
+      // 追加到列表
+      this.medicineList = [...this.medicineList, newMed];
+      // 清除临时变量，防止下次重复添加
+    }
+
+    // 2. 兼容旧路由参数（如果有）
+    const params = router.getParams() as Record<string, string>;
+    if (params && params.medicineJson) {
+      try {
+        const newMed: MedicineDetail = JSON.parse(params.medicineJson);
+        this.medicineList = [...this.medicineList, newMed];
+        router.clear();
+      } catch (e) {
+        console.error('添加药品失败', e);
       }
     }
   }
@@ -115,9 +171,8 @@ struct PrescriptionEditPage {
     router.pushUrl({
       url: 'pages/HomePages/MedicineUsagePage',
       params: {
-        index: index,
-        medicineName: item.name,
-        dosage: item.dosage || ''
+        editIndex: index,
+        existingMedicine: JSON.stringify(item)   // 传递整个药品对象
       }
     });
   }
@@ -125,7 +180,7 @@ struct PrescriptionEditPage {
   // 新增药品（跳转药品库选择，此处为演示）
   addMedicine() {
     router.pushUrl({
-      url: 'pages/HomePages/AddComMedSDCPage'
+      url: 'pages/HomePages/ACPSDCPPage'
     });
   }
 
@@ -137,7 +192,7 @@ struct PrescriptionEditPage {
     }
 
     // 构建常用处方模板（声明类型）
-    const commonPrescription: PrescriptionData = {
+    const commonPrescription: CommonPrescriptionData = {
       diagnosis: this.diagnosis,
       medicineCount: this.medicineList.length,
       medicineList: this.medicineList.map(item => item.name)
@@ -176,6 +231,12 @@ struct PrescriptionEditPage {
       return;
     }
 
+    // ⚠️ 关键：必须有问诊对象才能发送
+    if (!this.consultationItem) {
+      promptAction.showToast({ message: '缺少问诊信息，无法发送处方' });
+      return;
+    }
+
     // 声明纯数据对象，使用接口类型
     const itemPlain: ConsultationPlainData | null = this.consultationItem ? {
       id: this.consultationItem.id,
@@ -196,7 +257,7 @@ struct PrescriptionEditPage {
       patientAge: parseInt(this.patientAge),
       diagnosis: this.diagnosis,
       medicineCount: this.medicineList.length,
-      medicineList: this.medicineList.map(item => item.name)
+      medicineList: this.medicineList   // 直接传对象数组，不再 map(item => item.name)
     };
     console.log('准备发送处方:', JSON.stringify(prescription));
 
@@ -378,21 +439,27 @@ struct PrescriptionEditPage {
               .width('100%')
               .margin({ bottom: 16 })
 
-            ForEach(this.medicineList, (item: MedicineItem, index: number) => {
+            ForEach(this.medicineList, (item: MedicineDetail, index: number) => {
               Column() {
                 // 药品名称
-                Text(item.name)
+                Text(`${item.name} ${item.specification}`)
                   .fontSize(16)
                   .fontColor('#333')
                   .width('100%')
                   .margin({ bottom: 8 })
 
                 // 用法用量
-                Text(`用法用量：${item.dosage}`)
+                Text(`用法：${item.usageMethod || '未设置'}  ${item.frequency || ''}  ${item.singleDose || ''}`)
                   .fontSize(14)
                   .fontColor('#999')
                   .width('100%')
                   .margin({ bottom: 12 })
+
+                Text(`数量：${item.quantity}盒`)
+                  .fontSize(14)
+                  .fontColor('#999')
+                  .width('100%')
+                  .margin({ bottom: 8 })
 
                 // 操作按钮行
                 Row() {
@@ -442,6 +509,7 @@ struct PrescriptionEditPage {
 
       // 底部发送按钮
       Button('发送处方')
+        .enabled(this.consultationItem !== null)
         .width('90%')
         .height(50)
         .fontSize(16)

@@ -1,6 +1,7 @@
 // pages/HistoryPrescriptionDetailPage.ets
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
+import { MedicineDetail } from '../HomePages/PrescriptionEditPage'
 
 interface Prescription {
   id: string;
@@ -9,7 +10,7 @@ interface Prescription {
   patientAge?: number;
   diagnosis: string;
   medicineCount: number;
-  medicineList: string[];
+  medicineList: object[];
 }
 
 @Entry
@@ -23,7 +24,8 @@ struct HistoryPrescriptionDetailPage {
     const params = router.getParams() as Record<string, string>;
     if (params?.prescriptionJson) {
       try {
-        this.prescription = JSON.parse(params.prescriptionJson) as Prescription;
+        const raw = JSON.parse(params.prescriptionJson) as Prescription;
+        this.prescription = raw;
       } catch (e) {
         promptAction.showToast({ message: '数据加载失败' });
         router.back();
@@ -172,20 +174,18 @@ struct HistoryPrescriptionDetailPage {
                 .width('100%')
                 .margin({ bottom: 16 })
 
-              ForEach(this.prescription.medicineList, (med: string) => {
-                Column() {
+              ForEach(this.prescription.medicineList, (med: Object, index: number) => {
+                if (typeof med === 'string') {
+                  // 旧版字符串直接显示
                   Text(med)
-                    .fontSize(16)
-                    .fontColor('#333')
-                    .width('100%')
-                    .margin({ bottom: 8 })
-                  Text('用法用量：2次/天，每次1片，温水送服')
                     .fontSize(14)
-                    .fontColor('#999')
-                    .width('100%')
-                    .margin({ bottom: 16 })
+                    .fontColor('#333')
+                } else {
+                  // 新版对象类型
+                  Text(`· ${(med as MedicineDetail).name}  ${(med as MedicineDetail).specification}  ×${(med as MedicineDetail).quantity}`)
+                    .fontSize(14)
+                    .fontColor('#333')
                 }
-                .width('100%')
               })
             }
             .width('90%')
