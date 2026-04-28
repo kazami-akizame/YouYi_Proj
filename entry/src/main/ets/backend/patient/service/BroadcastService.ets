@@ -46,6 +46,11 @@ class BroadcastService {
   }
 
   async getMessageDetail(context: common.UIAbilityContext, messageId: number): Promise<BroadcastMessageEntity | null> {
+    const fallbackMessage = this.fallbackMessages.find((item: BroadcastMessageEntity) => item.id === messageId);
+    if (fallbackMessage) {
+      return fallbackMessage;
+    }
+
     try {
       const store = await PatientDatabaseBootstrap.ensureInitialized(context);
       const resultSet = await store.querySql(
@@ -67,7 +72,7 @@ class BroadcastService {
     } catch (_e) {
       // ignore and fallback to in-memory history for preview stability
     }
-    return this.fallbackMessages.find((item: BroadcastMessageEntity) => item.id === messageId) ?? null;
+    return null;
   }
 
   async getRecipientsByMessage(context: common.UIAbilityContext, messageId: number): Promise<PatientEntity[]> {
@@ -100,10 +105,7 @@ class BroadcastService {
     }, 0);
     const messageId = maxId + 1;
     const sentAt = this.nowString();
-    this.fallbackMessages = [
-      new BroadcastMessageEntity(messageId, text, sentAt, patientIds),
-      ...this.fallbackMessages
-    ];
+    this.fallbackMessages = [new BroadcastMessageEntity(messageId, text, sentAt, patientIds), ...this.fallbackMessages];
 
     try {
       if (context === null) {
@@ -125,6 +127,15 @@ class BroadcastService {
           'INSERT INTO broadcast_recipient(message_id, patient_id) VALUES (?, ?)',
           [dbMessageId, patientId]
         );
+      }
+      if (dbMessageId > 0 && dbMessageId !== messageId) {
+        this.fallbackMessages = this.fallbackMessages.map((item: BroadcastMessageEntity) => {
+          if (item.id === messageId && item.content === text && item.sentAt === sentAt) {
+            return new BroadcastMessageEntity(dbMessageId, item.content, item.sentAt, item.recipientPatientIds);
+          }
+          return item;
+        });
+        return dbMessageId;
       }
       return messageId;
     } catch (_e) {
