@@ -26,7 +26,7 @@
     {
       "id": "1",
       "name": "倍健 钙铁锌咀嚼片 1.2g*60片(3效同补)",
-      "price": 136,
+      "price": 25,
       "originalPrice": 236,
       "manufacturer": "特一药业集团股份有限公司",
       "images": [
@@ -81,15 +81,6 @@
       ],
       "editTime": "上次编辑于：2026-04-27",
       "id": "imPgo_B2ylA"
-    },
-    {
-      "title": "2222222",
-      "content": "rrrrrrrrrrrr",
-      "topics": [
-        "儿童健康"
-      ],
-      "editTime": "上次编辑于：2026-04-27",
-      "id": "mG-c27ByKxA"
     }
   ],
   "prescriptions": [
@@ -304,6 +295,1238 @@
       "comment": "0评论",
       "id": "3-IhPr2wNgA"
     }
+  ],
+  "doctorCertifications": [
+    {
+      "phoneNumber": "13800138000",
+      "name": "111",
+      "hospital": "北京市东城区第一人民医院",
+      "department": "内科-血液科",
+      "title": "主任医师",
+      "specialty": "111",
+      "intro": "111",
+      "experience": "1111111111111111111",
+      "avatar": "file://media/Photo/2/IMG_1776152151_001/8189f9628487cfcca770a4bf8f277983.jpg",
+      "idCardFront": "file://media/Photo/2/IMG_1776152151_001/8189f9628487cfcca770a4bf8f277983.jpg",
+      "idCardBack": "file://media/Photo/1/IMG_1776152140_000/51e883e3cff3bf929b071a06d1371dd7.jpg",
+      "cert": "file://media/Photo/2/IMG_1776152151_001/8189f9628487cfcca770a4bf8f277983.jpg",
+      "status": "pending",
+      "createTime": "2026-04-23T03:24:28.435Z",
+      "id": "1"
+    },
+    {
+      "phoneNumber": "13800138456",
+      "name": "111",
+      "hospital": "重庆医科大学附属第二医院",
+      "department": "内科-呼吸科",
+      "title": "主治医师",
+      "specialty": "111",
+      "intro": "111",
+      "experience": "111",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777257346333.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777257353126.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777257360094.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777257366004.jpg",
+      "status": "pending",
+      "createTime": "2026-04-27T02:36:19.743Z",
+      "id": "5"
+    },
+    {
+      "phoneNumber": "13345647898",
+      "name": "pyj",
+      "hospital": "北京市东城区第一人民医院",
+      "department": "内科-血液科",
+      "title": "主任医师",
+      "specialty": "qdbh\n",
+      "intro": "qdbh",
+      "experience": "my",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777359814098.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777359819061.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777359823437.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777359827829.jpg",
+      "status": "pending",
+      "createTime": "2026-04-28T07:03:51.123Z",
+      "id": "RjI7MpInS5Q"
+    },
+    {
+      "phoneNumber": "13345647898",
+      "name": "pyj",
+      "hospital": "北京市东城区第一人民医院",
+      "department": "内科-血液科",
+      "title": "主任医师",
+      "specialty": "?\n",
+      "intro": "m",
+      "experience": "m",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777359922690.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777359931977.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777359927446.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777359936332.jpg",
+      "status": "pending",
+      "createTime": "2026-04-28T07:05:40.408Z",
+      "id": "yKIxd7lJaNU"
+    },
+    {
+      "phoneNumber": "13345647898",
+      "name": "pyj",
+      "hospital": "北京市东城区第一人民医院",
+      "department": "内科-血液科",
+      "title": "主任医师",
+      "specialty": "m",
+      "intro": "m",
+      "experience": "m",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777360143554.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777360155519.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777360160970.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777360165211.jpg",
+      "status": "pending",
+      "createTime": "2026-04-28T07:09:29.021Z",
+      "id": "zXEonBkR8hU"
+    }
+  ],
+  "doctors": [
+    {
+      "id": "1",
+      "name": "张医生",
+      "hospital": "市人民医院",
+      "department": "内科",
+      "title": "主任医师",
+      "specialty": "心血管疾病",
+      "intro": "擅长冠心病、高血压等疾病的诊疗",
+      "experience": "20年临床经验"
+    }
+  ],
+  "users": [
+    {
+      "phoneNumber": "13800138000",
+      "password": "1234567",
+      "nickname": "用户8000",
+      "createTime": "2026-04-21T07:23:37.399Z",
+      "id": "v6Ay-WjINrw"
+    },
+    {
+      "phoneNumber": "13800138456",
+      "password": "123456",
+      "nickname": "13800138456",
+      "createTime": "2026-04-27T02:34:29.351Z",
+      "id": "fEbxcT-"
+    },
+    {
+      "phoneNumber": "13345647898",
+      "password": "123456",
+      "nickname": "13345647898",
+      "createTime": "2026-04-28T05:49:10.730Z",
+      "id": "YiTjLDKYzqE"
+    },
+    {
+      "phoneNumber": "13345647898",
+      "password": "123456",
+      "nickname": "13345647898",
+      "createTime": "2026-04-28T05:54:27.892Z",
+      "id": "kQMajD_szmM"
+    }
+  ],
+  "verifyCodes": [
+    {
+      "phoneNumber": "13800138000",
+      "code": "148110",
+      "timestamp": 1776753455420,
+      "id": "U5K-HVdZQPs"
+    },
+    {
+      "phoneNumber": "13800138456",
+      "code": "147114",
+      "timestamp": 1777257258366,
+      "id": "tbRdr0X"
+    },
+    {
+      "phoneNumber": "13345647898",
+      "code": "599672",
+      "timestamp": 1777355309413,
+      "id": "blrLwOTq9Jk"
+    },
+    {
+      "phoneNumber": "13345647898",
+      "code": "633383",
+      "timestamp": 1777355660663,
+      "id": "UdUbd1FYhmo"
+    }
+  ],
+  "myMedicines": [
+    {
+      "id": "5a3KDC2PFXo",
+      "name": "乌鸡白凤丸",
+      "manufacturer": "北京同仁堂",
+      "price": 45,
+      "specification": "9g*10丸"
+    },
+    {
+      "id": "54bZlsvqojc",
+      "name": "感冒灵颗粒",
+      "manufacturer": "华润三九医药",
+      "price": 18,
+      "specification": "10g*9袋"
+    },
+    {
+      "id": "OyF1hq-377E",
+      "name": "益母草颗粒",
+      "manufacturer": "江西济民可信",
+      "price": 22,
+      "specification": "15g*10袋"
+    },
+    {
+      "id": "qnvaaP8CLk8",
+      "name": "板蓝根颗粒",
+      "manufacturer": "白云山和记",
+      "price": 15,
+      "specification": "10g*20袋"
+    },
+    {
+      "id": "k7XIj_N2T9o",
+      "name": "硝酸甘油片",
+      "manufacturer": "北京益民药业",
+      "price": 28,
+      "specification": "0.5mg*100片"
+    },
+    {
+      "id": "2KDL46FmYO0",
+      "name": "桂枝茯苓胶囊",
+      "manufacturer": "江苏康缘",
+      "price": 68,
+      "specification": "0.31g*100粒"
+    },
+    {
+      "id": "OHNo6Yqm0gM",
+      "name": "钙尔奇D片",
+      "manufacturer": "惠氏制药",
+      "price": 78,
+      "specification": "600mg*60片"
+    },
+    {
+      "id": "4NfNbnzwtPc",
+      "name": "珍视明滴眼液",
+      "manufacturer": "江西珍视明",
+      "price": 25,
+      "specification": "15ml"
+    },
+    {
+      "id": "14",
+      "name": "秋水仙碱片",
+      "manufacturer": "云南植物药业",
+      "price": 25,
+      "specification": "0.5mg*20片"
+    },
+    {
+      "id": "16",
+      "name": "布地奈德气雾剂",
+      "manufacturer": "阿斯利康",
+      "price": 85,
+      "specification": "200μg*100掀"
+    }
+  ],
+  "commonPrescriptions": [
+    {
+      "id": "vzO_9pyYp8k",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "00000",
+      "medicineCount": 1,
+      "medicines": [
+        {
+          "name": "二甲双胍片",
+          "specification": "0.5g*20片",
+          "quantity": 1,
+          "usageMethod": "1",
+          "frequency": "1",
+          "singleDose": "1",
+          "remark": "1"
+        }
+      ],
+      "createDate": "2026/4/26",
+      "isCommon": true
+    },
+    {
+      "id": "87-EOHGYDp8",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "1234",
+      "medicineCount": 4,
+      "medicines": [
+        {
+          "name": "硝苯地平片",
+          "specification": "10mg*100片",
+          "quantity": 1,
+          "usageMethod": "1",
+          "frequency": "1",
+          "singleDose": "1",
+          "remark": "1"
+        },
+        {
+          "name": "厄贝沙坦片",
+          "specification": "150mg*7片",
+          "quantity": 1,
+          "usageMethod": "2",
+          "frequency": "2",
+          "singleDose": "2",
+          "remark": "2"
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10g*9袋",
+          "quantity": 1,
+          "usageMethod": "3",
+          "frequency": "3",
+          "singleDose": "3",
+          "remark": "3"
+        },
+        {
+          "name": "铝碳酸镁片",
+          "specification": "0.5g*20片",
+          "quantity": 1,
+          "usageMethod": "4",
+          "frequency": "4",
+          "singleDose": "4",
+          "remark": "4"
+        }
+      ],
+      "createDate": "2026/4/26",
+      "isCommon": true
+    },
+    {
+      "id": "lLM0dmXPmlA",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "急性肠胃炎",
+      "medicineCount": 4,
+      "medicines": [
+        {
+          "name": "蒙脱石散",
+          "specification": "1盒",
+          "quantity": 1
+        },
+        {
+          "name": "诺氟沙星胶囊",
+          "specification": "1盒",
+          "quantity": 1
+        },
+        {
+          "name": "口服补液盐散",
+          "specification": "1盒",
+          "quantity": 1
+        },
+        {
+          "name": "奥美拉唑肠溶胶囊",
+          "specification": "1盒",
+          "quantity": 1
+        }
+      ],
+      "createDate": "2026-04-26",
+      "isCommon": true
+    },
+    {
+      "id": "gfLVmS5nGQE",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "感冒",
+      "medicineCount": 3,
+      "medicines": [
+        {
+          "name": "板蓝根颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "口服",
+          "frequency": "每日3次",
+          "singleDose": "1",
+          "remark": ""
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "口服",
+          "frequency": "每日3次",
+          "singleDose": "1",
+          "remark": ""
+        },
+        {
+          "name": "维C银翘片",
+          "specification": "1盒",
+          "quantity": 1,
+          "usageMethod": "口服",
+          "frequency": "每日3次",
+          "singleDose": "2",
+          "remark": ""
+        }
+      ],
+      "createDate": "2026-04-26",
+      "isCommon": true
+    },
+    {
+      "id": "woRmLaxvH9U",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "test",
+      "medicineCount": 2,
+      "medicines": [
+        {
+          "name": "奥美拉唑肠溶胶囊",
+          "specification": "20mg*14粒",
+          "quantity": 3,
+          "usageMethod": "1",
+          "frequency": "1",
+          "singleDose": "1",
+          "remark": "333"
+        },
+        {
+          "name": "铝碳酸镁片",
+          "specification": "0.5g*20片",
+          "quantity": 2,
+          "usageMethod": "2",
+          "frequency": "2",
+          "singleDose": "2",
+          "remark": "2"
+        }
+      ],
+      "createDate": "2026/4/26",
+      "isCommon": true
+    },
+    {
+      "id": "59vPXlYsdSs",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "sss",
+      "medicineCount": 2,
+      "medicines": [
+        {
+          "name": "马应龙麝香痔疮膏",
+          "specification": "10g",
+          "quantity": 3,
+          "usageMethod": "zzz",
+          "frequency": "qqq",
+          "singleDose": "5",
+          "remark": "aaa"
+        },
+        {
+          "name": "铝碳酸镁片",
+          "specification": "0.5g*20片",
+          "quantity": 2,
+          "usageMethod": "2",
+          "frequency": "2",
+          "singleDose": "2",
+          "remark": "2"
+        }
+      ],
+      "createDate": "2026/4/26",
+      "isCommon": true
+    },
+    {
+      "id": "1777358913130",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "1",
+      "medicineCount": 1,
+      "medicines": [
+        {
+          "name": "钙铁锌咀嚼片",
+          "specification": "1.2g*60片",
+          "quantity": 1,
+          "usageMethod": "1",
+          "frequency": "1",
+          "singleDose": "1",
+          "remark": ""
+        }
+      ],
+      "createDate": "2026/4/28",
+      "isCommon": true
+    },
+    {
+      "id": "1777359455789",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "9",
+      "medicineCount": 1,
+      "medicines": [
+        {
+          "name": "钙铁锌咀嚼片",
+          "specification": "1.2g*60片",
+          "quantity": 2,
+          "usageMethod": "9",
+          "frequency": "9",
+          "singleDose": "9",
+          "remark": ""
+        }
+      ],
+      "createDate": "2026/4/28",
+      "isCommon": true
+    },
+    {
+      "id": "1777359967218",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "33",
+      "medicineCount": 2,
+      "medicines": [
+        {
+          "name": "咀嚼片",
+          "specification": "1.8g*90片",
+          "quantity": 1,
+          "usageMethod": "q",
+          "frequency": "q",
+          "singleDose": "q",
+          "remark": "q"
+        },
+        {
+          "name": "铝碳酸镁片",
+          "specification": "0.5g*20片",
+          "quantity": 1,
+          "usageMethod": "a",
+          "frequency": "a",
+          "singleDose": "a",
+          "remark": "a"
+        }
+      ],
+      "createDate": "2026/4/28",
+      "isCommon": true
+    },
+    {
+      "id": "1777361765844",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "s",
+      "medicineCount": 1,
+      "medicines": [
+        {
+          "name": "秋水仙碱片",
+          "specification": "0.5mg*20片",
+          "quantity": 1,
+          "usageMethod": "1",
+          "frequency": "1",
+          "singleDose": "1",
+          "remark": "1"
+        }
+      ],
+      "createDate": "2026/4/28",
+      "isCommon": true
+    }
+  ],
+  "historyPrescriptions": [
+    {
+      "id": "4",
+      "patientName": "吴珊珊",
+      "patientGender": "女",
+      "patientAge": 23,
+      "diagnosis": "感冒",
+      "medicineCount": 5,
+      "medicineList": [
+        {
+          "name": "板蓝根颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "维C银翘片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "patientName": "陈明",
+      "patientGender": "男",
+      "patientAge": 28,
+      "diagnosis": "急性肠胃炎",
+      "medicineCount": 4,
+      "medicineList": [
+        {
+          "name": "蒙脱石散",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "诺氟沙星胶囊",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "口服补液盐散",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "奥美拉唑肠溶胶囊",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "patientName": "刘芳",
+      "patientGender": "女",
+      "patientAge": 38,
+      "diagnosis": "高血压",
+      "medicineCount": 2,
+      "medicineList": [
+        {
+          "name": "硝苯地平缓释片",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "厄贝沙坦片",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    },
+    {
+      "patientName": "吴珊珊",
+      "patientGender": "女",
+      "patientAge": 23,
+      "diagnosis": "bb",
+      "medicineCount": 3,
+      "medicineList": [
+        {
+          "name": "板蓝根颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "维C银翘片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ],
+      "id": "IJDOfLt"
+    },
+    {
+      "patientName": "1",
+      "patientGender": "男",
+      "patientAge": 1,
+      "diagnosis": "1",
+      "medicineCount": 3,
+      "medicineList": [
+        {
+          "name": "板蓝根颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "维C银翘片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ],
+      "id": "1dxr1rF"
+    },
+    {
+      "patientName": "2",
+      "patientGender": "男",
+      "patientAge": 2,
+      "diagnosis": "2",
+      "medicineCount": 2,
+      "medicineList": [
+        {
+          "name": "硝苯地平片",
+          "specification": "10mg*100片",
+          "quantity": 1,
+          "usageMethod": "1",
+          "frequency": "1",
+          "singleDose": "1",
+          "remark": ""
+        },
+        {
+          "name": "硝苯地平片",
+          "specification": "10mg*100片",
+          "quantity": 2,
+          "usageMethod": "2",
+          "frequency": "2",
+          "singleDose": "2",
+          "remark": ""
+        }
+      ],
+      "id": "OsmRlw-"
+    }
+  ],
+  "doctorInfo": [
+    {
+      "id": "1",
+      "realName": "张医生",
+      "hospital": "北京大学人民医院",
+      "department": "消化内科",
+      "title": "副主任医师",
+      "skills": "胃炎、胃溃疡、肠炎、消化不良",
+      "intro": "医学博士，15年临床经验，擅长消化系统疾病",
+      "experience": "2010-2015 北京协和医院\n2015-至今 北京大学人民医院"
+    }
+  ],
+  "certifyInfo": {
+    "avatar": "avatar",
+    "idCardFront": "idCardFront",
+    "idCardBack": "idCardBack",
+    "certImage": "certImage",
+    "status": 2
+  },
+  "doctorIncome": {
+    "monthText": "四月",
+    "monthIncome": "5860.00",
+    "totalOrderCount": 126,
+    "totalIncome": "12560.00",
+    "settlementList": [
+      {
+        "year": 2025,
+        "month": 4,
+        "income": "5860.00",
+        "orderCount": 126,
+        "settleTime": "04-30"
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "income": "6720.00",
+        "orderCount": 143,
+        "settleTime": "03-31"
+      }
+    ]
+  },
+  "doctorOrder": [
+    {
+      "id": "1",
+      "time": "2025-04-20 09:20",
+      "name": "李小明 男 28岁",
+      "serviceType": "图文问诊",
+      "status": "已完成",
+      "price": "¥39.00",
+      "serviceColor": "#007FF0",
+      "patientName": "李小明",
+      "patientGender": "男",
+      "patientAge": "28岁",
+      "patientPhone": "138****1234",
+      "department": "消化内科",
+      "discount": "-¥9.00",
+      "realPay": "¥30.00",
+      "orderNo": "202504200001",
+      "createTime": "2025-04-20 09:15",
+      "payTime": "2025-04-20 09:16",
+      "payType": "微信支付"
+    },
+    {
+      "id": "2",
+      "time": "2025-04-19 15:10",
+      "name": "王芳 女 35岁",
+      "serviceType": "极速问诊",
+      "status": "已退款",
+      "price": "¥59.00",
+      "serviceColor": "#FFA500",
+      "patientName": "王芳",
+      "patientGender": "女",
+      "patientAge": "35岁",
+      "patientPhone": "139****5678",
+      "department": "消化内科",
+      "discount": "-¥9.00",
+      "realPay": "¥50.00",
+      "realRefund": "¥50.00",
+      "orderNo": "202504190002",
+      "createTime": "2025-04-19 15:05",
+      "payTime": "2025-04-19 15:06",
+      "payType": "支付宝",
+      "refundTime": "2025-04-19 16:00",
+      "refundType": "支付宝"
+    },
+    {
+      "id": "3",
+      "time": "2025-04-18 11:00",
+      "name": "张伟 男 45岁",
+      "serviceType": "开药问诊",
+      "status": "已完成",
+      "price": "¥49.00",
+      "serviceColor": "#34C755",
+      "patientName": "张伟",
+      "patientGender": "男",
+      "patientAge": "45岁",
+      "patientPhone": "137****8888",
+      "department": "消化内科",
+      "discount": "-¥9.00",
+      "realPay": "¥40.00",
+      "orderNo": "202504180003",
+      "createTime": "2025-04-18 10:55",
+      "payTime": "2025-04-18 10:56",
+      "payType": "微信支付"
+    },
+    {
+      "id": "4",
+      "time": "2025-04-17 16:40",
+      "name": "刘红 女 29岁",
+      "serviceType": "私人医生",
+      "status": "已关闭",
+      "price": "¥199.00",
+      "serviceColor": "#9D4EDD",
+      "patientName": "刘红",
+      "patientGender": "女",
+      "patientAge": "29岁",
+      "patientPhone": "136****6666",
+      "serviceName": "私人医生服务",
+      "serviceDuration": "半年",
+      "coupon": "-¥10.00",
+      "shouldPay": "¥189.00",
+      "orderNo": "202504170004",
+      "createTime": "2025-04-17 16:30",
+      "closeReason": "支付超时，订单关闭"
+    }
+  ],
+  "consultations": [
+    {
+      "id": "C001",
+      "patientName": "吴珊珊",
+      "patientGender": "女",
+      "patientAge": 23,
+      "type": "极速",
+      "status": "待接诊",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-04-06 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C002",
+      "patientName": "张伟",
+      "patientGender": "男",
+      "patientAge": 45,
+      "type": "图文",
+      "status": "待接诊",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约4天）",
+      "createTime": "2026-04-07 08:08",
+      "rejectReason": "",
+      "chatMessages": []
+    },
+    {
+      "id": "C003",
+      "patientName": "李娜",
+      "patientGender": "女",
+      "patientAge": 32,
+      "type": "开药",
+      "status": "问诊结束",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约5天）",
+      "createTime": "2026-04-08 08:08",
+      "rejectReason": "咨询不对症",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约5天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
+    },
+    {
+      "id": "C004",
+      "patientName": "王磊",
+      "patientGender": "男",
+      "patientAge": 29,
+      "type": "极速",
+      "status": "进行中",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约6天）",
+      "createTime": "2026-04-09 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约6天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C005",
+      "patientName": "刘芳",
+      "patientGender": "女",
+      "patientAge": 38,
+      "type": "图文",
+      "status": "进行中",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约7天）",
+      "createTime": "2026-04-10 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约7天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C006",
+      "patientName": "陈晨",
+      "patientGender": "男",
+      "patientAge": 27,
+      "type": "开药",
+      "status": "进行中",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约8天）",
+      "createTime": "2026-04-11 08:08",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约8天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
+    },
+    {
+      "id": "C008",
+      "patientName": "孙丽",
+      "patientGender": "女",
+      "patientAge": 26,
+      "type": "图文",
+      "status": "问诊结束",
+      "description": "早起经常头晕，恶心，有时候会咳嗽（持续约10天）",
+      "createTime": "2026-04-13 08:08",
+      "rejectReason": ""
+    },
+    {
+      "id": "C009",
+      "patientName": "郑丽",
+      "patientGender": "女",
+      "patientAge": 25,
+      "type": "图文",
+      "status": "待接诊",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-02-06 08:09",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        }
+      ]
+    },
+    {
+      "id": "C010",
+      "patientName": "陈明",
+      "patientGender": "男",
+      "patientAge": 28,
+      "type": "开药",
+      "status": "进行中",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-02-06 08:09",
+      "rejectReason": "",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
+    },
+    {
+      "id": "C011",
+      "patientName": "刘洋",
+      "patientGender": "女",
+      "patientAge": 22,
+      "type": "极速",
+      "status": "已退诊",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-02-06 08:09",
+      "rejectReason": "患者病情复杂",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好，退诊原因：患者病情复杂",
+          "time": "10:40"
+        }
+      ]
+    },
+    {
+      "id": "C012",
+      "patientName": "周敏",
+      "patientGender": "女",
+      "patientAge": 31,
+      "type": "图文",
+      "status": "问诊结束",
+      "description": "早起经常头晕，恶心，有时候会咳嗽",
+      "createTime": "2026-02-06 08:09",
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
+    }
+  ],
+  "commonPrescriptions1": [
+    {
+      "id": "1",
+      "diagnosis": "感冒",
+      "medicineCount": 5,
+      "medicineList": [
+        {
+          "name": "板蓝根颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "感冒灵颗粒",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "维C银翘片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "diagnosis": "急性咽炎",
+      "medicineCount": 4,
+      "medicineList": [
+        {
+          "name": "蒲地蓝消炎口服液",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "西瓜霜润喉片",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "阿莫西林胶囊",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "金银花含片",
+          "specification": "",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "diagnosis": "头痛/偏头痛",
+      "medicineList": [
+        {
+          "name": "布洛芬缓释胶囊",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        },
+        {
+          "name": "天麻头痛片",
+          "specification": "10包/盒",
+          "quantity": 1,
+          "usageMethod": "",
+          "frequency": "",
+          "singleDose": ""
+        }
+      ]
+    }
+  ],
+  "rejectReasons": [
+    "咨询不对症",
+    "患者缺少诊疗资料",
+    "患者病情复杂"
   ],
   "$schema": "./node_modules/json-server/schema.json"
 }

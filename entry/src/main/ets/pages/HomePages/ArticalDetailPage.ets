@@ -1,246 +1,369 @@
 import { router } from '@kit.ArkUI';
+import promptAction from '@ohos.promptAction';
+import http from '@ohos.net.http';
 
-interface CommentItem {
+// 文章主数据结构
+interface Article {
   id: number;
-  name: string;
+  title: string;
+  author: string;
+  hospital: string;
+  collect: string;
+  like: string;
+  comment: string;
   content: string;
-  time: string;
+  topics: string[]; // ✅ 改为 topics 数组
 }
 
-interface Topic {
+// 路由参数
+interface RouterParams {
+  article?: Article;
+}
+
+// 推荐文章
+interface RecommendArticle {
   id: number;
-  name: string;
-  isAdded: boolean;
+  title: string;
+  author: string;
+  hospital: string;
+  avatar: Resource;
+  cover: Resource;
+  collect: string;
+  like: string;
+  comment: string;
+  content: string;
+  topics: string[]; // ✅ 改为 topics 数组
+}
+
+// 评论
+interface Comment {
+  username: string;
+  time: string;
+  content: string;
 }
 
 @Entry
 @Component
-struct ArticleDetailPage {
-  @State commentText: string = '';
-  @State commentList: CommentItem[] = [
+struct ArticalDetailPage {
+  @State currentArticle: Article | null = null;
+  @State recommendList: RecommendArticle[] = [];
+
+  private commentList: Comment[] = [
     {
-      id: 1,
-      name: '儿科王医生',
-      content: '小孩子光脚走路其实有利于触觉发育，只要地面不凉就完全没问题。',
-      time: '10分钟前'
+      username: '匿名用户555',
+      time: '2018-10-15 10:15',
+      content: '说的很清晰，谢谢张医生的分享，期待张医生分享更多内容！'
     },
     {
-      id: 2,
-      name: '小小妈妈',
-      content: '学习了，一直不敢让孩子光脚，看来是我多虑了！',
-      time: '35分钟前'
+      username: '匿名用户555',
+      time: '2018-10-15 10:15',
+      content: '说的很清晰，谢谢张医生的分享，期待张医生分享更多内容！'
     },
     {
-      id: 3,
-      name: '张药师',
-      content: '冰激凌偶尔吃一点没关系，不用过度禁止，反而容易引起逆反。',
-      time: '1小时前'
+      username: '匿名用户555',
+      time: '2018-10-15 10:15',
+      content: '说的很清晰，谢谢张医生的分享，期待张医生分享更多内容！'
     }
   ];
 
-  @State selectedTopics: Topic[] = [];
+  private readonly articlesUrl: string = "http://127.0.0.1:8888/articles";
 
-  aboutToAppear() {
-    // 强制读取全局话题
-    let data = AppStorage.get<Topic[]>('selectedTopics');
-    if (data) {
-      this.selectedTopics = data;
-    } else {
-      this.selectedTopics = [];
+  onPageShow(): void {
+    const params = router.getParams() as RouterParams;
+    if (params && params.article) {
+      this.currentArticle = params.article;
+    }
+    this.loadRecommendArticles();
+  }
+
+  // 加载推荐文章（动态）
+  loadRecommendArticles(): void {
+    const req: http.HttpRequest = http.createHttp();
+    req.request(this.articlesUrl, {
+      method: http.RequestMethod.GET
+    }).then((res: http.HttpResponse): void => {
+      if (res.responseCode === 200) {
+        try {
+          const data: Article[] = JSON.parse(res.result as string);
+          const list: RecommendArticle[] = [];
+          for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            list.push({
+              id: item.id,
+              title: item.title,
+              author: item.author,
+              hospital: item.hospital,
+              avatar: $r('app.media.u4052'),
+              cover: $r('app.media.u981'),
+              collect: item.collect,
+              like: item.like,
+              comment: item.comment,
+              content: item.content,
+              topics: item.topics || [] // ✅ 读取 topics 数组
+            });
+          }
+          this.recommendList = list;
+        } catch (e) {}
+      }
+    }).catch(() => {});
+  }
+
+  shareArticle(): void {
+    promptAction.showToast({ message: '分享成功', duration: 2000 });
+  }
+
+  editArticle(): void {
+    if (this.currentArticle) {
+      router.push({
+        url: 'pages/HomePages/EditArticlePage',
+        params: { article: this.currentArticle }
+      });
+    }
+  }
+
+  deleteArticle(): void {
+    if (!this.currentArticle) return;
+
+    promptAction.showDialog({
+      title: '确认删除',
+      message: '确定要删除这篇文章吗？',
+      buttons: [
+        { text: '取消', color: '#999999' },
+        { text: '删除', color: '#ff0000' }
+      ]
+    }).then((result) => {
+      if (result.index === 1) {
+        const req = http.createHttp();
+        req.request(`${this.articlesUrl}/${this.currentArticle!.id}`, {
+          method: http.RequestMethod.DELETE
+        }).then(() => {
+          promptAction.showToast({ message: '删除成功' });
+          router.back();
+        });
+      }
+    });
+  }
+
+  @Builder
+  menuBuilder() {
+    Menu() {
+      MenuItem({ content: '分享' }).onClick(() => this.shareArticle());
+      MenuItem({ content: '编辑' }).onClick(() => this.editArticle());
+      MenuItem({ content: '删除' }).onClick(() => this.deleteArticle());
     }
   }
 
   build() {
     Column() {
-      this.buildVideoArea();
-
-      Scroll() {
-        Column({ space: 16 }) {
-          Text('夏天不能光脚丫、不能吃冰激凌？别用养生折腾孩子了')
-            .fontSize(22)
-            .fontWeight(FontWeight.Bold)
-            .fontColor('#1A1A1A')
-            .width('100%')
-            .lineHeight(30);
-
-          Text('看到孩子不穿袜子，光脚在地板上踩，就说会着凉，要穿袜子。\n\n也有不少爷爷奶奶一到夏天就想给宝宝们剃光头，美其名曰散热好，不怕长痱子，这有道理吗？')
-            .fontSize(15)
-            .fontColor('#444444')
-            .lineHeight(26)
-            .width('100%');
-
-          Image($r('app.media.u1288'))
-            .width('100%')
-            .height(200)
-            .backgroundColor('#E8F3FF')
-            .borderRadius(12)
-            .objectFit(ImageFit.Cover);
-
-          Text('看到孩子不穿袜子，光脚在地板上踩，就说会着凉，要穿袜子。')
-            .fontSize(15)
-            .fontColor('#444444')
-            .lineHeight(26)
-            .width('100%');
-
-          // ====================== ✅ 话题显示在正文左下角 ======================
-          this.buildTopicArea();
-
-          Divider()
-            .width('100%')
-            .color('#EEEEEE')
-            .margin({ top: 10, bottom: 10 });
-
-          this.buildCommentList();
-          Blank().height(40);
-        }
-        .width('100%')
-        .padding({ left: 20, right: 20, top: 16 })
-        .backgroundColor(Color.White);
-      }
-      .layoutWeight(1);
-
-      this.buildCommentBar();
-    }
-    .width('100%')
-    .height('100%')
-    .backgroundColor(Color.White);
-  }
-
-  // ✅ 话题区域：强制靠左（正文左下角）
-  @Builder
-  buildTopicArea() {
-    if (this.selectedTopics.length > 0) {
-      Row({ space: 8 }) {
-        Text('话题：')
-          .fontSize(14)
-          .fontColor('#666');
-
-        ForEach(this.selectedTopics, (item: Topic) => {
-          Text(`#${item.name}`)
-            .fontSize(14)
-            .fontColor('#007AFF')
-            .backgroundColor('#E8F3FF')
-            .padding({ left: 10, right: 10, top: 4, bottom: 4 })
-            .borderRadius(15);
-        })
-      }
-      .width('100%')
-      .justifyContent(FlexAlign.Start) // 强制靠左
-      .margin({ top: 4, bottom: 10 });
-    }
-  }
-
-  @Builder
-  buildVideoArea(): void {
-    Stack({ alignContent: Alignment.TopStart }) {
-      Video({
-        src: 'https://cdn8.axureshop.com/demo2024/1302024/demo_video.mp4',
-        previewUri: $r('app.media.u1158')
-      })
-        .width('100%')
-        .height(240)
-        .controls(true)
-        .autoPlay(false)
-        .objectFit(ImageFit.Cover);
-
+      // 顶部导航
       Row() {
         Image($r('app.media.u695'))
           .width(16)
           .height(16)
-          .fillColor(Color.White)
-          .onClick(() => router.back());
-        Blank();
+          .onClick(() => {
+            router.back();
+          })
+
+        Text('文章详情')
+          .fontSize(18)
+          .fontWeight(FontWeight.Medium)
+          .layoutWeight(1)
+          .textAlign(TextAlign.Center);
+
+        Image($r('app.media.u4211'))
+          .width(25)
+          .height(10)
+          .objectFit(ImageFit.Contain)
+          .bindMenu(this.menuBuilder);
       }
       .width('100%')
-      .padding({ left: 16, right: 16, top: 36 });
-    }
-    .width('100%');
-  }
+      .height(56)
+      .padding({ left: 16, right: 16 })
+      .backgroundColor(Color.White);
 
-  // 评论区靠左
-  @Builder
-  buildCommentList(): void {
-    Column({ space: 16 }) {
-      Row() {
-        Text(`全部评论 ${this.commentList.length}`)
-          .fontSize(17)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#333')
-          .textAlign(TextAlign.Start);
-      }
-      .width('100%')
-      .justifyContent(FlexAlign.Start);
+      Scroll() {
+        Column() {
+          if (this.currentArticle) {
+            Column({ space: 16 }) {
+              Text(this.currentArticle.title)
+                .fontSize(20)
+                .fontWeight(FontWeight.Bold)
+                .width('100%');
 
-      ForEach(this.commentList, (item: CommentItem) => {
-        Column({ space: 6 }) {
-          Row() {
-            Text(item.name)
-              .fontSize(15)
-              .fontColor('#007AFF')
-              .fontWeight(FontWeight.Medium);
-            Text(item.time)
-              .fontSize(12)
-              .fontColor('#999')
-              .margin({ left: 8 });
-          }
-          .width('100%')
-          .justifyContent(FlexAlign.Start);
+              Text(this.currentArticle.content)
+                .fontSize(13)
+                .fontColor('#666666')
+                .lineHeight(24)
+                .width('100%');
 
-          Text(item.content)
-            .fontSize(15)
-            .fontColor('#444')
-            .lineHeight(24)
+              Image($r('app.media.u981'))
+                .width('100%')
+                .height(200)
+                .backgroundColor('#E8F3FF')
+                .borderRadius(12);
+
+              // ==========================
+              // ✅ 显示话题（支持多个）
+              // ==========================
+              Row({ space: 8 }) {
+                if (this.currentArticle.topics && this.currentArticle.topics.length > 0) {
+                  ForEach(this.currentArticle.topics, (tagName: string) => {
+                    Text("# " + tagName)
+                      .fontSize(16)
+                      .fontColor('#007AFF');
+                  })
+                }
+              }
+            }
             .width('100%')
-            .textAlign(TextAlign.Start);
+            .padding(16);
+          }
 
           Divider()
             .width('100%')
-            .color('#EEEEEE')
-            .margin({ top: 10 });
-        }
-        .width('100%')
-        .alignItems(HorizontalAlign.Start);
-      });
-    }
-    .width('100%')
-    .alignItems(HorizontalAlign.Start)
-    .margin({ top: 10 });
-  }
+            .height(10)
+            .color('#F5F5F5');
 
-  @Builder
-  buildCommentBar(): void {
-    Row() {
-      TextInput({ text: this.commentText, placeholder: '发布你的评论' })
-        .layoutWeight(1)
-        .height(40)
-        .borderRadius(20)
-        .backgroundColor('#F5F5F5')
-        .padding({ left: 16 })
-        .onChange((val: string) => {
-          this.commentText = val;
-        });
+          // 推荐阅读
+          Column() {
+            Blank(10);
+            Text('推荐阅读')
+              .fontSize(18)
+              .width('100%')
+              .padding({ left: 16 });
 
-      Button('发布')
-        .width(70)
-        .height(40)
-        .borderRadius(20)
-        .backgroundColor('#007AFF')
-        .fontColor(Color.White)
-        .margin({ left: 10 })
-        .onClick(() => {
-          if (this.commentText.trim()) {
-            this.commentList.unshift({
-              id: Date.now(),
-              name: '我',
-              content: this.commentText,
-              time: '刚刚'
+            ForEach(this.recommendList, (item: RecommendArticle) => {
+              Column({ space: 12 }) {
+                Row() {
+                  Column({ space: 8 }) {
+                    Text(item.title)
+                      .fontSize(16)
+                      .fontColor('#333333')
+                      .width('100%');
+
+                    // 推荐列表也显示话题
+                    if (item.topics && item.topics.length > 0) {
+                      Text("# " + item.topics[0])
+                        .fontSize(12)
+                        .fontColor('#007AFF');
+                    }
+
+                    Row({ space: 8 }) {
+                      Image(item.avatar)
+                        .width(32)
+                        .height(32)
+                        .borderRadius(16);
+                      Text(`${item.author} ${item.hospital}`)
+                        .fontSize(13)
+                        .fontColor('#666666');
+                    }
+
+                    Row({ space: 16 }) {
+                      Text(item.collect).fontSize(10).fontColor('#999999');
+                      Text(item.like).fontSize(10).fontColor('#999999');
+                      Text(item.comment).fontSize(10).fontColor('#999999');
+                    }
+                  }
+                  .layoutWeight(1);
+
+                  Image(item.cover)
+                    .width(100)
+                    .height(80)
+                    .backgroundColor('#E8F3FF')
+                    .borderRadius(8);
+                }
+                .width('100%')
+                .onClick(() => {
+                  router.push({
+                    url: 'pages/HomePages/ArticalDetailPage',
+                    params: { article: item }
+                  });
+                });
+
+                Divider()
+                  .width('100%')
+                  .height(1)
+                  .color('#F0F0F0');
+              }
+              .width('100%')
+              .padding(10);
             });
-            this.commentText = '';
           }
-        });
+          .width('100%')
+          .backgroundColor(Color.White);
+
+          Blank(10);
+
+          // 评论区
+          Column() {
+            Text(`评论（${this.commentList.length}）`)
+              .fontSize(18)
+              .width('100%')
+              .margin({ bottom: 14 });
+
+            ForEach(this.commentList, (item: Comment) => {
+              Column({ space: 8 }) {
+                Row() {
+                  Text(item.username)
+                    .fontSize(16)
+                    .fontColor('#333333')
+                    .layoutWeight(1);
+                  Text(item.time)
+                    .fontSize(14)
+                    .fontColor('#999999');
+                }
+
+                Text(item.content)
+                  .fontSize(14)
+                  .fontColor('#555555')
+                  .lineHeight(22)
+                  .width('100%');
+
+                Divider()
+                  .width('100%')
+                  .height(1)
+                  .color('#F0F0F0')
+                  .margin({ top: 12 });
+              }
+              .width('100%')
+              .padding({ left: 16, right: 16, bottom: 16 });
+            });
+
+            Text('已加载全部')
+              .fontSize(14)
+              .fontColor('#999999')
+              .width('100%')
+              .textAlign(TextAlign.Center)
+              .margin({ top: 16, bottom: 30 });
+          }
+          .width('100%')
+          .backgroundColor(Color.White);
+        }
+        .width('100%');
+      }
+      .layoutWeight(1);
+
+      // 底部输入框
+      Row() {
+        TextInput({ placeholder: '发布你的评论' })
+          .layoutWeight(1)
+          .height(40)
+          .borderRadius(20)
+          .backgroundColor('#F5F5F5')
+          .padding({ left: 16, right: 16 });
+
+        Button('发布')
+          .width(80)
+          .height(40)
+          .borderRadius(20)
+          .backgroundColor('#007AFF')
+          .margin({ left: 12 });
+      }
+      .width('100%')
+      .padding(16)
+      .backgroundColor(Color.White);
     }
     .width('100%')
-    .padding({ left: 20, right: 20, top: 16, bottom: 24 })
-    .backgroundColor(Color.White);
+    .height('100%');
   }
 }

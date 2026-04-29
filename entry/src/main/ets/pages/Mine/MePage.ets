@@ -30,7 +30,8 @@ export struct MePage {
     this.isLoading = true;
     try {
       let res = await this.httpRequest.request(
-        "http://10.110.63.57:8888/doctorInfo", // json-server 接口地址
+        // "http://10.110.63.57:8888/doctorInfo", // json-server 接口地址
+        "http://localhost:8888/doctorInfo",
         { method: http.RequestMethod.GET }
       );
 

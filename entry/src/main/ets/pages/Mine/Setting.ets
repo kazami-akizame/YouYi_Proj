@@ -2,6 +2,7 @@
 // 1:1匹配原型标准页 · 全部问题已修复 · 旧版鸿蒙零报错
 import router from '@ohos.router';
 
+
 interface SettingItem {
   id: number;
   title: string;
@@ -114,9 +115,10 @@ struct SettingPage {
     .onClick(()=>{
       // 跳转+try捕获消除警告
       try {
-        if(item.title === '通知设置') router.replaceUrl({url:'pages/NoticeSetting'})
-        if(item.title === '更换手机号码') router.replaceUrl({url:'pages/ChangePhone'})
-        if(item.title === '常用语') router.replaceUrl({url:'pages/CommonWords'})
+        if(item.title === '通知设置') router.replaceUrl({url:'pages/Mine/NoticeSetting'})
+        if(item.title === '更换手机号码') router.replaceUrl({url:'pages/Mine/ChangePhone'})
+        if(item.title === '常用语') router.replaceUrl({url:'pages/Mine/CommonWords'})
+        if(item.title === '修改密码') router.replaceUrl({ url: 'pages/Login_Register/FindPin' })
       } catch(e){}
     })
     Divider().strokeWidth(1).color('#EEE')

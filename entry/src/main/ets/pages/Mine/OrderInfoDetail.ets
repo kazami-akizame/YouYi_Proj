@@ -42,7 +42,7 @@ struct DoctorOrderDetail {
     const id = params?.id ?? 1;
 
     let httpRequest = http.createHttp();
-    const url = 'http://10.110.63.57:8888/doctorOrder';
+    const url = 'http://localhost:8888/doctorOrder';
     httpRequest.request(
       url,
       { method: http.RequestMethod.GET },

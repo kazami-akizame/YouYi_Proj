@@ -65,7 +65,7 @@ struct MyPharmacyPage {
     try {
       let httpRequest = http.createHttp();
       let response = await httpRequest.request(
-        "http://127.0.0.1:8888/historyPrescriptions",
+        "http://localhost:8080/historyPrescriptions",
         {
           method: http.RequestMethod.GET,
           header: { 'Content-Type': 'application/json' }

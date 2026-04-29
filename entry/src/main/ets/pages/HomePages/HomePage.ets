@@ -480,52 +480,88 @@ struct HomePage {
   // 底部导航
   @Builder
   buildTabBar() {
+    // Row() {
+    //   Column() {
+    //     Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1073.png')
+    //       .width(24)
+    //       .height(24)
+    //       .fillColor('#007AFF')
+    //     Text('首页')
+    //       .fontSize(12)
+    //       .fontColor('#007AFF')
+    //       .margin({ top:3 })
+    //   }
+    //   .layoutWeight(1)
+    //
+    //   Column() {
+    //     Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1071.png')
+    //       .width(24)
+    //       .height(24)
+    //       .fillColor('#999999')
+    //     Text('患者')
+    //       .fontSize(12)
+    //       .fontColor('#999999')
+    //       .margin({ top:3 })
+    //       .onClick(()=>{
+    //         router.pushUrl({ url: 'pages/Patient/Index' })
+    //       })
+    //   }
+    //   .layoutWeight(1)
+    //
+    //   Column() {
+    //     Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1072.png')
+    //       .width(24)
+    //       .height(24)
+    //       .fillColor('#999999')
+    //     Text('我的')
+    //       .fontSize(12)
+    //       .fontColor('#999999')
+    //       .margin({ top:3 })
+    //       .onClick(()=>{
+    //         router.pushUrl({ url: 'pages/Mine/Index' })
+    //       })
+    //   }
+    //   .layoutWeight(1)
+    // }
+    // .width('100%')
+    // .height(64)
+    // .backgroundColor(Color.White)
+    // .justifyContent(FlexAlign.SpaceAround)
+
+
     Row() {
-      Column() {
-        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1073.png')
-          .width(24)
-          .height(24)
-          .fillColor('#007AFF')
-        Text('首页')
-          .fontSize(12)
-          .fontColor('#007AFF')
-          .margin({ top:3 })
+      // 首页
+      Column({ space: 4 }) {
+        Image($r('app.media.u1073')).width(20).height(20)
+        Text("首页").fontColor("#1A73E8").fontSize(12)
       }
-      .layoutWeight(1)
+      .flexGrow(1)
+      // .onClick(() => {
+      //   router.pushUrl({ url: "pages/HomePages/HomePage" });
+      // })
 
-      Column() {
-        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1071.png')
-          .width(24)
-          .height(24)
-          .fillColor('#999999')
-        Text('患者')
-          .fontSize(12)
-          .fontColor('#999999')
-          .margin({ top:3 })
-          .onClick(()=>{
-            router.pushUrl({ url: 'pages/Patient/Index' })
-          })
+      // 患者
+      Column({ space: 4 }) {
+        Image($r('app.media.u1071')).width(20).height(20)
+        Text("患者").fontColor("#999").fontSize(12)
       }
-      .layoutWeight(1)
+      .flexGrow(1)
+      .onClick(() => {
+        router.pushUrl({ url: "pages/Patient/Index" });
+      })
 
-      Column() {
-        Image('https://cdn8.axureshop.com/demo2024/1306719/images/%E7%BB%84%E4%BB%B6_%E8%A7%84%E8%8C%83/u1072.png')
-          .width(24)
-          .height(24)
-          .fillColor('#999999')
-        Text('我的')
-          .fontSize(12)
-          .fontColor('#999999')
-          .margin({ top:3 })
-          .onClick(()=>{
-            router.pushUrl({ url: 'pages/Patient/Index' })
-          })
+      // 我的
+      Column({ space: 4 }) {
+        Image($r('app.media.u1072')).width(20).height(20)
+        Text("我的").fontColor("#999").fontSize(12)
       }
-      .layoutWeight(1)
+      .flexGrow(1)
+      .onClick(()=>{
+        router.pushUrl({url: "pages/Mine/MePage"});
+      })
     }
     .width('100%')
-    .height(64)
-    .backgroundColor(Color.White)
-    .justifyContent(FlexAlign.SpaceAround)
+    .height(56)
+    .backgroundColor("#ffffff")
   }
 }

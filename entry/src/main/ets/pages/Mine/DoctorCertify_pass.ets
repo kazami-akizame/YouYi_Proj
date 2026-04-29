@@ -1,84 +1,49 @@
 import router from '@ohos.router';
-import { http } from '@kit.NetworkKit';
 
-// 显式定义认证信息类型
 interface CertifyInfo {
-  avatar: Resource;
-  idCardFront: Resource;
-  idCardBack: Resource;
-  certImage: Resource;
-  status: number;
-}
-
-// 定义后端返回的状态类型
-interface CertifyStatus {
+  avatar: string;
+  idCardFront: string;
+  idCardBack: string;
+  certImage: string;
   status: number;
 }
 
 @Entry
 @Component
 struct DoctorCertify_pass {
-  // ✅ 修复：显式指定 @State 变量类型
   @State certifyInfo: CertifyInfo = {
-    avatar: $r('app.media.img11'),
-    idCardFront: $r('app.media.person'),
-    idCardBack: $r('app.media.nation'),
-    certImage: $r('app.media.ic_upload'),
+    avatar: '',
+    idCardFront: '',
+    idCardBack: '',
+    certImage: '',
     status: 1
   };
 
   onPageShow() {
-    this.loadCertifyInfo();
+    this.loadUploadedImages();
   }
 
-  async loadCertifyInfo() {
-    const httpTask = http.createHttp();
-    try {
-      const response = await httpTask.request(
-        "http://localhost:8888/certifyInfo",
-        { method: http.RequestMethod.GET }
-      );
-
-      if (response.responseCode === 200) {
-        const result: CertifyStatus = JSON.parse(response.result.toString());
-        let status = result.status ?? 1;
-
-        // ======================
-        // 自动跳转正确页面
-        // ======================
-        if (status === 0) {
-          router.replaceUrl({ url: "pages/Mine/DoctorCertify_review" });
-          return;
-        }
-        if (status === 2) {
-          router.replaceUrl({ url: "pages/Mine/DoctorCertify_fail" });
-          return;
-        }
-
-        this.certifyInfo.status = status;
-        console.log("✅ 成功页面：认证状态加载成功");
-      }
-    } catch (err) {
-      console.error("⚠️ 认证信息请求失败，使用本地数据");
-    } finally {
-      httpTask.destroy();
-    }
+  // 只从 AppStorage 读上传的图片，读不到就留空
+  loadUploadedImages() {
+    this.certifyInfo.avatar = AppStorage.get<string>('avatarUri') || '';
+    this.certifyInfo.idCardFront = AppStorage.get<string>('idCardFrontUri') || '';
+    this.certifyInfo.idCardBack = AppStorage.get<string>('idCardBackUri') || '';
+    this.certifyInfo.certImage = AppStorage.get<string>('certUri') || '';
   }
 
   build() {
     Column() {
+      // 顶部导航栏
       Row() {
         Image($r('app.media.u695'))
           .width(24)
           .height(24)
           .onClick(() => router.back())
-
         Text("医师认证")
           .fontSize(20)
           .fontWeight(FontWeight.Medium)
           .layoutWeight(1)
           .textAlign(TextAlign.Center)
-
         Blank().width(24)
       }
       .width('100%')
@@ -87,11 +52,11 @@ struct DoctorCertify_pass {
       .alignItems(VerticalAlign.Center)
       .padding({ left: 15, right: 15 })
 
+      // 成功提示
       Column() {
         Image($r('app.media.u6010'))
           .width(48)
           .height(48)
-
         Text("医师认证成功")
           .fontSize(18)
           .fontColor("#333")
@@ -101,8 +66,12 @@ struct DoctorCertify_pass {
       .backgroundColor("#fff")
       .padding({ top: 20, bottom: 20 })
 
-      Column() { }.width('100%').height(10).backgroundColor("#F5F5F5")
+      Column()
+        .width('100%')
+        .height(10)
+        .backgroundColor("#F5F5F5")
 
+      // 图片列表
       List() {
         ListItem() {
           Column() {
@@ -110,14 +79,25 @@ struct DoctorCertify_pass {
               .fontSize(16)
               .width('100%')
               .textAlign(TextAlign.Start)
-
-            Image(this.certifyInfo.avatar)
-              .width(120)
-              .height(120)
-              .backgroundColor("#F7F9FC")
-              .borderRadius(10)
-              .margin({ top: 12 })
-              .objectFit(ImageFit.Cover)
+            // ✅ 正确兜底写法：用条件渲染
+            if (this.certifyInfo.avatar) {
+              Image(this.certifyInfo.avatar)
+                .width(120)
+                .height(120)
+                .backgroundColor("#F7F9FC")
+                .borderRadius(10)
+                .margin({ top: 12 })
+                .objectFit(ImageFit.Cover)
+            } else {
+              // 没上传就显示默认图
+              Image($r('app.media.img11'))
+                .width(120)
+                .height(120)
+                .backgroundColor("#F7F9FC")
+                .borderRadius(10)
+                .margin({ top: 12 })
+                .objectFit(ImageFit.Cover)
+            }
           }
           .width('100%')
           .padding(20)
@@ -125,7 +105,10 @@ struct DoctorCertify_pass {
         }
 
         ListItem() {
-          Column() { }.width('100%').height(10).backgroundColor("#F5F5F5")
+          Column()
+            .width('100%')
+            .height(10)
+            .backgroundColor("#F5F5F5")
         }
 
         ListItem() {
@@ -134,21 +117,38 @@ struct DoctorCertify_pass {
               .fontSize(16)
               .width('100%')
               .textAlign(TextAlign.Start)
-
             Row({ space: 12 }) {
-              Image(this.certifyInfo.idCardFront)
-                .width(120)
-                .height(120)
-                .backgroundColor("#F7F9FC")
-                .borderRadius(10)
-                .objectFit(ImageFit.Cover)
+              if (this.certifyInfo.idCardFront) {
+                Image(this.certifyInfo.idCardFront)
+                  .width(120)
+                  .height(120)
+                  .backgroundColor("#F7F9FC")
+                  .borderRadius(10)
+                  .objectFit(ImageFit.Cover)
+              } else {
+                Image($r('app.media.nation'))
+                  .width(120)
+                  .height(120)
+                  .backgroundColor("#F7F9FC")
+                  .borderRadius(10)
+                  .objectFit(ImageFit.Cover)
+              }
 
-              Image(this.certifyInfo.idCardBack)
-                .width(120)
-                .height(120)
-                .backgroundColor("#F7F9FC")
-                .borderRadius(10)
-                .objectFit(ImageFit.Cover)
+              if (this.certifyInfo.idCardBack) {
+                Image(this.certifyInfo.idCardBack)
+                  .width(120)
+                  .height(120)
+                  .backgroundColor("#F7F9FC")
+                  .borderRadius(10)
+                  .objectFit(ImageFit.Cover)
+              } else {
+                Image($r('app.media.person'))
+                  .width(120)
+                  .height(120)
+                  .backgroundColor("#F7F9FC")
+                  .borderRadius(10)
+                  .objectFit(ImageFit.Cover)
+              }
             }
             .margin({ top: 12 })
           }
@@ -158,7 +158,10 @@ struct DoctorCertify_pass {
         }
 
         ListItem() {
-          Column() { }.width('100%').height(10).backgroundColor("#F5F5F5")
+          Column()
+            .width('100%')
+            .height(10)
+            .backgroundColor("#F5F5F5")
         }
 
         ListItem() {
@@ -167,15 +170,23 @@ struct DoctorCertify_pass {
               .fontSize(16)
               .width('100%')
               .textAlign(TextAlign.Start)
-
-            Image(this.certifyInfo.certImage)
-              .width(120)
-              .height(120)
-              .backgroundColor("#F7F9FC")
-              .borderRadius(10)
-              .margin({ top: 12 })
-              .objectFit(ImageFit.Cover)
-
+            if (this.certifyInfo.certImage) {
+              Image(this.certifyInfo.certImage)
+                .width(120)
+                .height(120)
+                .backgroundColor("#F7F9FC")
+                .borderRadius(10)
+                .margin({ top: 12 })
+                .objectFit(ImageFit.Cover)
+            } else {
+              Image($r('app.media.ic_upload'))
+                .width(120)
+                .height(120)
+                .backgroundColor("#F7F9FC")
+                .borderRadius(10)
+                .margin({ top: 12 })
+                .objectFit(ImageFit.Cover)
+            }
             Text("照片仅用作认证，平台会保护您的隐私，不会泄漏给第三方")
               .fontSize(12)
               .fontColor("#999")
@@ -192,6 +203,7 @@ struct DoctorCertify_pass {
       .backgroundColor("#fff")
       .divider({ strokeWidth: 0 })
 
+      // 修改认证按钮
       Button("修改认证")
         .width('90%')
         .height(48)

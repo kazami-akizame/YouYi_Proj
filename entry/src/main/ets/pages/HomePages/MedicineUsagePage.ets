@@ -483,7 +483,15 @@ struct MedicineUsagePage {
             router.back({
               url: 'pages/HomePages/EditComPrePage',
               params: {
-                editedData: JSON.stringify(data),
+                medicineJson: JSON.stringify({
+                  name: this.medicine.name,
+                  specification: this.medicine.spec,
+                  quantity: this.medicineCount,
+                  usageMethod: this.usageMethod,
+                  frequency: this.frequency,
+                  singleDose: this.singleDose,
+                  remark: this.remark
+                }),
                 editIndex: this.editIndex
               }
             });
@@ -497,7 +505,8 @@ struct MedicineUsagePage {
               ]
             }).then((result:  DialogResult) => {
               if (result.index === 0) {
-                router.pushUrl({ url: 'pages/HomePages/MedicineListPage' });
+                tempUsageData = data;
+                router.back();
               }
               if (result.index === 1) {
                 tempUsageData = data;

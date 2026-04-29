@@ -1,6 +1,8 @@
+import { ConsultationItem, ConsultationStatus, ConsultationType } from '../common/ConsultationData'
 import router from '@ohos.router'
-interface Patient {
-  id: string;
+import { patientService } from '../../backend/patient/service/PatientService'
+class Patient {
+  id: number;
   name: string;
   gender: string;
   age: number;
@@ -9,6 +11,28 @@ interface Patient {
   serviceDuration: string;
   startDate: string;
   endDate: string;
+
+  constructor(
+    id: number,
+    name: string,
+    gender: string,
+    age: number,
+    status: number,
+    hasNewMsg: boolean,
+    serviceDuration: string,
+    startDate: string,
+    endDate: string
+  ) {
+    this.id = id;
+    this.name = name;
+    this.gender = gender;
+    this.age = age;
+    this.status = status;
+    this.hasNewMsg = hasNewMsg;
+    this.serviceDuration = serviceDuration;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
 }
 
 @Entry
@@ -16,31 +40,25 @@ interface Patient {
 struct NewPage {
   //@State：状态变量，变化时自动刷新UI
   @State currentTabIndex: number = 0;
-  @State patientList: Patient[] = [
-    {
-      id: '001',
-      name: '吴珊珊',
-      gender: '女',
-      age: 23,
-      status: 0,
-      hasNewMsg: true,
-      serviceDuration: '半年',
-      startDate: '2020-02-06',
-      endDate: '2020-08-06'
-    },
-    {
-      id: '002',
-      name: '吴珊珊',
-      gender: '女',
-      age: 23,
-      status: 1,
-      hasNewMsg: false,
-      serviceDuration: '半年',
-      startDate: '2020-02-06',
-      endDate: '2020-08-06'
-    },
+  @State patientList: Patient[] = [];
 
-  ];
+  aboutToAppear() {
+    const patients = patientService.getAllPatients();
+    this.patientList = patients.map((item, index) => {
+      const inProgress = index % 2 === 0;
+      return new Patient(
+        item.id,
+        item.name,
+        item.gender,
+        item.age,
+        inProgress ? 0 : 1,
+        inProgress,
+        '半年',
+        '2020-02-05',
+        '2020-08-05'
+      );
+    });
+  }
 
   // 患者列表项
   @Builder
@@ -136,10 +154,15 @@ struct NewPage {
           .border({ width: 1, color: '#ccc' })
           .borderRadius(16)
           .onClick(() => {
-              router.pushUrl({
-                url: 'pages/Patient/PatientDetailPages',
-              });
-            })
+            router.pushUrl({
+              url: 'pages/Patient/Index',
+              params: {
+                targetPage: '患者资料',
+                currentPatientId: item.id,
+                messageDetailReturnPage: '__BACK__'
+              }
+            });
+          })
 
 
         if (item.status === 0) {
@@ -151,9 +174,26 @@ struct NewPage {
             .border({ width: 1, color: '#007DFF' })
             .borderRadius(16)
             .onClick(() => {
+              // ✅ 使用构造函数，不要使用对象字面量 {}
+              const consultationItem = new ConsultationItem(
+                item.id.toString(),           // id
+                item.name,                     // patientName
+                item.gender,                   // patientGender
+                item.age,                      // patientAge
+                ConsultationType.GRAPHIC,      // type
+                ConsultationStatus.WAITING,    // status
+                `${item.name}，${item.gender}，${item.age}岁，正在等待问诊...`, // description
+                new Date().toLocaleString(),   // createTime
+                '',                            // rejectReason
+                []                             // chatMessages
+              );
+
               router.pushUrl({
-                url:'pages/HomePages/ChatPage'
-              })
+                url: 'pages/HomePages/ChatPage',
+                params: {
+                  item: JSON.stringify(consultationItem)
+                }
+              });
             })
         }
       }
@@ -256,7 +296,7 @@ struct NewPage {
             .width('100%')
             .padding({ left: 15, right: 15 })
           },
-          (item: Patient) => item.id
+          (item: Patient) => item.id.toString()
         )
 
         ListItem() {
@@ -298,7 +338,7 @@ struct NewPage {
             .width('100%')
             .padding({ left: 15, right: 15 })
           },
-          (item: Patient) => item.id
+          (item: Patient) => item.id.toString()
         )
 
         ListItem() {
@@ -340,7 +380,7 @@ struct NewPage {
             .width('100%')
             .padding({ left: 15, right: 15 })
           },
-          (item: Patient) => item.id
+          (item: Patient) => item.id.toString()
         )
 
         ListItem() {
@@ -359,3 +399,6 @@ struct NewPage {
     }
   }
 }
+
+
+

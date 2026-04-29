@@ -18,7 +18,7 @@ struct ChangePhonePage {
   // 隐私政策点击跳转
   goPrivacyPolicy() {
     try {
-      router.pushUrl({ url: 'pages/PrivacyPolicy' });
+      router.pushUrl({ url: 'pages/Mine/PrivacyPolicy' });
     } catch (e) {}
   }
 

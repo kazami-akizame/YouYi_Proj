@@ -4,6 +4,7 @@ import { patientService } from '../../backend/patient/service/PatientService'
 import { broadcastService } from '../../backend/patient/service/BroadcastService'
 import promptAction from '@ohos.promptAction'
 import common from '@ohos.app.ability.common'
+import router from '@ohos.router'
 
 @Component
 export struct CreateBroadcastPage {
@@ -303,6 +304,7 @@ export struct SearchMessagePage {
 export struct MessageDetailPage {
   @Link activePage: string;
   @Link selectedMessageId: number;
+  @Link detailReturnPage: string;
   @State private currentMessage: BroadcastMessageEntity | null = null;
   @State private recipients: PatientEntity[] = [];
 
@@ -328,6 +330,10 @@ export struct MessageDetailPage {
           .syncLoad(true)
           .objectFit(ImageFit.Contain)
           .onClick(() => {
+            if (this.detailReturnPage === '__BACK__') {
+              router.back()
+              return;
+            }
             this.activePage = '群发历史';
           })
         Blank()

@@ -1,5 +1,6 @@
 // pages/CommonPrescriptionDetailPage.ets
 import router from '@ohos.router';
+import { MedicineDetail } from '../HomePages/PrescriptionEditPage'
 import promptAction from '@ohos.promptAction';
 
 interface Prescription {
@@ -9,7 +10,7 @@ interface Prescription {
   patientAge?: number;
   diagnosis: string;
   medicineCount: number;
-  medicineList: string[];
+  medicineList: Object[];
 }
 
 @Entry
@@ -19,12 +20,13 @@ struct CommonPrescriptionDetailPage {
 
   aboutToAppear() {
     const params = router.getParams() as Record<string, string>;
-    if (params?.prescriptionJson) {
+    if (params.prescriptionJson) {
       try {
-        this.prescription = JSON.parse(params.prescriptionJson) as Prescription;
+        const raw = JSON.parse(params.prescriptionJson) as Prescription;
+        this.prescription = raw;
+        // 如果需要，可以在此转换 medicineList 为统一格式（可选）
       } catch (e) {
-        promptAction.showToast({ message: '数据加载失败' });
-        router.back();
+        console.error('处方数据解析失败', e);
       }
     }
   }
@@ -91,20 +93,18 @@ struct CommonPrescriptionDetailPage {
               .width('100%')
               .margin({ bottom: 16 })
 
-            ForEach(this.prescription.medicineList, (med: string) => {
-              Column() {
+            ForEach(this.prescription.medicineList, (med: Object, index: number) => {
+              if (typeof med === 'string') {
+                // 旧版字符串直接显示
                 Text(med)
-                  .fontSize(16)
-                  .fontColor('#333')
-                  .width('100%')
-                  .margin({ bottom: 8 })
-                Text('用法用量：2次/天，每次1片，温水送服')
                   .fontSize(14)
-                  .fontColor('#999')
-                  .width('100%')
-                  .margin({ bottom: 16 })
+                  .fontColor('#333')
+              } else {
+                // 新版对象类型
+                Text(`· ${(med as MedicineDetail).name}  ${(med as MedicineDetail).specification}  ×${(med as MedicineDetail).quantity}`)
+                  .fontSize(14)
+                  .fontColor('#333')
               }
-              .width('100%')
             })
           }
           .width('90%')
