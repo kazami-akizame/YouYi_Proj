@@ -66,7 +66,7 @@ struct ArticalDetailPage {
     }
   ];
 
-  private readonly articlesUrl: string = "http://127.0.0.1:8888/articles";
+  private readonly articlesUrl: string = "http://10.0.2.2:8080/articles";
 
   onPageShow(): void {
     const params = router.getParams() as RouterParams;

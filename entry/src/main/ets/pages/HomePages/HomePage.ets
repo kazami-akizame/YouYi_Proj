@@ -25,7 +25,7 @@ struct HomePage {
   // 医生个人信息
   @State doctorName: string = '李明明'
   @State doctorTitle: string = '副主任医师'
-  @State hospital: string = '北京积水潭医院'
+  @State hospital: string = '北京天坛医院'
   @State goodRate: string = '90.2%'
   @State serviceCount: number = 1401
   @State fansCount: number = 55

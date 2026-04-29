@@ -52,8 +52,8 @@ struct EditArticlePage {
     { id: 8, name: "泌尿健康", isChecked: false },
   ];
 
-  private readonly baseUrl: string = 'http://127.0.0.1:8888/articles';
-  private readonly draftUrl: string = 'http://127.0.0.1:8888/drafts';
+  private readonly baseUrl: string = 'http://10.0.2.2:8080/articles';
+  private readonly draftUrl: string = 'http://10.0.2.2:8080/drafts';
 
   build() {
     Stack() {

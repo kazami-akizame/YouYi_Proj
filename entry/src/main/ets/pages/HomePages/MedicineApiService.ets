@@ -33,7 +33,7 @@ export interface Prescription {
 }
 
 // 服务器地址（模拟器用10.0.2.2）
-const BASE_URL: string = 'http://localhost:8080';
+const BASE_URL: string = 'http://10.0.2.2:8080';
 
 export class MedicineApiService {
   // ========== 常用药品 API ==========

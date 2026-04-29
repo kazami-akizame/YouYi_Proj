@@ -72,15 +72,6 @@
       "title": "夏天不能光脚丫、不能吃冰激凌？别用养生折腾孩子了",
       "editTime": "上次编辑于：2020-01-20",
       "topics": []
-    },
-    {
-      "title": "heyuliangzi",
-      "content": "hihihi",
-      "topics": [
-        "脾胃健康"
-      ],
-      "editTime": "上次编辑于：2026-04-27",
-      "id": "imPgo_B2ylA"
     }
   ],
   "prescriptions": [
@@ -381,6 +372,193 @@
       "status": "pending",
       "createTime": "2026-04-28T07:09:29.021Z",
       "id": "zXEonBkR8hU"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "李箱",
+      "hospital": "北京市中关村医院",
+      "department": "内科-神经内科",
+      "title": "副主任医师",
+      "specialty": "沉沦",
+      "intro": "理想",
+      "experience": "limbus",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777432414018.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777432419750.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777432424793.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777432429928.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T03:13:54.711Z",
+      "id": "sunwbu1urEA"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "李明明",
+      "hospital": "北京天坛医院",
+      "department": "内科-消化科",
+      "title": "副主任医师",
+      "specialty": "2010-2015 北京协和医院\\n2015-至今 北京天坛医院消化内科",
+      "intro": "2010-2015 北京协和医院\\n2015-至今 北京天坛医院消化内科",
+      "experience": "2010-2015 北京协和医院\\n2015-至今 北京天坛医院消化内科",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777432992198.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777432997866.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777433003853.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777433009558.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T03:23:34.168Z",
+      "id": "yeXzhgfI2Vc"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "12",
+      "hospital": "北京市东城区第一人民医院",
+      "department": "内科-呼吸科",
+      "title": "住院医师",
+      "specialty": "12",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777438001680.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777438009089.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777438014152.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777438019472.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T04:47:01.311Z",
+      "id": "UIUzzTQQJMs"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "12",
+      "hospital": "北京市东城区中医医院",
+      "department": "内科-呼吸科",
+      "title": "主治医师",
+      "specialty": "12",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777440636477.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777440642341.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777440647153.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777440653120.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T05:31:01.171Z",
+      "id": "fSPBdkQBlYk"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "12",
+      "hospital": "北京市东城区中医医院",
+      "department": "内科-呼吸科",
+      "title": "主任医师",
+      "specialty": "12",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777441009217.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777441015317.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777441022852.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777441028692.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T05:37:11.505Z",
+      "id": "xqhncx_OHLQ"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "123",
+      "hospital": "北京市东城区第一人民医院",
+      "department": "内科-呼吸科",
+      "title": "副主任医师",
+      "specialty": "123",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777441298245.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777441303457.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777441308898.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777441313869.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T05:41:55.054Z",
+      "id": "zt0qe2VV5V8"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "12",
+      "hospital": "北京市东城区中医医院",
+      "department": "内科-呼吸科",
+      "title": "副主任医师",
+      "specialty": "23",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777447073678.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777447078768.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777447084685.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777447089389.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T07:18:11.474Z",
+      "id": "rCKw8XOPLCE"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "12",
+      "hospital": "北京市东城区中医医院",
+      "department": "内科-消化科",
+      "title": "主任医师",
+      "specialty": "12",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777447445681.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777447450874.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777447455846.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777447461576.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T07:24:23.191Z",
+      "id": "4Darq1WeVdc"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "12",
+      "hospital": "北京市东城区第一人民医院",
+      "department": "内科-消化科",
+      "title": "主治医师",
+      "specialty": "12",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777447634124.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777447638960.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777447645690.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777447650413.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T07:27:33.961Z",
+      "id": "A5L2izJsVYs"
+    },
+    {
+      "phoneNumber": "14455625854",
+      "name": "q",
+      "hospital": "北京市东城区中医医院",
+      "department": "内科-心血管科",
+      "title": "住院医师",
+      "specialty": "qq",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777448398400.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777448405669.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777448411096.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777448416995.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T07:40:29.701Z",
+      "id": "3rQ-bXFoGhk"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "name": "122323",
+      "hospital": "北京市东城区第一人民医院",
+      "department": "内科-消化科",
+      "title": "副主任医师",
+      "specialty": "2",
+      "intro": "",
+      "experience": "",
+      "avatar": "file:///data/storage/el2/base/haps/entry/files/avatar_1777448885934.jpg",
+      "idCardFront": "file:///data/storage/el2/base/haps/entry/files/idCardFront_1777448892874.jpg",
+      "idCardBack": "file:///data/storage/el2/base/haps/entry/files/idCardBack_1777448900684.jpg",
+      "cert": "file:///data/storage/el2/base/haps/entry/files/cert_1777448906452.jpg",
+      "status": "pending",
+      "createTime": "2026-04-29T07:48:29.800Z",
+      "id": "oBRCNAXDkcY"
     }
   ],
   "doctors": [
@@ -423,6 +601,27 @@
       "nickname": "13345647898",
       "createTime": "2026-04-28T05:54:27.892Z",
       "id": "kQMajD_szmM"
+    },
+    {
+      "phoneNumber": "14455556666",
+      "password": "123456",
+      "nickname": "14455556666",
+      "createTime": "2026-04-29T02:58:59.400Z",
+      "id": "aCpk9ky-bI8"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "password": "123456",
+      "nickname": "14555667878",
+      "createTime": "2026-04-29T03:06:52.241Z",
+      "id": "wPrXSpS-RVc"
+    },
+    {
+      "phoneNumber": "14455625854",
+      "password": "111111",
+      "nickname": "14455625854",
+      "createTime": "2026-04-29T07:38:57.410Z",
+      "id": "twoIKhR0itM"
     }
   ],
   "verifyCodes": [
@@ -449,6 +648,42 @@
       "code": "633383",
       "timestamp": 1777355660663,
       "id": "UdUbd1FYhmo"
+    },
+    {
+      "phoneNumber": "14455556666",
+      "code": "219901",
+      "timestamp": 1777431510237,
+      "id": "JZperUoqfS0"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "code": "866742",
+      "timestamp": 1777431995700,
+      "id": "rbxULbyYbjg"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "code": "720755",
+      "timestamp": 1777440588247,
+      "id": "DFnni4fFD4s"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "code": "871007",
+      "timestamp": 1777440588251,
+      "id": "1uFYtIEsVqY"
+    },
+    {
+      "phoneNumber": "14555667878",
+      "code": "687722",
+      "timestamp": 1777440588252,
+      "id": "bIwgu0Kohpo"
+    },
+    {
+      "phoneNumber": "14455625854",
+      "code": "232471",
+      "timestamp": 1777448308729,
+      "id": "Z88PVi67cYU"
     }
   ],
   "myMedicines": [
@@ -521,30 +756,16 @@
       "manufacturer": "阿斯利康",
       "price": 85,
       "specification": "200μg*100掀"
+    },
+    {
+      "id": "QBq0JDBU56E",
+      "name": "维生素C片",
+      "manufacturer": "东北制药",
+      "price": 8,
+      "specification": "100mg*100片"
     }
   ],
   "commonPrescriptions": [
-    {
-      "id": "vzO_9pyYp8k",
-      "patientName": "",
-      "patientGender": "",
-      "patientAge": 0,
-      "clinicalDiagnosis": "00000",
-      "medicineCount": 1,
-      "medicines": [
-        {
-          "name": "二甲双胍片",
-          "specification": "0.5g*20片",
-          "quantity": 1,
-          "usageMethod": "1",
-          "frequency": "1",
-          "singleDose": "1",
-          "remark": "1"
-        }
-      ],
-      "createDate": "2026/4/26",
-      "isCommon": true
-    },
     {
       "id": "87-EOHGYDp8",
       "patientName": "",
@@ -815,6 +1036,27 @@
         }
       ],
       "createDate": "2026/4/28",
+      "isCommon": true
+    },
+    {
+      "id": "3p3YGnnjSfM",
+      "patientName": "",
+      "patientGender": "",
+      "patientAge": 0,
+      "clinicalDiagnosis": "00000",
+      "medicineCount": 1,
+      "medicines": [
+        {
+          "name": "二甲双胍片",
+          "specification": "0.5g*20片",
+          "quantity": 1,
+          "usageMethod": "1",
+          "frequency": "1",
+          "singleDose": "1",
+          "remark": "1"
+        }
+      ],
+      "createDate": "4/29/2026",
       "isCommon": true
     }
   ],
@@ -1151,7 +1393,7 @@
       "patientGender": "女",
       "patientAge": 23,
       "type": "极速",
-      "status": "待接诊",
+      "status": "问诊结束",
       "description": "早起经常头晕，恶心，有时候会咳嗽",
       "createTime": "2026-04-06 08:08",
       "rejectReason": "",
@@ -1166,6 +1408,16 @@
           "content": "",
           "time": "10:10",
           "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
         }
       ]
     },
@@ -1179,18 +1431,39 @@
       "description": "早起经常头晕，恶心，有时候会咳嗽（持续约4天）",
       "createTime": "2026-04-07 08:08",
       "rejectReason": "",
-      "chatMessages": []
+      "chatMessages": [
+        {
+          "isDoctor": false,
+          "content": "病情描述：早起经常头晕，恶心，有时候会咳嗽（持续约4天）\n患病时长：一周内\n就诊情况：就诊过",
+          "time": "10:10"
+        },
+        {
+          "isDoctor": false,
+          "content": "",
+          "time": "10:10",
+          "isImage": true
+        },
+        {
+          "isDoctor": true,
+          "content": "您好",
+          "time": ""
+        },
+        {
+          "isDoctor": true,
+          "content": "建议先服用药物来控制调理，看看效果怎么样？",
+          "time": ""
+        }
+      ]
     },
     {
       "id": "C003",
       "patientName": "李娜",
       "patientGender": "女",
-      "patientAge": 32,
+      "patientAge": 38,
       "type": "开药",
-      "status": "问诊结束",
+      "status": "进行中",
       "description": "早起经常头晕，恶心，有时候会咳嗽（持续约5天）",
       "createTime": "2026-04-08 08:08",
-      "rejectReason": "咨询不对症",
       "chatMessages": [
         {
           "isDoctor": false,

@@ -108,7 +108,7 @@ export struct MePage {
                       .fontColor("#e8f1ff")
                   }
                   // 医院
-                  Text(this.doctorData?.doctorInfo?.[0]?.hospital ?? "北京积水潭医院")
+                  Text(this.doctorData?.doctorInfo?.[0]?.hospital ?? "北京天坛医院")
                     .fontSize(14)
                     .fontColor("#e8f1ff")
                 }.margin({ left: 10 })

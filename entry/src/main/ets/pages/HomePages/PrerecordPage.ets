@@ -39,7 +39,7 @@ struct HistoryPrescriptionDetailPage {
     try {
       let httpRequest = http.createHttp();
       let response = await httpRequest.request(
-        "http://127.0.0.1:8888/commonPrescriptions",
+        "http://10.0.2.2:8080/commonPrescriptions",
         {
           method: http.RequestMethod.POST,
           header: { 'Content-Type': 'application/json' },

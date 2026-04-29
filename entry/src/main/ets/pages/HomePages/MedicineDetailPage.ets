@@ -23,7 +23,7 @@ struct MedicineDetailPage {
   @State medicineData: Medicine | null = null;
   @State isLoading: boolean = true; // 加载状态
   @State errorMsg: string = ''; // 错误提示
-  private baseUrl: string = 'http://127.0.0.1:8888/medicines';
+  private baseUrl: string = 'http://10.0.2.2:8080/medicines';
 
   onPageShow(): void {
     this.isLoading = true;

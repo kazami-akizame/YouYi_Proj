@@ -23,7 +23,7 @@ struct MyCreationPage {
   @State articleList: ArticleItem[] = [];
 
   // 后端接口地址
-  private readonly baseUrl: string = "http://127.0.0.1:8888/articles";
+  private readonly baseUrl: string = "http://10.0.2.2:8080/articles";
 
   // 页面打开自动加载数据
   onPageShow(): void {

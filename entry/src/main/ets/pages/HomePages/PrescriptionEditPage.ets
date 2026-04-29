@@ -203,7 +203,7 @@ struct PrescriptionEditPage {
 
     // 2. 发送 POST 请求，写入 data.json
     httpRequest.request(
-      "http://127.0.0.1:8888/commonPrescriptions",
+      "http://10.0.2.2:8080/commonPrescriptions",
       {
         method: http.RequestMethod.POST,
         header: {
@@ -265,7 +265,7 @@ struct PrescriptionEditPage {
       let httpRequest = http.createHttp();
       // 1. 发送 HTTP 请求并等待结果
       let response = await httpRequest.request(
-        "http://127.0.0.1:8888/historyPrescriptions",
+        "http://10.0.2.2:8080/historyPrescriptions",
         {
           method: http.RequestMethod.POST,
           header: { 'Content-Type': 'application/json' },

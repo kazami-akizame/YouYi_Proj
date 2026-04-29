@@ -37,7 +37,7 @@ interface Prescription {
   patientName?: string;
   patientGender?: string;
   patientAge?: number;
-  diagnosis: string;
+  diagnosis?: string;
   medicineCount: number;
   medicineList: Object[];
 }
@@ -85,7 +85,7 @@ struct MyPharmacyPage {
 
       // 常用处方请求 - 保持原样，不做转换
       let commonResponse = await httpRequest.request(
-        "http://127.0.0.1:8888/commonPrescriptions1",
+        "http://10.0.2.2:8080/commonPrescriptions1",
         {
           method: http.RequestMethod.GET,
           header: { 'Content-Type': 'application/json' }
@@ -95,7 +95,7 @@ struct MyPharmacyPage {
 
       // 历史处方请求 - 转换格式
       let historyResponse = await httpRequest.request(
-        "http://127.0.0.1:8888/historyPrescriptions",
+        "http://10.0.2.2:8080/historyPrescriptions",
         {
           method: http.RequestMethod.GET,
           header: { 'Content-Type': 'application/json' }
@@ -110,7 +110,7 @@ struct MyPharmacyPage {
           patientName: item.patientName || '',
           patientGender: item.patientGender || '',
           patientAge: item.patientAge || 0,
-          diagnosis: item.clinicalDiagnosis || '',
+          diagnosis: item.diagnosis || '',
           medicineCount: item.medicineCount,
           medicineList: []
         };

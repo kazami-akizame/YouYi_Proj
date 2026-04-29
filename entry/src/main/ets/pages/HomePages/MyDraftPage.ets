@@ -16,7 +16,7 @@ struct MyDraftPage {
   @State drafts: Draft[] = [];
 
   // 接口地址
-  private readonly baseUrl: string = "http://127.0.0.1:8888/drafts";
+  private readonly baseUrl: string = "http://10.0.2.2:8080/drafts";
 
   // 页面显示时加载数据
   onPageShow(): void {

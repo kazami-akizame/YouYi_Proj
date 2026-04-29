@@ -21,12 +21,12 @@ struct PersonalInformation {
   // ==============================================
   @State doctorInfo: DoctorInfo = {
     realName: "李明明",
-    hospital: "北京积水潭医院",
+    hospital: "北京天坛医院",
     department: "消化内科",
     title: "副主任医师",
     skills: "急性肠胃炎、胃溃疡、肠道疾病",
     intro: "医学博士，从事临床工作15年",
-    experience: "2010-2015 北京协和医院\n2015-至今 北京积水潭医院消化内科"
+    experience: "2010-2015 北京协和医院\n2015-至今 北京天坛医院消化内科"
   };
 
   // 页面显示时 → 自动请求后端更新数据

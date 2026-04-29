@@ -135,7 +135,7 @@ export async function loadFromJsonServer(): Promise<ConsultationItem[]> {
   try {
     // 👉 改成你电脑的局域网IP，例如：http://192.168.1.100:3000/consultations
     let resp = await httpConn.request(
-      "http://127.0.0.1:8888/consultations",
+      "http://10.0.2.2:8080/consultations",
       { method: http.RequestMethod.GET,
         header: { 'Content-Type': 'application/json' }
       }
@@ -175,7 +175,7 @@ export async function saveToJsonServer(data: ConsultationItem[]): Promise<void> 
 
   try {
     await httpConn.request(
-      "http://127.0.0.1:8888/consultations",
+      "http://10.0.2.2:8080/consultations",
       {
         method: http.RequestMethod.PUT,
         header: { 'Content-Type': 'application/json' },
@@ -195,7 +195,7 @@ export async function saveSingleItemToServer(item: ConsultationItem): Promise<vo
 
   try {
     await httpConn.request(
-      `http://127.0.0.1:8888/consultations/${item.id}`,
+      `http://10.0.2.2:8080/consultations/${item.id}`,
       {
         method: http.RequestMethod.PUT,
         header: { 'Content-Type': 'application/json' },
