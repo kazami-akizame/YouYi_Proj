@@ -1523,10 +1523,5 @@
       ]
     }
   ],
-  "rejectReasons": [
-    "咨询不对症",
-    "患者缺少诊疗资料",
-    "患者病情复杂"
-  ],
   "$schema": "./node_modules/json-server/schema.json"
 }
